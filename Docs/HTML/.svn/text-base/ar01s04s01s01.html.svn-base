@@ -1,0 +1,324 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>4.1.1.  Core</title><link rel="stylesheet" href="docbook.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="Sorento Engine"><link rel="up" href="ar01s04s01.html" title="4.1.  Resolvers"><link rel="prev" href="ar01s04s01.html" title="4.1.  Resolvers"><link rel="next" href="ar01s04s01s02.html" title="4.1.2.  Akvabase"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">4.1.1. 
+					Core
+				</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ar01s04s01.html">Prev</a> </td><th width="60%" align="center">4.1. 
+				Resolvers
+			</th><td width="20%" align="right"> <a accesskey="n" href="ar01s04s01s02.html">Next</a></td></tr></table><hr></div><div class="section" title="4.1.1.  Core"><div class="titlepage"><div><div><h4 class="title"><a name="id484440"></a>4.1.1. 
+					Core
+				</h4></div></div></div><div class="toc"><dl><dt><span class="section"><a href="ar01s04s01s01.html#id484450">4.1.1.1. 
+						Class
+					</a></span></dt><dt><span class="section"><a href="ar01s04s01s01.html#id530402">4.1.1.2. 
+						Function
+					</a></span></dt><dt><span class="section"><a href="ar01s04s01s01.html#id530483">4.1.1.3. 
+						AJAX
+					</a></span></dt></dl></div><p>					
+				</p><div class="section" title="4.1.1.1.  Class"><div class="titlepage"><div><div><h5 class="title"><a name="id484450"></a>4.1.1.1. 
+						Class
+					</h5></div></div></div><p>					
+					</p><div class="variablelist" title="SorentoLib.Session"><p class="title"><b>SorentoLib.Session</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.Session.Current ()</code></span></dt><dd><p>
+									Returns a object containing the currently used Session.
+								</p><pre class="programlisting">
+$session = SorentoLib.Session.Current ()
+$user = $session.User
+Write ($user.Realname)
+
+&gt; John Doe
+</pre></dd><dt><span class="term"><code class="filename">$object.Id</code></span></dt><dd><p>
+									Returns Session Guid id.
+								</p></dd><dt><span class="term"><code class="filename">$object.CreateTimestamp</code></span></dt><dd><p>
+									Returns Timestamp of when Session was created.
+								</p></dd><dt><span class="term"><code class="filename">$object.UpdateTimestamp</code></span></dt><dd><p>
+									Returns Timestamp of when Session was last changed.
+								</p></dd><dt><span class="term"><code class="filename">$object.User</code></span></dt><dd><p>
+									If Session has a valid User loggedin, this will return the User object
+								</p><pre class="programlisting">
+$session = SorentoLib.Session.Current ()
+$user = $session.User
+Write ($user.Realname)
+
+&gt; John Doe
+</pre></dd><dt><span class="term"><code class="filename">$object.AccessLevel</code></span></dt><dd><p>
+									Returns Session highest AccessLevel. If no User is loggedin this will return the lowest AccessLevel (Guest).
+								</p><pre class="programlisting">
+$session = SorentoLib.Session.Current ()
+Write ($session.AccessLevel)
+
+&gt; Administrator
+</pre></dd><dt><span class="term"><code class="filename">$object.LoggedIn</code></span></dt><dd><p>
+									If a valid user has been logged in, this will return true.
+								</p><pre class="programlisting">
+$session = SorentoLib.Session.Current ()
+If ($session.LoggedIn == "true")
+    You are logged in.
+EndIf
+
+&gt; You are logged in.
+</pre></dd><dt><span class="term"><code class="filename">$object.AuthenticateByAccessLevel (SorentoLib.Enums.AccessLevel accesslevel)</code></span></dt><dd><p>
+									???
+								</p></dd><dt><span class="term"><code class="filename">$object.Query (string query)</code></span></dt><dd><p>
+									Returns the value of a query passed to the current Page and Session, using either GET or POST.
+								</p><pre class="programlisting">
+$session = SorentoLib.Session.Current ()
+Write ($session.Query("username"))
+
+&gt; johndoe
+</pre></dd></dl></div><div class="variablelist" title="SorentoLib.Session.Env"><p class="title"><b>SorentoLib.Session.Env</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.Session.Env.AuthType</code></span></dt><dd><p>
+									If Sorento is protected by any type of authorization, this environment 
+									variable contains the authorization type. Apache web servers support HTTP basic
+									and digest access authorization.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ContentLength</code></span></dt><dd><p>
+									This environment variable contains the number of bytes being sent by the client. You use this variable to determine the number of bytes you need to read. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ContentTypeMultiPartBoundary</code></span></dt><dd><p>
+								 [MISSING]
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.DocumentRoot</code></span></dt><dd><p>
+									This environment variable contains the directory under which Sorento is executing, as defined in the server's configuration file. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.GatewayInterface</code></span></dt><dd><p>
+									This environment variable contains the revision of the CGI specification supported by the server software. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpAccept</code></span></dt><dd><p>
+									This environment variable enumerates the types of data the client can accept. 
+									For most client software, this protocol feature has become a bit convoluted
+									and the information isn't always useful. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpAcceptCharset</code></span></dt><dd><p>
+									Contents of the Accept-Charset: header from the current request, if there is one. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpAcceptEncoding</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpAcceptLangauge</code></span></dt><dd><p>
+									Contents of the Accept-Language: header from the current request,
+									if there is one. This value can be changed on the client browser options, 
+									when choosing preferred language.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpConnection</code></span></dt><dd><p>
+									Contents of the Connection: header from the current request, if there is one. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpCookie</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpHost</code></span></dt><dd><p>
+									Contents of the Host: header from the current request, if there is one. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpKeepAlive</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpUserAgent</code></span></dt><dd><p>
+									Contents of the User_Agent: header from the current request, if there is one. 
+									This is a string denoting the browser software being used to view the current page. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpReferer</code></span></dt><dd><p>
+									The address of the page (if any) which referred the browser to the current page. 
+									This is set by the user's browser; not all browsers will set this. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.HttpAgent</code></span></dt><dd><p>
+									This environment variable identifies the browser software being used to access your program. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.PathInfo</code></span></dt><dd><p>
+									This environment variable contains the extra path information that the 
+									server derives from the URL that was used to access Sorento. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.PathTranslated</code></span></dt><dd><p>
+									This environment variable contains the actual fully-qualified file name that
+									was translated from the URL. web servers distinguish between path names used
+									in URLs, and file system path names. It is often useful to make your PATH_INFO
+									a virtual path so that the server provides a physical path name in this variable.
+									This way, you can avoid giving file system path names to remote client software. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.QueryString</code></span></dt><dd><p>
+									This environment variable contains information sent from page to Sorento.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RedirectQueryString</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RedirectStatus</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RedirectUrl</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RemoteAddress</code></span></dt><dd><p>
+									This environment variable contains the IP address of the remote host. This information is guaranteed to be present. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RemoteHost</code></span></dt><dd><p>
+									This environment variable contains the host name of the remote client 
+									software. This is a fully-qualified domain name such as www.dbase.com
+									(instead of just www, which you might type within your intranet). 
+									If no host name information is available, your program should use the
+									REMOTE_ADDR variable instead. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RemoteIdent</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RemoteUser</code></span></dt><dd><p>
+									This environment variable is set to the name of the local HTTP user of the person using 
+									the browser software only if access authorization has been activated for this URL. 
+									Note that this is not a way to determine the user name of any person accessing your program. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RequestMethod</code></span></dt><dd><p>
+									This environment variable contains the name of the method (defined in the HTTP protocol) 
+									to be used when accessing URLs on the server. When a hyperlink is clicked, the GET method is used.
+									When a form is submitted, the method used is determined by the METHOD attribute to the FORM tag. 
+									Sorento do not have to deal with the HEAD method directly and can treat it just like the GET method. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.RequestUri</code></span></dt><dd><p>
+									The Uniform Resource Identifier (URI) which was given in order to access the program. 
+									The URI points Sorento to the file that needs to be rendered.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ServerAddress</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ServerAdmin</code></span></dt><dd><p>
+									The value given to the ServerAdmin (for Apache) directive in the web server configuration file. If Sorento is running on a virtual host, this will be the value defined for that virtual host. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ServerName</code></span></dt><dd><p>
+									This environment variable contains the domain name or IP address of the server machine. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ServerPort</code></span></dt><dd><p>
+									This environment variable contains the number of the port to which this request was sent. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ServerProtocol</code></span></dt><dd><p>
+									This environment variable contains the name and revision of the protocol being used by the client and server. 
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ServerSignature</code></span></dt><dd><p>
+								 [MISSING]								
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Env.ServerSoftware</code></span></dt><dd><p>
+									This environment variable contains the name and version of the software that Sorento is running under.
+								</p></dd></dl></div><div class="variablelist" title="SorentoLib.User"><p class="title"><b>SorentoLib.User</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.User.Load (Guid value)</code>, </span><span class="term"><code class="filename">SorentoLib.User.Load (Guid value)</code></span></dt><dd><p>
+									Load a USer by either id or username. Returns a User object.
+								</p><pre class="programlisting">
+$user = SorentoLib.User.Load ("af5056c1-8056-4837-a102-24e38b98e500")
+Write ($user.Realname))
+
+&gt; John Doe
+</pre><pre class="programlisting">
+$user = SorentoLib.User.Load ("janedoe")
+Write ($user.Realname))
+
+&gt; Jane Doe
+</pre></dd><dt><span class="term"><code class="filename">SorentoLib.User.List</code></span></dt><dd><p>
+									Returns a list of User objects.
+								</p><pre class="programlisting">
+Foreach (user in SorentoLib.User.List)
+    Write ($user.Username)
+EndForeach
+
+&gt; John Doe
+&gt; Jane Doe
+</pre></dd><dt><span class="term"><code class="filename">$object.Id</code></span></dt><dd><p>
+									Returns User Guid id.
+								</p></dd><dt><span class="term"><code class="filename">$object.CreateTimestamp</code></span></dt><dd><p>
+									Returns Timestamp of when User was created.
+								</p></dd><dt><span class="term"><code class="filename">$object.UpdateTimestamp</code></span></dt><dd><p>
+									Returns Timestamp of when User was last changed.
+								</p></dd><dt><span class="term"><code class="filename">$object.Username</code></span></dt><dd><p>
+									Returns username.
+								</p></dd><dt><span class="term"><code class="filename">$object.Email</code></span></dt><dd><p>
+									Returns email.
+								</p></dd><dt><span class="term"><code class="filename">$object.Realname</code></span></dt><dd><p>
+									Returns realname.
+								</p></dd><dt><span class="term"><code class="filename">$object.AccesLevel</code></span></dt><dd><p>
+									Returns the highest AccessLevel awarded to the User.
+								</p><pre class="programlisting">
+$user = SorentoLib.User.Load ("af5056c1-8056-4837-a102-24e38b98e500")
+
+Foreach (usergroup in $user.UserGroups)
+    Write ($usergroup.Name)
+EndForeach		
+
+&gt; User
+&gt; Editor
+&gt; Administrator
+</pre></dd><dt><span class="term"><code class="filename">$object.UserGroups</code></span></dt><dd><p>
+									Returns a list of UserGroup objects the User is a member of.
+								</p></dd><dt><span class="term"><code class="filename">$object.Status</code></span></dt><dd><p>
+									Returns User status. Enabled, Disabled or BuiltIn.
+								</p></dd></dl></div><div class="variablelist" title="SorentoLib.UserGroup"><p class="title"><b>SorentoLib.UserGroup</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.UserGroup.Load</code></span></dt><dd><p>	
+									Load a UserGroup by id. Returns a UserGroup object.
+								</p><pre class="programlisting">
+$usergroup = SorentoLib.UserGroup.Load ("8b9d2815-9496-412a-8110-42cd85761a92")
+Write ($usergroup.Name)
+
+&gt; Administrator
+</pre></dd><dt><span class="term"><code class="filename">SorentoLib.UserGroup.List</code></span></dt><dd><p>
+									Returns a list of UserGroup objects.
+								</p><pre class="programlisting">
+Foreach (usergroup in SorentoLib.UserGroup.List)
+    Write ($usergroup.Name)
+EndForeach		
+
+&gt; User
+&gt; Editor
+&gt; Administrator
+</pre></dd><dt><span class="term"><code class="filename">$object.Id</code></span></dt><dd><p>
+									Returns UserGroup Guid id.
+								</p></dd><dt><span class="term"><code class="filename">$object.CreateTimestamp</code></span></dt><dd><p>
+									Returns Timestamp of when UserGroup was created.
+								</p></dd><dt><span class="term"><code class="filename">$object.UpdateTimestamp</code></span></dt><dd><p>
+									Returns Timestamp of when UserGroup was last changed.
+								</p></dd><dt><span class="term"><code class="filename">$object.Name</code></span></dt><dd><p>
+									Returns UserGroup name.
+								</p></dd><dt><span class="term"><code class="filename">$object.AccessLevel</code></span></dt><dd><p>
+									Returns UserGroup AccessLevel.
+								</p></dd><dt><span class="term"><code class="filename">$object.Status</code></span></dt><dd><p>
+									Returns UserGroup status.
+								</p></dd></dl></div><div class="variablelist" title="SorentoLib.Services.Config"><p class="title"><b>SorentoLib.Services.Config</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.Services.Config.Get (string key, string value)</code></span></dt><dd><p>
+									Get value from Config key.
+								</p><pre class="programlisting">
+$value = SorentoLib.Services.Config ("core", "hostname")
+Write ($value)
+
+&gt; localhost
+</pre></dd></dl></div><div class="variablelist" title="SorentoLib.Services.Crypto"><p class="title"><b>SorentoLib.Services.Crypto</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.Services.Crypto.EncryptExponent</code></span></dt><dd><p>
+									Returns public encrypt exponent.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Services.Crypto.Modulus</code></span></dt><dd><p>
+									Returns public modulus.
+								</p></dd></dl></div><div class="variablelist" title="SorentoLib.Services.Stats"><p class="title"><b>SorentoLib.Services.Stats</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.Services.Stats.Get (string key)</code></span></dt><dd><p>
+									Returns value of Stat key.
+								</p><pre class="programlisting">
+Write (SorentoLib.Services.Stats.Get ("SorentoLib.Session.ActiveSessions"));
+
+&gt; 24
+</pre></dd></dl></div><div class="variablelist" title="SorentoLib.Guid"><p class="title"><b>SorentoLib.Guid</b></p><dl><dt><span class="term"><code class="filename">$object.ToString</code></span></dt><dd><p>
+									Returns string conversion of Guid.
+								</p><pre class="programlisting">
+$guid = SorentoLib.Guid.New
+Write ($guid.ToString)
+
+&gt; af5056c1-8056-4837-a102-24e38b98e500
+</pre></dd><dt><span class="term"><code class="filename">SorentoLib.Guid.New ()</code></span></dt><dd><p>
+									Returns fresh Guid.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Guid.New (string value)</code></span></dt><dd><p>
+									Converts given value into a Guid. (if possible)
+								</p></dd></dl></div><div class="variablelist" title="SorentoLib.String"><p class="title"><b>SorentoLib.String</b></p><dl><dt><span class="term"><code class="filename">$object.Length</code></span></dt><dd><p>
+									Returns length of string object.
+								</p><pre class="programlisting">
+$value = "This is a short text."
+Write ($value.Length)
+
+&gt; 21
+</pre></dd><dt><span class="term"><code class="filename">$object.SubString (int index, int length)</code></span></dt><dd><p>
+									Returns a substring of the given string object.
+								</p><pre class="programlisting">
+$value = "This is a short text."
+Write ($value.SubString (10, 10))
+
+&gt; short text
+</pre></dd><dt><span class="term"><code class="filename">SorentoLib.Guid.New (string)</code></span></dt><dd><p>
+									Converts given value into a Guid. (if possible)
+								</p></dd></dl></div><div class="variablelist" title="SorentoLib.DateTime"><p class="title"><b>SorentoLib.DateTime</b></p><dl><dt><span class="term"><code class="filename">$object.Day</code></span></dt><dd><p>
+									Returns day in numeric.
+								</p></dd><dt><span class="term"><code class="filename">$object.Month</code></span></dt><dd><p>
+									Returns month in numeric.
+								</p></dd><dt><span class="term"><code class="filename">$object.Year</code></span></dt><dd><p>
+									Returns year in numeric.
+								</p></dd><dt><span class="term"><code class="filename">$object.Hour</code></span></dt><dd><p>
+									Returns hour.
+								</p></dd><dt><span class="term"><code class="filename">$object.Minute</code></span></dt><dd><p>
+									Returns minute.
+								</p></dd><dt><span class="term"><code class="filename">$object.Second</code></span></dt><dd><p>
+									Returns second.
+								</p></dd><dt><span class="term"><code class="filename">$object.Millisecond</code></span></dt><dd><p>
+									Returns millisecond.
+								</p></dd><dt><span class="term"><code class="filename">$object.DayOfWeak</code></span></dt><dd><p>
+									Returns day of week.
+								</p></dd><dt><span class="term"><code class="filename">$object.DayOfYear</code></span></dt><dd><p>
+									Returns day of year.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.DataTime</code></span></dt><dd><p>
+									Returns a SorentoLib.DateTime object of the current time.
+								</p><pre class="programlisting">
+$datetime = SorentoLib.DateTime.Now
+Write ($datetime.DayOfYear))
+
+&gt; 63
+</pre></dd></dl></div></div><div class="section" title="4.1.1.2.  Function"><div class="titlepage"><div><div><h5 class="title"><a name="id530402"></a>4.1.1.2. 
+						Function
+					</h5></div></div></div><p>					
+					</p><div class="variablelist" title="SorentoLib.Session"><p class="title"><b>SorentoLib.Session</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.Session.Login (string username, string password)</code></span></dt><dd><p>
+									Authenticates currently used Session, with the given username and password.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.Session.Logout ()</code></span></dt><dd><p>
+									Removes User from currently used Session.
+								</p></dd></dl></div><div class="variablelist" title="SorentoLib.Forms"><p class="title"><b>SorentoLib.Forms</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.Forms.Send (guid formid)</code></span></dt><dd><p>
+									Render and send Form. Returns True or False
+								</p></dd></dl></div></div><div class="section" title="4.1.1.3.  AJAX"><div class="titlepage"><div><div><h5 class="title"><a name="id530483"></a>4.1.1.3. 
+						AJAX
+					</h5></div></div></div><p>					
+					</p><div class="variablelist" title="SorentoLib.User"><p class="title"><b>SorentoLib.User</b></p><dl><dt><span class="term"><code class="filename">SorentoLib.User.ChangePassword (string oldpassword, string newpassword)</code></span></dt><dd><p>
+									Change User password. Passwords should be encrypted before delivery. Returns True or False.
+								</p></dd><dt><span class="term"><code class="filename">SorentoLib.User.IsEmailInUse (string email)</code>, </span><span class="term"><code class="filename">SorentoLib.User.IsEmailInUse (string email, string id)</code></span></dt><dd><p>
+									Checks if the given email is currently used by a User. A User Guid id can be given that should be excluded. Returns True or False.
+								</p></dd></dl></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ar01s04s01.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ar01s04s01.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ar01s04s01s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">4.1. 
+				Resolvers
+			 </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 4.1.2. 
+					Akvabase
+				</td></tr></table></div></body></html>

@@ -1,0 +1,1598 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "docbook/dtd/xml/4.2/docbookx.dtd">
+
+<article lang="en">
+	<articleinfo>
+		<title>
+			Sorento Engine	
+		</title>
+	</articleinfo>
+	<section>
+		<title>
+			Introduction
+		</title>
+		<para>
+			[MISSING]
+		</para>
+	</section>
+
+	<section>
+		<title>
+			SorentoLib
+		</title>
+		<para>
+			
+		</para>	
+
+		<section>
+			<title>
+				User
+			</title>
+			<para>		
+			</para>
+				<variablelist>
+					<title>SorentoLib.User</title>			
+					<varlistentry>
+						<term><filename>new User ()</filename></term>						
+						<listitem>
+							<para>
+								Create new User object.
+							</para>
+						</listitem>
+					</varlistentry>					
+					<varlistentry>
+						<term><filename>.Id - guid</filename></term>						
+						<listitem>
+							<para>
+								User id.
+							</para>
+						</listitem>
+					</varlistentry>								
+					<varlistentry>
+						<term><filename>.CreateTimestamp - int</filename></term>
+						<listitem>
+							<para>
+								Timestamp of when User was created.
+							</para>
+						</listitem>
+					</varlistentry>	
+					<varlistentry>
+						<term><filename>.UpdateTimestamp - int</filename></term>
+						<listitem>
+							<para>
+								Timestamp of when User was last updated.
+							</para>
+						</listitem>
+					</varlistentry>								
+					<varlistentry>
+						<term><filename>.UserGroups - list[usergroups]</filename></term>
+						<listitem>
+							<para>
+								List of UserGroups User belongs to.
+							</para>
+						</listitem>
+					</varlistentry>								
+					<varlistentry>
+						<term><filename>User.Username - string</filename></term>
+						<listitem>
+							<para>
+								Username connected with User. This can not be set to a username allready used by another User.
+							</para>
+						</listitem>
+					</varlistentry>													
+					<varlistentry>
+						<term><filename>.Password - string</filename></term>
+						<listitem>
+							<para>
+								SHA1 encrypted string of the password used to authenticate User. When set a SHA1 encrypted string should be used.
+							</para>
+						</listitem>
+					</varlistentry>	
+					<varlistentry>
+						<term><filename>.Realname - string</filename></term>
+						<listitem>
+							<para>
+								Used to hold the realname of person the User belongs to.
+							</para>
+						</listitem>
+					</varlistentry>	
+					<varlistentry>
+						<term><filename>.Email - string</filename></term>
+						<listitem>
+							<para>
+								Email associated with the User. This can not be set to an email allready used by another User.
+							</para>
+						</listitem>
+					</varlistentry>	
+					<varlistentry>
+						<term><filename>.AccessLevel - sorentolib.enum.accesslevel</filename></term>
+						<listitem>
+							<para>
+								Will allways return the highest accesslevel given to the User. This field can not be set.
+							</para>
+						</listitem>
+					</varlistentry>	
+					<varlistentry>
+						<term><filename>.Status - sorentolib.enum.userstatus</filename></term>
+						<listitem>
+							<para>
+								User status. None, Enabled, Disabled, BuiltIn.
+							</para>
+						</listitem>
+					</varlistentry>	
+					
+					
+								
+								
+												
+				</variablelist>
+		</section>
+	</section>
+	
+	<section>
+		<title>
+			Services
+		</title>
+		<para>
+			Sorento exposes various services, some help keep the Sorento application running and some gives AddIn authors tools to quickly perfome different tasks. 
+		</para>
+		<section>
+			<title>
+				Stats
+			</title>
+      			<para>
+      				The Stats service collects statistical information from various points inside Sorento. This allows a website author to quickly pull fx. online users or total page views directly 
+      				from a template. 
+			</para>	
+      			<para>
+      				Stat values are updated every 3 minutes automatically by the Stat service. It is also possible for a single part of Sorento to force an update if something happens. Eg. if a User is created,
+      				"SorentoLib.User.TotalUsers" value will be updated immediately.
+			</para>		
+			<section>
+				<title>
+					Internal Stat Values
+				</title>
+	      			<para>
+      				</para>				
+<!-- BEGIN: SorentoLib -->
+					<variablelist>
+						<title>SorentoLib</title>			
+						<varlistentry>
+							<term><filename>SorentoLib.Session.ActiveSessions</filename></term>
+							<listitem>
+								<para>
+									Holds the current number of active sessions. Sessions that have been inactive for more than 5 minutes are not included.
+								</para>
+							</listitem>
+						</varlistentry>					
+						<varlistentry>
+							<term><filename>SorentoLib.Session.UserSessions</filename></term>
+							<listitem>
+								<para>
+									Holds the current number of sessions that has a user logged in.
+								</para>
+							</listitem>
+						</varlistentry>										
+						<varlistentry>
+							<term><filename>SorentoLib.Session.GuestSessions</filename></term>
+							<listitem>
+								<para>
+									Holds the current number of sessions has no user logged in.
+								</para>
+							</listitem>
+						</varlistentry>																				
+						<varlistentry>
+							<term><filename>SorentoLib.User.TotalUsers</filename></term>
+							<listitem>
+								<para>
+									Holds the current number total users.
+								</para>
+							</listitem>
+						</varlistentry>																				
+						
+					</variablelist>	
+					
+<!-- END: SorentoLib -->	
+			</section>				
+		</section>		
+	</section>
+	
+	<section>
+		<title>
+			Addins
+		</title>
+		<para>
+			Addins expand the Sorento Engine with new functions.
+		</para>
+		
+		<section>
+			<title>
+				Resolvers
+			</title>
+      		<para>					
+			</para>			
+			
+			<section>
+				<title>
+					Core
+				</title>
+	      		<para>					
+				</para>			
+				
+				<section>
+					<title>
+						Render
+					</title>
+		      		<para>					
+					</para>			
+
+<!-- ############################################################### -->
+<!-- BEGIN: SorentoLib.Session -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>SorentoLib.Session</title>						
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Current ()</filename></term>
+							<listitem>
+								<para>
+									Returns a object containing the currently used Session.
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+$user = $session.User
+Write ($user.Realname)
+
+> John Doe
+</programlisting>																
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Id</filename></term>
+							<listitem>
+								<para>
+									Returns Session Guid id.
+								</para>
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>$object.CreateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp of when Session was created.
+								</para>
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>$object.UpdateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp of when Session was last changed.
+								</para>
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>$object.User</filename></term>
+							<listitem>
+								<para>
+									If Session has a valid User loggedin, this will return the User object
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+$user = $session.User
+Write ($user.Realname)
+
+> John Doe
+</programlisting>								
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>$object.Languages</filename></term>
+							<listitem>
+								<para>
+									Returns a list of languages supported by the client. Usefull for autoamtically displaying the right language in multi-lingu sites.
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+Foreach (language in $session)
+    Write ($language)
+EndForeach
+
+> Da
+> En
+</programlisting>								
+							</listitem>
+						</varlistentry>						
+						<varlistentry>
+							<term><filename>$object.Accesslevel</filename></term>
+							<listitem>
+								<para>
+									Returns Session highest Accesslevel. If no User is loggedin this will return the lowest AccessLevel (Guest).
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+Write ($session.AccessLevel)
+
+> Administrator
+</programlisting>									
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>$object.LoggedIn</filename></term>
+							<listitem>
+								<para>
+									If a valid user has been logged in, this will return true.
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+If ($session.LoggedIn == "true")
+    You are logged in.
+EndIf
+
+> You are logged in.
+</programlisting>								
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>$object.AuthenticateByAccesslevel (string accesslevel)</filename></term>
+							<listitem>
+								<para>
+									Returns True / False. If no USER is loggedin, accesslevel will be authenticated against Guest level.
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+If ($session.AuthenticateByAccesslevel ("Administrator") == "true")
+    You have administrator rights.
+EndIf
+
+> You have administrator rights.
+</programlisting>									
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>$object.AuthenticateByUsergroup (guid accesslevel)</filename></term>
+							<listitem>
+								<para>
+									Returns True / False. If no USER is loggedin this will allways return false.
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+$groupid = System.Guid.New ("ba6ef2fe-7e37-40af-bf81-b9f2c01cd516")
+If ($session.AuthenticateByAccesslevel ($groupid) == "true")
+    You have access to the Administration group.
+EndIf
+
+> You have access to the Administration group.
+</programlisting>									
+							</listitem>
+						</varlistentry>						
+						<varlistentry>
+							<term><filename>$object.CookieJar</filename></term>
+							<listitem>
+								<para>
+									Returns CookieJar object.
+								</para>								
+							</listitem>
+						</varlistentry>		
+						<varlistentry>
+							<term><filename>$object.QueryJar</filename></term>
+							<listitem>
+								<para>
+									Returns QueryJar object.
+								</para>								
+							</listitem>
+						</varlistentry>																												
+					</variablelist>
+<!-- ############################################################### -->
+<!-- END: SorentoLib.Session -->				
+<!-- ############################################################### -->	
+
+<!-- ############################################################### -->
+<!-- BEGIN: SorentoLib.FastCgi.CookieJar -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>SorentoLib.FastCgi.CookieJar</title>						
+						<varlistentry>
+							<term><filename>$object.Exist (string name)</filename></term>
+							<listitem>
+								<para>
+									Check if a given cookie can be found in the current Session CookieJar. Returns True/False.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Get (string name)</filename></term>
+							<listitem>
+								<para>
+									Returns if found a Cookie object.
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+$cookiejar = $session.CookieJar
+$cookie = $cookiejar.Get ("sorentosessionid")
+Write ($cookie.Name)
+Write ($cookie.Value)
+
+> sorentosessionid
+> db578a9f-4828-40cc-a433-205d5eb2e1f6 
+</programlisting>								
+								
+							</listitem>
+						</varlistentry>							
+					</variablelist>
+<!-- ############################################################### -->
+<!-- END: SorentoLib.FastCgi.CookieJar -->				
+<!-- ############################################################### -->
+
+<!-- ############################################################### -->
+<!-- BEGIN: SorentoLib.FastCgi.Cookie -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>SorentoLib.FastCgi.Cookie</title>						
+						<varlistentry>
+							<term><filename>$object.Name</filename></term>
+							<listitem>
+								<para>
+									Returns Cookie name.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Domain</filename></term>
+							<listitem>
+								<para>
+									Returns Cookie domain.
+								</para>								
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Path</filename></term>
+							<listitem>
+								<para>
+									Returns Cookie path.
+								</para>								
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Expires</filename></term>
+							<listitem>
+								<para>
+									Returns Cookie expire.
+								</para>								
+							</listitem>
+						</varlistentry>					
+						<varlistentry>
+							<term><filename>$object.Secure</filename></term>
+							<listitem>
+								<para>
+									Returns Cookie secure.
+								</para>								
+							</listitem>
+						</varlistentry>							
+								
+						
+					</variablelist>
+<!-- ############################################################### -->
+<!-- END: SorentoLib.FastCgi.Cookie -->				
+<!-- ############################################################### -->
+
+<!-- ############################################################### -->
+<!-- BEGIN: SorentoLib.FastCgi.QueryJar -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>SorentoLib.FastCgi.QueryJar</title>						
+						<varlistentry>
+							<term><filename>$object.Exist (string name)</filename></term>
+							<listitem>
+								<para>
+									Check if a given query can be found in the current Session CookieJar. Returns True/False.								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Get (string name)</filename></term>
+							<listitem>
+								<para>
+									Returns if found a Query object.
+								</para>
+<programlisting>
+$session = SorentoLib.Session.Current ()
+$queryjar = $session.QueryJar
+$query = $queryjar.Get ("test")
+Write ($query.Name)
+Write ($query.Value)
+
+> Test
+> This is a test.
+</programlisting>								
+								
+							</listitem>
+						</varlistentry>							
+					</variablelist>
+<!-- ############################################################### -->
+<!-- END: SorentoLib.FastCgi.CookieJar -->				
+<!-- ############################################################### -->
+
+<!-- ############################################################### -->
+<!-- BEGIN: SorentoLib.FastCgi.Query -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>SorentoLib.FastCgi.Query</title>						
+						<varlistentry>
+							<term><filename>$object.Name</filename></term>
+							<listitem>
+								<para>
+									Returns Query name.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Value</filename></term>
+							<listitem>
+								<para>
+									Returns Query value.
+								</para>								
+							</listitem>
+						</varlistentry>							
+					</variablelist>
+<!-- ############################################################### -->
+<!-- END: SorentoLib.FastCgi.Query -->				
+<!-- ############################################################### -->
+
+<!-- ############################################################### -->				
+<!-- BEGIN: SorentoLib.User -->
+<!-- ############################################################### -->				
+					<variablelist>
+						<title>SorentoLib.User</title>
+						<varlistentry>
+<term><filename>SorentoLib.User.Load (Guid value)</filename></term>
+<term><filename>SorentoLib.User.Load (String value)</filename></term>
+							<listitem>
+								<para>
+									Load a USER object either by its id or by the username associated with it. Method returns USER object.
+								</para>
+<programlisting format="linespecific">
+$user = SorentoLib.User.Load ("af5056c1-8056-4837-a102-24e38b98e500")
+Write ($user.Realname))
+
+> John Doe
+</programlisting>	
+<programlisting>
+$user = SorentoLib.User.Load ("janedoe")
+Write ($user.Realname))
+
+> Jane Doe
+</programlisting>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.User.List</filename></term>
+							<listitem>
+								<para>
+									Returns a list of USER objects.
+								</para>
+<programlisting>
+Foreach (user in SorentoLib.User.List)
+    Write ($user.Username)
+EndForeach
+
+> John Doe
+> Jane Doe
+</programlisting>								
+							
+							</listitem>
+						</varlistentry>																	
+						<varlistentry>
+							<term><filename>$object.Id</filename></term>
+							<listitem>
+								<para>
+									Returns USER id.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.CreateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp when USER object was created.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.UpdateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp when USER object was last updated.
+								</para>
+							</listitem>
+						</varlistentry>			
+						<varlistentry>
+							<term><filename>$object.Username</filename></term>
+							<listitem>
+								<para>
+									Returns username.
+								</para>
+							</listitem>
+						</varlistentry>					
+						<varlistentry>
+							<term><filename>$object.Email</filename></term>
+							<listitem>
+								<para>
+									Returns email.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Realname</filename></term>
+							<listitem>
+								<para>
+									Returns realname.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Accesslevel</filename></term>
+							<listitem>
+								<para>
+									Returns the highest accesslevel awarded to the USER.
+								</para>
+<programlisting>
+$user = SorentoLib.User.Load ("af5056c1-8056-4837-a102-24e38b98e500")
+
+Foreach (usergroup in $user.UserGroups)
+    Write ($usergroup.Name)
+EndForeach		
+
+> User
+> Editor
+> Administrator
+</programlisting>								
+							</listitem>
+						</varlistentry>		
+						<varlistentry>
+							<term><filename>$object.UserGroups</filename></term>
+							<listitem>
+								<para>
+									Returns a list of USERGROUP objects the USER object belongs too.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Status</filename></term>
+							<listitem>
+								<para>
+									Returns User status. Enabled, Disabled or BuiltIn.
+								</para>
+							</listitem>
+						</varlistentry>																																																		
+					</variablelist>		
+<!-- ############################################################### -->				
+<!-- END: SorentoLib.User -->																												
+<!-- ############################################################### -->				
+
+<!-- BEGIN: SorentoLib.UserGroup -->
+					<variablelist>
+						<title>SorentoLib.UserGroup</title>
+						<varlistentry>
+							<term><filename>SorentoLib.UserGroup.Load</filename></term>
+							<listitem>
+								<para>	
+									Load a UserGroup by id. Returns a UserGroup object.
+								</para>
+<programlisting>
+$usergroup = SorentoLib.UserGroup.Load ("8b9d2815-9496-412a-8110-42cd85761a92")
+Write ($usergroup.Name)
+
+> Administrator
+</programlisting>								
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>SorentoLib.UserGroup.List</filename></term>
+							<listitem>
+								<para>
+									Returns a list of UserGroup objects.
+								</para>
+<programlisting>
+Foreach (usergroup in SorentoLib.UserGroup.List)
+    Write ($usergroup.Name)
+EndForeach		
+
+> User
+> Editor
+> Administrator
+</programlisting>								
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Id</filename></term>
+							<listitem>
+								<para>
+									Returns UserGroup Guid id.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.CreateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp of when UserGroup was created.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.UpdateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp of when UserGroup was last changed.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Name</filename></term>
+							<listitem>
+								<para>
+									Returns UserGroup name.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Accesslevel</filename></term>
+							<listitem>
+								<para>
+									Returns UserGroup Accesslevel.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Status</filename></term>
+							<listitem>
+								<para>
+									Returns UserGroup status.
+								</para>
+							</listitem>
+						</varlistentry>																			
+					</variablelist>		
+<!-- END: SorentoLib.UserGroup -->	
+
+<!-- ############################################################### -->				
+<!-- BEGIN: SorentoLib.Media -->
+<!-- ############################################################### -->				
+					<variablelist>
+						<title>SorentoLib.Media</title>
+						<varlistentry>
+							<term><filename>SorentoLib.Media.Load (String value)</filename></term>
+							<listitem>
+								<para>
+									Load a Media object.
+								</para>
+<programlisting format="linespecific">
+$media = SorentoLib.Media.Load ("63bc2750-cf6e-4e84-b5d5-bae4c4a133d3 ")
+Write ($media.FileName))
+
+> File1.Data
+</programlisting>	
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>$object.Id</filename></term>
+							<listitem>
+								<para>
+									Returns Media id.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.CreateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp when Media object was created.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.UpdateTimestamp</filename></term>
+							<listitem>
+								<para>
+									Returns Timestamp when Media object was last updated.
+								</para>
+							</listitem>
+						</varlistentry>			
+						<varlistentry>
+							<term><filename>$object.Path</filename></term>
+							<listitem>
+								<para>
+									Returns Media path.
+								</para>
+							</listitem>
+						</varlistentry>					
+						<varlistentry>
+							<term><filename>$object.FileName</filename></term>
+							<listitem>
+								<para>
+									Returns Media filename.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.DirectoryName</filename></term>
+							<listitem>
+								<para>
+									Returns Media directoryname.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Size</filename></term>
+							<listitem>
+								<para>
+									Returns size of the Media file.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Status</filename></term>
+							<listitem>
+								<para>
+									Returns Media status. Public, Restricted, PublicTemperary and Temperary.
+								</para>
+							</listitem>
+						</varlistentry>																																																		
+						<varlistentry>
+							<term><filename>$object.Accesslevel</filename></term>
+							<listitem>
+								<para>
+									Returns Accesslevel needed to access Media.
+								</para>
+							</listitem>
+						</varlistentry>								
+						<varlistentry>
+							<term><filename>$object.UserGroups</filename></term>
+							<listitem>
+								<para>
+									Returns list of UserGroups needed to access Media.
+								</para>
+							</listitem>
+						</varlistentry>																																																																																																							
+					</variablelist>		
+<!-- ############################################################### -->				
+<!-- END: SorentoLib.User -->																												
+<!-- ############################################################### -->
+
+<!-- BEGIN: SorentoLib.Services.Config -->
+					<variablelist>
+						<title>SorentoLib.Services.Config</title>			
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Config.Exit (string module, string key)</filename></term>
+							<listitem>
+								<para>
+									Check if a config key is available. Returns true/false.
+								</para>
+							</listitem>
+						</varlistentry>										
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Config.GetString (string module, string key)</filename></term>
+							<listitem>
+								<para>
+									Get String value from Config key.
+								</para>
+<programlisting>
+$value = SorentoLib.Services.Config.GetString ("core", "hostname")
+Write ($value)
+
+> localhost
+</programlisting>								
+							</listitem>
+						</varlistentry>										
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Config.GetInt (string module, string key)</filename></term>
+							<listitem>
+								<para>
+									Get Int value from Config key.
+								</para>
+							</listitem>
+						</varlistentry>										
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Config.GetDecimal (string module, string key)</filename></term>
+							<listitem>
+								<para>
+									Get Decimal value from Config key.
+								</para>
+							</listitem>
+						</varlistentry>										
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Config.GetBool (string module, string key)</filename></term>
+							<listitem>
+								<para>
+									Get Bool value from Config key.
+								</para>
+							</listitem>
+						</varlistentry>										
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Config.GetGuid (string module, string key)</filename></term>
+							<listitem>
+								<para>
+									Get Guid value from Config key.
+								</para>
+							</listitem>
+						</varlistentry>																
+					</variablelist>	
+<!-- END: SorentoLib.Services.Config -->
+
+<!-- BEGIN: SorentoLib.Services.Stats -->
+					<variablelist>
+						<title>SorentoLib.Services.Stats</title>			
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Stats.GetString (string key)</filename></term>
+							<listitem>
+								<para>
+									Returns string value of Stat key.
+								</para>
+<programlisting>
+Write (SorentoLib.Services.Stats.GetString ("SorentoLib.Session.ActiveSessions"));
+
+> 24
+</programlisting>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Stats.GetInt (string key)</filename></term>
+							<listitem>
+								<para>
+									Returns Int value of Stat key.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Stats.GetDecimal (string key)</filename></term>
+							<listitem>
+								<para>
+									Returns Decimal value of Stat key.
+								</para>
+							</listitem>
+						</varlistentry>							
+						
+					</variablelist>		
+<!-- END: SorentoLib.Services.Stats -->
+
+<!-- BEGIN: SorentoLib.Services.Crypto -->
+					<variablelist>
+						<title>SorentoLib.Services.Crypto</title>			
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Crypto.EncryptExponent</filename></term>
+							<listitem>
+								<para>
+									Returns public encrypt exponent.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>SorentoLib.Services.Crypto.Modulus</filename></term>
+							<listitem>
+								<para>
+									Returns public modulus.
+								</para>
+							</listitem>
+						</varlistentry>																			
+					</variablelist>		
+<!-- END: SorentoLib.Services.Crypto -->
+
+
+<!-- ############################################################### -->
+<!-- BEGIN: SorentoLib.Session.Env -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>SorentoLib.Session.Env</title>			
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.AuthType</filename></term>
+							<listitem>
+								<para>
+									If Sorento is protected by any type of authorization, this environment 
+									variable contains the authorization type. Apache web servers support HTTP basic
+									and digest access authorization.
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ContentLength</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the number of bytes being sent by the client. You use this variable to determine the number of bytes you need to read. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ContentTypeMultiPartBoundary</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.DocumentRoot</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the directory under which Sorento is executing, as defined in the server's configuration file. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.GatewayInterface</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the revision of the CGI specification supported by the server software. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpAccept</filename></term>
+							<listitem>
+								<para>
+									This environment variable enumerates the types of data the client can accept. 
+									For most client software, this protocol feature has become a bit convoluted
+									and the information isn't always useful. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpAcceptCharset</filename></term>
+							<listitem>
+								<para>
+									Contents of the Accept-Charset: header from the current request, if there is one. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpAcceptEncoding</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpAcceptLangauge</filename></term>
+							<listitem>
+								<para>
+									Contents of the Accept-Language: header from the current request,
+									if there is one. This value can be changed on the client browser options, 
+									when choosing preferred language.
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpConnection</filename></term>
+							<listitem>
+								<para>
+									Contents of the Connection: header from the current request, if there is one. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpCookie</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpHost</filename></term>
+							<listitem>
+								<para>
+									Contents of the Host: header from the current request, if there is one. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpKeepAlive</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpUserAgent</filename></term>
+							<listitem>
+								<para>
+									Contents of the User_Agent: header from the current request, if there is one. 
+									This is a string denoting the browser software being used to view the current page. 
+								</para>
+							</listitem>
+						</varlistentry>					
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpReferer</filename></term>
+							<listitem>
+								<para>
+									The address of the page (if any) which referred the browser to the current page. 
+									This is set by the user's browser; not all browsers will set this. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.HttpAgent</filename></term>
+							<listitem>
+								<para>
+									This environment variable identifies the browser software being used to access your program. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.PathInfo</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the extra path information that the 
+									server derives from the URL that was used to access Sorento. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.PathTranslated</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the actual fully-qualified file name that
+									was translated from the URL. web servers distinguish between path names used
+									in URLs, and file system path names. It is often useful to make your PATH_INFO
+									a virtual path so that the server provides a physical path name in this variable.
+									This way, you can avoid giving file system path names to remote client software. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.QueryString</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains information sent from page to Sorento.
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RedirectQueryString</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RedirectStatus</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RedirectUrl</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RemoteAddress</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the IP address of the remote host. This information is guaranteed to be present. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RemoteHost</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the host name of the remote client 
+									software. This is a fully-qualified domain name such as www.dbase.com
+									(instead of just www, which you might type within your intranet). 
+									If no host name information is available, your program should use the
+									REMOTE_ADDR variable instead. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RemoteIdent</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RemoteUser</filename></term>
+							<listitem>
+								<para>
+									This environment variable is set to the name of the local HTTP user of the person using 
+									the browser software only if access authorization has been activated for this URL. 
+									Note that this is not a way to determine the user name of any person accessing your program. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RequestMethod</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the name of the method (defined in the HTTP protocol) 
+									to be used when accessing URLs on the server. When a hyperlink is clicked, the GET method is used.
+									When a form is submitted, the method used is determined by the METHOD attribute to the FORM tag. 
+									Sorento do not have to deal with the HEAD method directly and can treat it just like the GET method. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.RequestUri</filename></term>
+							<listitem>
+								<para>
+									The Uniform Resource Identifier (URI) which was given in order to access the program. 
+									The URI points Sorento to the file that needs to be rendered.
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ServerAddress</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ServerAdmin</filename></term>
+							<listitem>
+								<para>
+									The value given to the ServerAdmin (for Apache) directive in the web server configuration file. If Sorento is running on a virtual host, this will be the value defined for that virtual host. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ServerName</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the domain name or IP address of the server machine. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ServerPort</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the number of the port to which this request was sent. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ServerProtocol</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the name and revision of the protocol being used by the client and server. 
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ServerSignature</filename></term>
+							<listitem>
+								<para>
+								 [MISSING]								
+								</para>
+							</listitem>
+						</varlistentry>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Env.ServerSoftware</filename></term>
+							<listitem>
+								<para>
+									This environment variable contains the name and version of the software that Sorento is running under.
+								</para>
+							</listitem>
+						</varlistentry>													
+					</variablelist>		
+<!-- ############################################################### -->
+<!-- END: SorentoLib.Session.Env -->
+<!-- ############################################################### -->
+
+<!-- ############################################################### -->
+<!-- BEGIN: System.Guid -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>System.Guid</title>
+						<varlistentry>
+							<term><filename>$object.ToString</filename></term>
+							<listitem>
+								<para>
+									Returns string conversion of Guid.
+								</para>
+<programlisting>
+$guid = System.Guid.New
+Write ($guid.ToString)
+
+> af5056c1-8056-4837-a102-24e38b98e500
+</programlisting>									
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>System.Guid.New ()</filename></term>
+							<listitem>
+								<para>
+									Returns fresh Guid.
+								</para>
+							</listitem>
+						</varlistentry>																			
+						<varlistentry>
+							<term><filename>System.Guid.New (string value)</filename></term>
+							<listitem>
+								<para>
+									Converts given value into a Guid. (if possible)
+								</para>
+							</listitem>
+						</varlistentry>																									
+					</variablelist>		
+<!-- ############################################################### -->
+<!-- END: System.Guid -->
+<!-- ############################################################### -->
+
+<!-- ############################################################### -->
+<!-- BEGIN: System.String -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>System.String</title>
+						<varlistentry>
+							<term><filename>$object.Length</filename></term>
+							<listitem>
+								<para>
+									Returns length of string object.
+								</para>
+<programlisting>
+$value = "This is a short text."
+Write ($value.Length)
+
+> 21
+</programlisting>								
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.SubString (int index, int length)</filename></term>
+							<listitem>
+								<para>
+									Returns a substring of the given string object.
+								</para>
+<programlisting>
+$value = "This is a short text."
+Write ($value.SubString (10, 10))
+
+> short text
+</programlisting>								
+								
+							</listitem>
+						</varlistentry>																			
+						<varlistentry>
+							<term><filename>$object.Replace (string value1, string value2)</filename></term>
+							<listitem>
+								<para>
+									Replaces every occurence of value1 with value2.
+								</para>
+							</listitem>
+						</varlistentry>																									
+						<varlistentry>
+							<term><filename>$object.ToUpper ()</filename></term>
+							<listitem>
+								<para>
+									Sets all letters to uppercase.
+								</para>
+							</listitem>
+						</varlistentry>																									
+						<varlistentry>
+							<term><filename>$object.ToLower ()</filename></term>
+							<listitem>
+								<para>
+									Sets all letters to lowercase.
+								</para>
+							</listitem>
+						</varlistentry>						
+						<varlistentry>
+							<term><filename>$object.Truncate (int length)</filename><filename>$object.Truncate (int length, string "suffix")</filename></term>
+							<listitem>
+								<para>
+									Truncates string to given length. And if a suffix is supplied it will be added to the end of the string.
+								</para>
+<programlisting>
+$value = "This is a short text."
+Write ($value.Truncate (10, "..."))
+
+> This is a ...
+</programlisting>								
+								
+							</listitem>
+						</varlistentry>																									
+																									
+						
+					</variablelist>	
+<!-- ############################################################### -->
+<!-- END: System.String -->
+<!-- ############################################################### -->				
+
+<!-- ############################################################### -->
+<!-- BEGIN: System.DateTime -->
+<!-- ############################################################### -->
+					<variablelist>
+						<title>System.DateTime</title>
+						<varlistentry>
+							<term><filename>$object.Day</filename></term>
+							<listitem>
+								<para>
+									Returns day in numeric.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>$object.Month</filename></term>
+							<listitem>
+								<para>
+									Returns month in numeric.
+								</para>
+							</listitem>
+						</varlistentry>																			
+						<varlistentry>
+							<term><filename>$object.Year</filename></term>
+							<listitem>
+								<para>
+									Returns year in numeric.
+								</para>
+							</listitem>
+						</varlistentry>																									
+						<varlistentry>
+							<term><filename>$object.Hour</filename></term>
+							<listitem>
+								<para>
+									Returns hour.
+								</para>
+							</listitem>
+						</varlistentry>				
+						<varlistentry>
+							<term><filename>$object.Minute</filename></term>
+							<listitem>
+								<para>
+									Returns minute.
+								</para>
+							</listitem>
+						</varlistentry>																									
+						<varlistentry>
+							<term><filename>$object.Second</filename></term>
+							<listitem>
+								<para>
+									Returns second.
+								</para>
+							</listitem>
+						</varlistentry>																									
+						<varlistentry>
+							<term><filename>$object.Millisecond</filename></term>
+							<listitem>
+								<para>
+									Returns millisecond.
+								</para>
+							</listitem>
+						</varlistentry>																									
+						<varlistentry>
+							<term><filename>$object.DayOfWeak</filename></term>
+							<listitem>
+								<para>
+									Returns day of week.
+								</para>
+							</listitem>
+						</varlistentry>																									
+						<varlistentry>
+							<term><filename>$object.DayOfYear</filename></term>
+							<listitem>
+								<para>
+									Returns day of year.
+								</para>
+							</listitem>
+						</varlistentry>																													
+						<varlistentry>
+							<term><filename>System.DataTime.Now</filename></term>
+							<listitem>
+								<para>
+									Returns a SorentoLib.DateTime object of the current time.
+								</para>
+<programlisting>
+$datetime = SorentoLib.DateTime.Now
+Write ($datetime.DayOfYear))
+
+> 63
+</programlisting>								
+							</listitem>
+						</varlistentry>																									
+					</variablelist>	
+<!-- ############################################################### -->
+<!-- END: System.DateTime -->
+<!-- ############################################################### -->
+				</section>							
+
+				<section>
+					<title>
+						Function
+					</title>
+		      			<para>					
+					</para>		
+<!-- BEGIN: SorentoLib.Session -->
+					<variablelist>
+						<title>SorentoLib.Session</title>	
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Login (string username, string password)</filename></term>
+							<listitem>
+								<para>
+									Authenticates currently used Session, with the given username and password.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>SorentoLib.Session.Logout ()</filename></term>
+							<listitem>
+								<para>
+									Removes User from currently used Session.
+								</para>
+							</listitem>
+						</varlistentry>												
+					</variablelist>											
+<!-- END: SorentoLib.Session -->
+
+<!-- BEGIN: SorentoLib.Forms -->
+					<variablelist>
+						<title>SorentoLib.Forms</title>	
+						<varlistentry>
+							<term><filename>SorentoLib.Forms.Send (guid formid)</filename></term>
+							<listitem>
+								<para>
+									Render and send Form. Returns True or False
+								</para>
+							</listitem>
+						</varlistentry>							
+					</variablelist>											
+<!-- END: SorentoLib.Forms -->
+				</section>							
+
+				<section>
+					<title>
+						AJAX
+					</title>
+		      			<para>					
+					</para>		
+<!-- BEGIN: SorentoLib.User -->						
+					<variablelist>
+						<title>SorentoLib.User</title>	
+						<varlistentry>
+							<term><filename>SorentoLib.User.ChangePassword (string oldpassword, string newpassword)</filename></term>
+							<listitem>
+								<para>
+									Change User password. Passwords should be encrypted before delivery. Returns True or False.
+								</para>
+							</listitem>
+						</varlistentry>							
+						<varlistentry>
+							<term><filename>SorentoLib.User.IsEmailInUse (string email)</filename></term><term><filename>SorentoLib.User.IsEmailInUse (string email, string id)</filename></term>
+							<listitem>
+								<para>
+									Checks if the given email is currently used by a User. A User Guid id can be given that should be excluded. Returns True or False.
+								</para>
+							</listitem>
+						</varlistentry>													
+					</variablelist>						
+<!-- END: SorentoLib.User -->					
+				</section>							
+				
+			</section>		
+			<section>
+				<title>
+					Akvabase
+				</title>
+	      			<para>					
+				</para>																
+			</section>			
+				
+		</section>
+		
+		
+	</section>
+</article>
+	
+
+

@@ -1,0 +1,34 @@
+<Addin id          = "sCMS"              
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "A CMS."	   
+       version     = "1.0">
+	<Runtime>
+		<Import assembly="sCMS.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0"/>
+	</Dependencies>
+		
+	<Extension path = "/SorentoLib/PageResponders">
+		<Type type="sCMS.Addin.PageResponder"/>
+	</Extension>
+		
+	<Extension path = "/SorentoLib/Resolver/Functions">
+		<Type type="sCMS.Addin.Function"/>
+	</Extension>			
+		
+	<Extension path = "/SorentoLib/Resolver/Renders">
+		<Type type="sCMS.Addin.Render"/>
+	</Extension>				
+	
+	<Extension path = "/SorentoLib/Resolver/Ajaxes">
+		<Type type="sCMS.Addin.Ajax"/>
+	</Extension>			
+	
+	<Extension path = "/SorentoLib/Services/Snapshots">
+		<Type type="sCMS.Addin.Snapshot"/>
+	</Extension>		
+</Addin>

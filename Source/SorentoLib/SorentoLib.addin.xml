@@ -1,0 +1,49 @@
+<Addin id="Sorento" version="1.0" isroot="true">
+	<Runtime>		
+		<Import assembly="SorentoLib.dll"/>		
+	</Runtime>
+
+	<ExtensionPoint path = "/SorentoLib/Init">
+		<ExtensionNode objectType="SorentoLib.Addins.IInit"/>
+	</ExtensionPoint>		
+												
+	<ExtensionPoint path = "/SorentoLib/Services/Loggers">
+		<ExtensionNode objectType="SorentoLib.Addins.ILogger"/>
+	</ExtensionPoint>		
+	
+	<ExtensionPoint path = "/SorentoLib/Services/Snapshots">
+		<ExtensionNode objectType="SorentoLib.Addins.ISnapshot"/>
+	</ExtensionPoint>			
+	
+	<ExtensionPoint path = "/SorentoLib/Resolver/Renders">
+		<ExtensionNode objectType="SorentoLib.Addins.IRender"/>
+	</ExtensionPoint>
+
+	<ExtensionPoint path = "/SorentoLib/Resolver/Functions">
+		<ExtensionNode objectType="SorentoLib.Addins.IFunction"/>
+	</ExtensionPoint>
+	
+	<ExtensionPoint path = "/SorentoLib/Resolver/Ajaxes">
+		<ExtensionNode objectType="SorentoLib.Addins.IAjax"/>
+	</ExtensionPoint>	
+	
+	<ExtensionPoint path = "/SorentoLib/PageResponders">
+		<ExtensionNode objectType="SorentoLib.Addins.IPageResponder"/>
+	</ExtensionPoint>	
+
+	<ExtensionPoint path = "/SorentoLib/MediaResponders">
+		<ExtensionNode objectType="SorentoLib.Addins.IMediaResponder"/>
+	</ExtensionPoint>	
+				
+	<ExtensionPoint path = "/SorentoLib/FunctionResponders">
+		<ExtensionNode objectType="SorentoLib.Addins.IFunctionResponder"/>
+	</ExtensionPoint>	
+		
+	<ExtensionPoint path = "/SorentoLib/AjaxResponders">
+		<ExtensionNode objectType="SorentoLib.Addins.IAjaxResponder"/>
+	</ExtensionPoint>	
+	
+	<ExtensionPoint path = "/SorentoLib/Render/Placeholders">
+		<ExtensionNode objectType="SorentoLib.Addins.IPlaceholder"/>
+	</ExtensionPoint>
+</Addin>

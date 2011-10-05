@@ -1,0 +1,28 @@
+<Addin id          = "Core.Responders"              
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "Provides core functionality to the Sorento render engine."
+	   category    = "Responders"
+       version     = "1.0">
+	<Runtime>
+		<Import assembly="Core.Responders.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0" />
+	</Dependencies>
+		
+	<Extension path = "/SorentoLib/PageResponders">
+		<Type type="Core.Responders.Addin.PageResponder"/>
+	</Extension>	
+	
+	<Extension path = "/SorentoLib/FunctionResponders">
+		<Type type="Core.Responders.Addin.FunctionResponder"/>
+	</Extension>	
+	
+	<Extension path = "/SorentoLib/AjaxResponders">
+		<Type type="Core.Responders.Addin.AjaxResponder"/>
+	</Extension>	
+	
+</Addin>

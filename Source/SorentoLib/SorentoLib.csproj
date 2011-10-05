@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2E1A7376-FCCD-469A-9968-99828257DF27}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SorentoLib</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ReleaseVersion>1.0</ReleaseVersion>
+    <RootNamespace>SorentoLib</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Binary\Debug\Lib</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Binary\Release\Lib</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Jyc.Expr, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Jyc.Expr.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix" />
+    <Reference Include="System.Web" />
+    <Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <SpecificVersion>False</SpecificVersion>
+      <Package>mono-addins</Package>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="Mono.FastCgi, Version=1.0.4295.19585, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Mono.FastCgi.dll</HintPath>
+    </Reference>
+    <Reference Include="SNDK, Version=1.0.4295.21424, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\SNDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="SorentoLib.Render\Block.cs" />
+    <Compile Include="SorentoLib.Render\Condition.cs" />
+    <Compile Include="SorentoLib.Render\Foreach.cs" />
+    <Compile Include="SorentoLib.Render\Loop.cs" />
+    <Compile Include="SorentoLib.Render\Page.cs" />
+    <Compile Include="SorentoLib.Render\Resolver.cs" />
+    <Compile Include="SorentoLib.Render\Template.cs" />
+    <Compile Include="SorentoLib.Render\Variable.cs" />
+    <Compile Include="SorentoLib.Render\Variables.cs" />
+    <Compile Include="SorentoLib.Ajax\Request.cs" />
+    <Compile Include="SorentoLib.Ajax\Respons.cs" />
+    <Compile Include="SorentoLib.Enums\UserStatus.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="SorentoLib\Runtime.cs" />
+    <Compile Include="SorentoLib.Enums\LogLevel.cs" />
+    <Compile Include="SorentoLib.Addins\ILogger.cs" />
+    <Compile Include="SorentoLib.Services\Logging.cs" />
+    <Compile Include="SorentoLib.Services\Addins.cs" />
+    <Compile Include="SorentoLib.Services\Config.cs" />
+    <Compile Include="SorentoLib.Services\Database.cs" />
+    <Compile Include="SorentoLib.FastCgi\Responder.cs" />
+    <Compile Include="SorentoLib.FastCgi\Runtime.cs" />
+    <Compile Include="SorentoLib.Enums\LoopType.cs" />
+    <Compile Include="SorentoLib.Enums\Accesslevel.cs" />
+    <Compile Include="SorentoLib\User.cs" />
+    <Compile Include="SorentoLib\Session.cs" />
+    <Compile Include="SorentoLib.Enums\ResolveType.cs" />
+    <Compile Include="SorentoLib.FastCgi\Cookie.cs" />
+    <Compile Include="SorentoLib.FastCgi\CookieJar.cs" />
+    <Compile Include="SorentoLib.FastCgi\Environment.cs" />
+    <Compile Include="SorentoLib.FastCgi\Query.cs" />
+    <Compile Include="SorentoLib.FastCgi\QueryJar.cs" />
+    <Compile Include="SorentoLib.FastCgi\Request.cs" />
+    <Compile Include="SorentoLib.Services\Events.cs" />
+    <Compile Include="SorentoLib.Addins\IFunction.cs" />
+    <Compile Include="SorentoLib.Addins\IPageResponder.cs" />
+    <Compile Include="SorentoLib.Addins\IMediaHandler.cs" />
+    <Compile Include="SorentoLib.Addins\IFunctionResponder.cs" />
+    <Compile Include="SorentoLib.Addins\IAjaxResponder.cs" />
+    <Compile Include="SorentoLib.Addins\IAjax.cs" />
+    <Compile Include="SorentoLib.Services\Cache.cs" />
+    <Compile Include="SorentoLib.Enums\RedirectType.cs" />
+    <Compile Include="SorentoLib.Services\Datestore.cs" />
+    <Compile Include="SorentoLib.Addins\IInit.cs" />
+    <Compile Include="SorentoLib.Tools\RC4.cs" />
+    <Compile Include="SorentoLib.Tools\Timer.cs" />
+    <Compile Include="SorentoLib.Tools\ParseTypeName.cs" />
+    <Compile Include="SorentoLib.Tools\Untaint.cs" />
+    <Compile Include="SorentoLib.Tools\Helpers.cs" />
+    <Compile Include="SorentoLib.Services\Crypto.cs" />
+    <Compile Include="SorentoLib.Tools\StringHelper.cs" />
+    <Compile Include="SorentoLib.Tools\Security.cs" />
+    <Compile Include="SorentoLib.Services\Stats.cs" />
+    <Compile Include="SorentoLib.Enums\MediaStatus.cs" />
+    <Compile Include="SorentoLib.Services\MediaLibrary.cs" />
+    <Compile Include="SorentoLib.Services\GarbageCollector.cs" />
+    <Compile Include="SorentoLib\Usergroup.cs" />
+    <Compile Include="SorentoLib.Enums\UsergroupStatus.cs" />
+    <Compile Include="SorentoLib.Enums\UsergroupListFilter.cs" />
+    <Compile Include="SorentoLib.Enums\UserListFilter.cs" />
+    <Compile Include="SorentoLib\Media.cs" />
+    <Compile Include="SorentoLib.Addins\IRender.cs" />
+    <Compile Include="SorentoLib.Enums\UsergroupType.cs" />
+    <Compile Include="SorentoLib\MediaTransformation.cs" />
+    <Compile Include="SorentoLib.Enums\MediaTransformationType.cs" />
+    <Compile Include="SorentoLib.Enums\ConfigKey.cs" />
+    <Compile Include="SorentoLib.Strings\Exception.cs" />
+    <Compile Include="SorentoLib.Strings\LogDebug.cs" />
+    <Compile Include="SorentoLib.Strings\LogError.cs" />
+    <Compile Include="SorentoLib.Strings\LogInfo.cs" />
+    <Compile Include="SorentoLib.Services\Scripting.cs" />
+    <Compile Include="SorentoLib.Addins\IPlaceholder.cs" />
+    <Compile Include="SorentoLib.Render\Placeholder.cs" />
+    <Compile Include="SorentoLib.Strings\LogFatalError.cs" />
+    <Compile Include="SorentoLib.Services\Snapshot.cs" />
+    <Compile Include="SorentoLib.Addins\ISnapshot.cs" />
+    <Compile Include="SorentoLib.Addins\IRenderBaseClass.cs" />
+    <Compile Include="SorentoLib.Addins\IAjaxBaseClass.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SorentoLib.Render\" />
+    <Folder Include="SorentoLib.Ajax\" />
+    <Folder Include="SorentoLib.Addins\" />
+    <Folder Include="SorentoLib.Enums\" />
+    <Folder Include="SorentoLib\" />
+    <Folder Include="SorentoLib.Services\" />
+    <Folder Include="SorentoLib.FastCgi\" />
+    <Folder Include="SorentoLib.Tools\" />
+    <Folder Include="SorentoLib.Strings\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="SorentoLib.Render\Token.cs" />
+    <None Include="Tools.cs" />
+    <None Include="SorentoLib.Tools\Install.cs" />
+    <None Include="Scraps.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SorentoLib.addin.xml" />
+  </ItemGroup>
+</Project>

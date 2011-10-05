@@ -1,0 +1,31 @@
+<Addin id          = "AkvaBase"              
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "Provides Akvabase functionality to the Sorento render engine."
+	   category    = "Resolvers"
+       version     = "1.0">
+	<Runtime>
+		<Import assembly="Akvabase.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0" />
+	</Dependencies>
+
+	<Extension path = "/SorentoLib/Init">
+		<Type type="Akvabase.Addin.Init"/>
+	</Extension>			
+						
+	<Extension path = "/SorentoLib/Resolver/Classes">
+		<Type type="Akvabase.Addin.Class"/>
+	</Extension>			
+	
+	<Extension path = "/SorentoLib/Resolver/Functions">
+		<Type type="Akvabase.Addin.Function"/>
+	</Extension>			
+		
+	<Extension path = "/SorentoLib/Resolver/Ajaxes">
+		<Type type="Akvabase.Addin.Ajax"/>
+	</Extension>		
+</Addin>

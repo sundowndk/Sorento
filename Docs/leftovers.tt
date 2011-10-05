@@ -1,0 +1,410 @@
+  <section id="minimal-page">
+    <title>Making a minimal but good looking page</title>
+    <para>
+      The following sections show how to do the minimal things to not give your documentation a museum look.
+    </para>
+    <section>
+      <title>Getting down to business</title>
+      <para>
+	Start your favorite editor and paste the following magical invocation:
+	<programlisting>
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+&lt;!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+               "docbook/dtd/xml/4.2/docbookx.dtd"&gt;
+</programlisting>
+    </para>
+    <para>
+      Nobody really knows what this does exactly, but it works. Now to start the actual article:
+
+<programlisting>
+&lt;article&gt;
+  &lt;articleinfo&gt;
+    &lt;title&gt;
+      Making your DocBook/XML HTML output not suck
+    &lt;/title&gt;
+  &lt;/articleinfo&gt;
+  &lt;section&gt;
+    &lt;title&gt;Introduction&lt;/title&gt;
+    &lt;para&gt;
+      Most modern UNIX and Linux distributions come with suitable DocBook/XML tools, yet by default..
+    &lt;/para&gt;
+  &lt;/section&gt;
+&lt;/article&gt;
+</programlisting>
+    </para>
+    <para>
+      This article is getting slightly recursive!
+    </para>
+    <para>
+      Save your file as docbook.xml and do the following:
+      <screen>
+$ xmlto html docbook.xml
+$
+      </screen>
+    </para>
+    <para>
+      And out comes <filename>docbook.html</filename>, which you should take a brief look at. It is has a very 1990s feel to it.
+    </para>
+    <para>
+      To change this, we will use the modern technology called <quote>Cascading Style Sheets</quote>. These can do almost everything and can be very complicated. We're not
+      going make them so however. We need to do two things:
+      <orderedlist>
+	<listitem>
+	  <para>
+	    Write a suitable Cascading Style Sheet
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    Instruct <command>xmlto</command> to use it
+	  </para>
+	</listitem>
+      </orderedlist>
+    </para>
+  </section>
+  <section>
+    <title>The Extensible Stylesheet Language</title>
+    <para>
+      This is a system for, um, well, as far as I know, reconfiguring xmlto. Here is another magic invocation:
+<programlisting>
+&lt;?xml version='1.0'?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                version="1.0"&gt;
+  &lt;xsl:param name="use.id.as.filename" select="'1'"/&gt;
+  &lt;xsl:param name="admon.graphics" select="'1'"/&gt;
+  &lt;xsl:param name="admon.graphics.path"&gt;&lt;/xsl:param&gt;
+  &lt;xsl:param name="chunk.section.depth" select="0"&gt;&lt;/xsl:param&gt;
+  &lt;xsl:param name="html.stylesheet" select="'docbook.css'"/&gt;
+&lt;/xsl:stylesheet&gt;
+</programlisting>
+    </para>
+    <para>
+      This is their convoluted way of saying <literal>'use.id.as.filename = 1'</literal>. Oh well. What this means
+      is that sections which get their own files get named according to the id assigned to them in XML. Also, we want 
+      pictures in <quote>warning</quote> boxes, and these will be found in the same path as our html. In addition, we don't want any
+      <quote>chunking</quote>, in other words, we want one file to come out.
+    </para>
+    <para>
+      The last line is the important one: it tells <command>xmlto</command> to include code in the output that 
+      will load a cascading style sheet called <filename>docbook.css</filename>.
+    </para>
+    <para>
+      Incidentally, these settings are documented on <ulink 
+      url="http://docbook.sourceforge.net/release/xsl/current/doc/html/index.html">http://docbook.sourceforge.net/release/xsl/current/doc/html/index.html</ulink>, 
+      and are more properly settings of DocBook than of <command>xmlto</command>.
+    </para>
+    <para>
+      Save the above XSL file as <filename>config.xsl</filename>, you'll need it later on.
+    </para>
+  </section>
+  <section>
+    <title>Cascading Style Sheet</title>
+    <para>
+      This is <quote>web technology</quote> and has been around for a while. I know little of all this, except for the parts I need to make
+      my DocBook output look good (or at least, better).
+    </para>
+    <para>
+      I use the following:
+<programlisting>
+body {
+         font-family: luxi sans,sans-serif;
+}
+
+.screen {
+        font-family: monospace;
+        font-size: 1em;
+        display: block;
+        padding: 10px;
+        border: 1px solid #bbb;
+        background-color: #eee;
+        color: #000;   
+        overflow: auto;
+        border-radius: 2.5px;
+        -moz-border-radius: 2.5px;
+        margin: 0.5em 2em;
+ 
+}
+
+.programlisting {
+        font-family: monospace;
+        font-size: 1em;
+        display: block;
+        padding: 10px;
+        border: 1px solid #bbb;
+        background-color: #ddd;
+        color: #000;   
+        overflow: auto;
+        border-radius: 2.5px;
+        -moz-border-radius: 2.5px;
+        margin: 0.5em 2em;
+}
+</programlisting>
+    </para>
+    <para>
+      Ok, we've said a few things here. The first stanza is arbitrarily the most important one, it selects a spiffy font. You can put other stuff in the body 
+      stanza as well, like a background image, the default text colour etc. 
+    </para>
+    <para>
+      The second two stanzas are interesting as they <quote>hook</quote> into DocBook tags. The first one specifies the appearance of &lt;screen&gt; content, the second one
+      that of &lt;programlisting&gt;'s. All this was gleened from the Fedora HOWTO pages, by the way, I invented none of this.
+    </para>
+    <para>
+      Do note however that while you can go wild with CSS, you can also mess things up. Most, if not all, uses of &lt;screen&gt; and &lt;programlisting&gt; expect
+      a monospace font, for example. If you change that, diagrams will look bad.
+    </para>
+    <para>
+      Save the CSS file above as <filename>docbook.css</filename>, we'll need it in the next section.
+    </para>
+  </section>
+  <section>
+    <title>
+      Putting things together
+    </title>
+    <para>
+      So far we've made an XSL file telling DocBook to include a reference to a Cascading Style Sheet, which we've made as well. All that's left is
+      to tell <command>xmlto</command> to use the XSL file:
+      <screen>
+$ xmlto xhtml -m config.xsl docbook.xml
+Writing index.html for article
+$ 
+      </screen>
+      The <literal>-m config.xsl</literal> part is new, and makes <command>xmlto</command> read <filename>config.xsl</filename>. If this finished without 
+      errors, you should now have a file called <filename>index.html</filename> that looks a lot like the page you are reading now.
+    </para>
+  </section>
+  </section>
+  <section id="fancy-css">
+    <title>More fancy CSS things</title>
+    <para>
+      At this point, this document assumes you are using FireFox with the Web Developer extension, or, are in a position to easily
+      change the CSS file <emphasis>of this document</emphasis> and reloading it in your browser to watch the results. 
+    </para>
+    <para>
+      In this section, we'll be doing some experiments on this file, not the small file we wrote above.
+    </para>
+    <section>
+      <title>
+	Notes, warnings, cautions: stuff that deserves special attention
+      </title>
+      <para>
+	DocBook provides for, at least, the following ways to draw special attention to a message:
+	<note>
+	  <para>
+	    This is a &lt;note&gt;.
+	  </para>
+	</note>
+	<warning>
+	  <para>
+	    This is a &lt;warning&gt;!
+	  </para>
+	</warning>
+	<caution>
+	  <para>
+	    This is a &lt;caution&gt;!
+	  </para>
+	</caution>
+      </para>
+      <para>
+	Note the cool little icons. On most DocBook installations you'll find some sample icons, as shown above, that you
+	need to copy to a place where your browser can find them. Feel free to use different icons though, these are pretty boring.
+      </para>
+      <para>
+	Time for some CSS, we may want to make these warnings somewhat more special. Open the CSS file that belongs to this page
+	(in FireFox, right-click on this page, select Web Developer, select CSS, select Edit CSS). Now add the following:
+	<programlisting>
+.caution, .warning {
+        border: 1px solid #f00;
+}
+	</programlisting>
+      </para>
+      <para>
+	This adds a bright red border around &lt;caution&gt; and &lt;warning&gt; messages. You may have been wondering what 
+	<quote>Cascading</quote> means in Cascading Style Sheets, well, here goes. Below the stanza above, add:
+<programlisting>
+.caution {
+      font-size: 1.2em;
+}
+</programlisting>
+      </para>
+      <para>
+	Now we've specialised the appearance of the &lt;caution&gt; message from the general stanza above that also specified the 
+	&lt;warning&gt; layout. The result is that the Caution text is now bigger by 20%.
+      </para>
+    </section>
+    <section><title>Making links stand out</title>
+    <para>
+      This is really a matter of taste. Many sites these days feel the need to make their links stand out a bit more, for example by giving them
+      a dotted underline and making them invert on hover. Well, if you want this, you can do it. Paste the following into the CSS:
+<programlisting>
+
+a { 
+    text-decoration: none;
+    border-bottom: 1px dotted #000; 
+}
+
+a:hover {
+    background-color: #777;
+    color: #fff; 
+}
+</programlisting>
+    </para>
+    <para>
+      This first removes the traditional underline by setting <userinput>text-decoration</userinput> to <userinput>none</userinput>, followed by specifying
+      a dotted black <userinput>bottom-border</userinput>.
+    </para>
+    <para>
+      Additionally, the a-element is configured to have a different back- and foreground when the cursor hovers over it. To test, here is
+      <ulink url="http://ds9a.nl/">a fine url</ulink> to hover over. To pimp up your page further, briefly consider <literal>text-decoration: blink</literal>.
+    </para>
+    </section>
+  </section>
+  <section id="fancy-docbook">
+    <title>More DocBook specific things</title>
+    <section><title>The dreaded <quote>Smart Quotes</quote></title>
+    <para>
+      It appears that the dust has settled on this. For a long time, it was common to see inverted question marks or weird
+      dice-face looking things in place of proper double and single quotes. To elaborate a bit, the regular ASCII charcter set, or 
+      nationalised variants such as ISO-8859-1 don't actually define left and right quotes. In some contexts the ` character 
+      has been abused as a left-quote, and, indeed in the 1990s this actually looked good on many browsers.
+    </para>
+    <para>
+      However, these days the position of ` and ' has been clarified, and the font people have listened. The ` is now 
+      <quote>GRAVE ACCENT</quote> in Unicode-speak, and ' is <quote>ACUTE ACCENT</quote>, and look accordingly. For
+      stunning detail on this issue, see <ulink url="http://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html">here</ulink>.
+    </para>
+    <para>
+      For our purposes it is enough to know to never use `. It is permissible, and easy, to use ' to quote strings. However,
+      the royal way of quoting strings in DocBook is to use &lt;quote&gt;. For example, 
+      <literal>&lt;quote&gt;quoted&lt;/quote&gt;</literal> ends up like this: <quote>quoted</quote>.
+    </para>
+    <para>
+      For comparison: regular double quotes "quoted", abusing the GRAVE ACCENT `quoted', using regular single quotes (aka ACUTE ACCENT) 
+      'quoted', the royal way: <quote>A quoted <quote>quote</quote> looks like this</quote>.
+    </para>
+    </section>
+    <section><title>Callouts</title>
+    <para>
+      Ok, these rarely used and truly spice up your output so it won't look DocBookish anymore. To make things pretty, we 
+      need to edit our <filename>config.xsl</filename> a bit. Watch the numbers:
+    </para>
+    <para>
+<programlisting>
+&lt;?xml version='1.0'?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                version="1.0"&gt;
+  &lt;!-- Use ids for filenames --&gt;
+  &lt;xsl:param name="use.id.as.filename" select="'1'"/&gt;
+  &lt;!-- Turn on admonition graphics. --&gt;
+  &lt;xsl:param name="admon.graphics" select="'1'"/&gt;
+  &lt;xsl:param name="admon.graphics.path"&gt;&lt;/xsl:param&gt;
+  &lt;!-- Configure the stylesheet to use --&gt;
+  &lt;xsl:param name="html.stylesheet" select="'docbook.css'"/&gt;
+
+&lt;xsl:param name="chunk.section.depth" select="0"&gt;&lt;/xsl:param&gt;
+&lt;xsl:param name="callout.graphics" select="'1'"&gt;&lt;/xsl:param&gt; <co id="graphics"/>
+&lt;xsl:param name="callout.graphics.path"&gt;&lt;/xsl:param&gt; <co id="graphics-path"/>
+&lt;/xsl:stylesheet&gt;
+
+</programlisting>
+
+<calloutlist>
+  <title>Description</title>
+  <callout arearefs="graphics">
+    <para> 
+    This turns on graphical callout numbers 
+    </para>
+  </callout>
+  <callout arearefs="graphics-path">
+    <para>This configures the callouts graphics to be in the same directory as the html</para>
+  </callout>
+</calloutlist>
+    </para>
+    <para>
+      Sure looks pretty! You need to copy the number graphics over from the same place where you found <filename>warn.jpg</filename> etc, the
+      files are called <filename>1.png</filename> and onwards.
+    </para>
+    <para>
+      The syntax is not too hard, add <literal>&lt;co id="something"/&gt;</literal> (note the closing /!) to your &lt;screen&gt; or &lt;programlisting&gt; and 
+      add a &lt;calloutlist&gt; below, like this:
+      <programlisting>
+&lt;calloutlist&gt;
+  &lt;callout arearefs="graphics"&gt;
+    &lt;para&gt; 
+    This turns on graphical callout numbers 
+    &lt;/para&gt;
+  &lt;/callout&gt;
+&lt;/calloutlist&gt;
+      </programlisting>
+    </para>
+    <para>
+      There is also a <quote>hidden</quote> syntax for if you don't want to insert things in the text you refer to, perhaps because it is auto-generated. I haven't been able
+      to get this to work though.
+    </para>
+    </section>
+    <section>
+      <title>Section numbering, main Table of Contents, section Table of Contents </title>
+    <para>
+      DocBook knows several document types, like book and article. Each of these comes with certain
+      preset defaults which specify if sections are numbered, if the Table of Contents is repeated for each section etc.
+    </para>
+    <para>
+      You might want to change these settings individually, which is possible by adding the following to the XSL configuration:
+<programlisting>
+&lt;xsl:param name="generate.section.toc.level" select="1"&gt;&lt;/xsl:param&gt;
+&lt;xsl:param name="section.autolabel" select="1"&gt;&lt;/xsl:param&gt;
+&lt;xsl:param name="section.autolabel.max.depth" select="1"&gt;&lt;/xsl:param&gt;
+</programlisting>
+    </para>
+    <para>
+      In order this enables the output of a section level ToC, turns on the enumeration (numbering) of sections, but limits that numbering
+      to the first nesting level - ie, sections within sections don't get additional numbers.
+    </para>
+    </section>
+    <section><title>Questions &amp; Answers</title>
+    <qandaset>
+      <qandaentry><question><para>How can I add a spiffy <quote>Questions &amp; Answers</quote> section?</para></question>
+      <answer><para>By using a Qandaset!</para></answer>
+      </qandaentry>
+
+      <qandaentry><question><para>How does a Qandaset work?</para></question>
+      <answer><para>As you would expect it to - with the minor exception that it can only live outside of a &lt;para&gt;</para></answer>
+      </qandaentry>
+
+      <qandaentry><question><para>Can you show some code?</para></question>
+      <answer><para><programlisting>
+&lt;qandaset&gt;
+   &lt;qandaentry&gt;&lt;question&gt;&lt;para&gt;How can I add a spiffy &lt;quote&gt;Questions &amp; Answers&lt;/quote&gt; section?&lt;/para&gt;&lt;/question&gt;
+   &lt;answer&gt;&lt;para&gt;By using a Qandaset!&lt;/para&gt;&lt;/answer&gt;
+   &lt;/qandaentry&gt;
+&lt;/qandaset&gt;
+    </programlisting>
+      </para></answer>
+      </qandaentry>
+    </qandaset>
+    </section>
+
+  <section id="headers"><title>Adding headers and footers to HTML output</title>
+  <para>
+    In <ulink url="http://www.sagehill.net/docbookxsl/HTMLHeaders.html">the HTML headers section</ulink> of <quote>DocBook XSL: The Complete Guide</quote> 
+    we read that we can use the following to do this:
+<programlisting>
+&lt;xsl:template name="user.footer.content"&gt;
+  &lt;P class="copyright"&gt;&#x00A9; 2002  Megacorp, Inc.&lt;/P&gt;
+&lt;/xsl:template&gt;
+</programlisting>
+  </para>
+  <para>
+    However, things are not as easy as they appear. For some reason or other, part of the toolchain decides that it needs to mess with lower case tags you insert here.
+    The easy solution is to upper case all these, as is done above. A lot of HTML also works in lower case but specifically javascript breaks. This for all you Google AdSense users
+    out there :-)
+  </para>
+  </section>
+</section>
+</article>
+  
+
+
+  

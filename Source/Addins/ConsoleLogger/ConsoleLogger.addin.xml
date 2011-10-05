@@ -1,0 +1,19 @@
+<Addin id          = "ConsoleLogger"              
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "Output log directly to console."
+	   category    = "Logger"
+       version     = "1.0">
+	<Runtime>
+		<Import assembly="ConsoleLogger.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0" />
+	</Dependencies>
+	
+	<Extension path = "/SorentoLib/Services/Loggers">
+		<Type type="ConsoleLogger.Addin.Logger" />
+	</Extension>			
+</Addin>

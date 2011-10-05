@@ -1,0 +1,20 @@
+<Addin id          = "Google"       
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "Provides various Google functionality to the Sorento render engine."
+	   category    = "Resolvers"
+       version     = "1.0">
+	<Runtime>
+		<Import assembly="Google.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0" />
+	</Dependencies>
+		
+	<Extension path = "/SorentoLib/Render/Placeholders">
+		<Type type="Google.Addin.Placeholder"/>
+	</Extension>		
+	
+</Addin>

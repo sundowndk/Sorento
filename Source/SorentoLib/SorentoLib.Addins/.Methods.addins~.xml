@@ -1,0 +1,10 @@
+<Addin id="Sorento" version="1.0" isroot="true">
+ 
+	<Runtime>
+		<Import assembly="AddinTest.exe"/>		
+	</Runtime>
+	
+	<ExtensionPoint path = "/TextEditor/TypeExtensions/ICommand">
+		<ExtensionNode objectType="AddinTest.ICommand"/>
+	</ExtensionPoint>
+</Addin>

@@ -1,0 +1,93 @@
+body {
+         font-family: luxi sans,sans-serif;
+}
+
+.screen {
+        font-family: monospace;
+        font-size: 1em;
+        display: block;
+        padding: 10px;
+        border: 1px solid #bbb;
+        background-color: #eee;
+        color: #000;   
+        overflow: auto;
+        border-radius: 2.5px;
+        -moz-border-radius: 2.5px;
+        margin: 0.5em 2em;
+ 
+}
+
+h5
+{
+	font-size: 15px;
+	font-weight: bold;
+}
+
+
+h1, h2, h3, h4, h5, h6
+{
+	font-size: 15px;
+}
+
+p
+{
+	font-size: 12px;
+}
+
+.filename
+{
+	font-style: italic;
+	font-weighT: bold;
+}
+
+.variablelist 
+{
+	padding-bottom: 20px;
+}
+
+.variablelist .title
+{
+        font-family: monospace;
+        font-size: 1em;
+        display: block;
+        padding: 10px;
+        border: 1px solid #bbb;
+        background-color: #bbb;
+        color: #000;   
+        overflow: auto;
+        border-radius: 2.5px;
+        -moz-border-radius: 2.5px;
+        margin: 0.5em 2em;	
+}
+
+.variablelist .term 
+{
+       	padding-left: 40px;
+}
+
+.variablelist p
+{
+       	padding-left: 25px;
+}
+
+dd
+{
+	padding-bottom: 20px;
+}
+
+
+
+.programlisting {
+        font-family: monospace;
+        font-size: 1em;
+        display: block;
+        padding: 10px;
+        border: 1px solid #bbb;
+        background-color: #ddd;
+        color: #000;   
+        overflow: auto;
+        border-radius: 2.5px;
+        -moz-border-radius: 2.5px;
+        margin: 0.5em 2em;
+}
+

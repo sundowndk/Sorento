@@ -1,0 +1,23 @@
+
+//			SorentoLib.Services.Events.TemplateRenderSuccess += Test;
+
+//			SorentoLib.Services.Events.TemplateRenderComplete += delegate
+//			{
+//				(SorentoLib.Render.Template)
+//
+//				SorentoLib.Services.Logging.LogDebug("TEST");
+//			};
+
+
+
+//		public static void Test(object sender, EventArgs e)
+//		{
+//			List<object> test = (List<object>)sender;
+//
+//			SorentoLib.Session session = (SorentoLib.Session)test[0];
+//			SorentoLib.Render.Template template = (SorentoLib.Render.Template)test[1];
+//
+////			SorentoLib.Render.Template test = (SorentoLib.Render.Template)sender;
+//			Console.WriteLine(session.CreateTimestamp);
+//			Console.WriteLine(template.Filename);
+//		}

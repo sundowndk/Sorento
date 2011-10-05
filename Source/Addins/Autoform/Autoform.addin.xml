@@ -1,0 +1,30 @@
+<Addin id          = "Autoform"              
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "Automated form sender."	   
+       version     = "1.0">
+	<Runtime>
+		<Import assembly="Autoform.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0"/>
+	</Dependencies>
+		
+	<Extension path = "/SorentoLib/Resolver/Functions">
+		<Type type="Autoform.Addin.Function"/>
+	</Extension>			
+		
+	<Extension path = "/SorentoLib/Resolver/Renders">
+		<Type type="Autoform.Addin.Render"/>
+	</Extension>				
+	
+	<Extension path = "/SorentoLib/Resolver/Ajaxes">
+		<Type type="Autoform.Addin.Ajax"/>
+	</Extension>			
+	
+	<Extension path = "/SorentoLib/Services/Snapshots">
+		<Type type="Autoform.Addin.Snapshot"/>
+	</Extension>	
+</Addin>
