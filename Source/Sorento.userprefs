@@ -1,50 +1,50 @@
 ﻿<Properties>
   <AuthorInfo Name="Rasmus Pedersen" Email="rasmus@akvaservice.dk" Copyright="Rasmus Pedersen" Company="" Trademark="" />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Addins/Autoform/Autoform.Addin/Snapshot.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Test/Main.cs">
     <Files>
-      <File FileName="Test/Main.cs" Line="51" Column="38" />
-      <File FileName="Addins/sBlog/sBlog/Blog.cs" Line="193" Column="16" />
-      <File FileName="Addins/sBlog/sBlog/Entry.cs" Line="34" Column="12" />
-      <File FileName="Addins/sBlog/sBlog/Comment.cs" Line="197" Column="16" />
+      <File FileName="Test/Main.cs" Line="31" Column="7" />
+      <File FileName="Addins/sBlog/sBlog/Blog.cs" Line="1" Column="1" />
+      <File FileName="Addins/sBlog/sBlog/Entry.cs" Line="1" Column="1" />
+      <File FileName="Addins/sBlog/sBlog/Comment.cs" Line="1" Column="1" />
       <File FileName="Addins/sBlog/sBlog.Strings/Exception.cs" Line="1" Column="1" />
       <File FileName="Addins/sBlog/sBlog.Strings/LogDebug.cs" Line="1" Column="1" />
       <File FileName="Addins/sBlog/sBlog.Addin/Render.cs" Line="1" Column="1" />
       <File FileName="Addins/sBlog/sBlog.Addin/Ajax.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Collection.cs" Line="237" Column="16" />
-      <File FileName="SorentoLib/SorentoLib.FastCgi/Responder.cs" Line="37" Column="11" />
-      <File FileName="SorentoLib/SorentoLib.Render/Variables.cs" Line="35" Column="11" />
-      <File FileName="SorentoLib/SorentoLib.Services/Database.cs" Line="50" Column="76" />
-      <File FileName="SorentoLib/SorentoLib/User.cs" Line="808" Column="1" />
-      <File FileName="SorentoLib/SorentoLib/Session.cs" Line="357" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Services/Datestore.cs" Line="290" Column="86" />
-      <File FileName="SorentoLib/SorentoLib.Services/MediaLibrary.cs" Line="30" Column="11" />
-      <File FileName="SorentoLib/SorentoLib/Media.cs" Line="788" Column="15" />
-      <File FileName="SorentoLib/SorentoLib/MediaTransformation.cs" Line="247" Column="32" />
-      <File FileName="SorentoLib/SorentoLib.Services/Scripting.cs" Line="616" Column="39" />
-      <File FileName="SorentoLib/SorentoLib/Usergroup.cs" Line="421" Column="34" />
-      <File FileName="SorentoLib/SorentoLib.Tools/Helpers.cs" Line="186" Column="8" />
-      <File FileName="SorentoLib/SorentoLib.Services/Snapshot.cs" Line="274" Column="10" />
-      <File FileName="SorentoLib/SorentoLib.Render/Condition.cs" Line="133" Column="1" />
-      <File FileName="Sorento/Sorento.Startup/SorentoMain.cs" Line="31" Column="1" />
-      <File FileName="Addins/Core/Core.Resolvers/Core.Resolvers.Addin/Function.cs" Line="102" Column="59" />
-      <File FileName="Addins/Core/Core.Resolvers/Core.Resolvers.Addin/Render.cs" Line="127" Column="1" />
-      <File FileName="Addins/Core/Core.Snapshots/Core.Snapshots.Addin/Snapshot.cs" Line="469" Column="12" />
-      <File FileName="Addins/sCMS/sCMS/Stylesheet.cs" Line="123" Column="8" />
-      <File FileName="Addins/sCMS/sCMS.Addin/Snapshot.cs" Line="425" Column="38" />
-      <File FileName="Addins/Autoform/Autoform/Form.cs" Line="431" Column="42" />
-      <File FileName="Addins/Autoform/Autoform.Addin/Snapshot.cs" Line="107" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Template.cs" Line="453" Column="27" />
-      <File FileName="Addins/sCMS/sCMS/Page.cs" Line="428" Column="16" />
-      <File FileName="Addins/sCMS/sCMS/Field.cs" Line="284" Column="35" />
-      <File FileName="Addins/sCMS/sCMS.Addin/Function.cs" Line="79" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Global.cs" Line="290" Column="39" />
-      <File FileName="Addins/sCMS/sCMS/Root.cs" Line="185" Column="23" />
-      <File FileName="Addins/sCMS/sCMS/RootFilter.cs" Line="106" Column="43" />
-      <File FileName="Addins/sCMS/sCMS/CollectionSchema.cs" Line="259" Column="16" />
+      <File FileName="Addins/sCMS/sCMS/Collection.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.FastCgi/Responder.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Render/Variables.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Services/Database.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib/User.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib/Session.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Services/Datestore.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Services/MediaLibrary.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib/Media.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib/MediaTransformation.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Services/Scripting.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib/Usergroup.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Tools/Helpers.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Services/Snapshot.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Render/Condition.cs" Line="1" Column="1" />
+      <File FileName="Sorento/Sorento.Startup/SorentoMain.cs" Line="1" Column="1" />
+      <File FileName="Addins/Core/Core.Resolvers/Core.Resolvers.Addin/Function.cs" Line="1" Column="1" />
+      <File FileName="Addins/Core/Core.Resolvers/Core.Resolvers.Addin/Render.cs" Line="1" Column="1" />
+      <File FileName="Addins/Core/Core.Snapshots/Core.Snapshots.Addin/Snapshot.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Stylesheet.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS.Addin/Snapshot.cs" Line="1" Column="1" />
+      <File FileName="Addins/Autoform/Autoform/Form.cs" Line="1" Column="1" />
+      <File FileName="Addins/Autoform/Autoform.Addin/Snapshot.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Template.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Page.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Field.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS.Addin/Function.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Global.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Root.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/RootFilter.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/CollectionSchema.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

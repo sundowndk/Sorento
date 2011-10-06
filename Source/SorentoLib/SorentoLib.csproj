@@ -48,7 +48,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Mono.FastCgi.dll</HintPath>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4295.21424, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SNDK, Version=1.0.4296.19313, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
