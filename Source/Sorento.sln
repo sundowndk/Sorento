@@ -33,6 +33,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Default|Any CPU = Default|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2E1A7376-FCCD-469A-9968-99828257DF27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
