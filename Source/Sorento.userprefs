@@ -4,84 +4,37 @@
   <MonoDevelop.Ide.DebuggingService>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Sorento/Sorento.exe.addins">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Addins/sCMS/sCMS/Collection.cs">
     <Files>
-      <File FileName="Test/Main.cs" Line="31" Column="7" />
-      <File FileName="Addins/sBlog/sBlog/Blog.cs" Line="1" Column="1" />
-      <File FileName="Addins/sBlog/sBlog/Entry.cs" Line="1" Column="1" />
-      <File FileName="Addins/sBlog/sBlog/Comment.cs" Line="1" Column="1" />
-      <File FileName="Addins/sBlog/sBlog.Strings/Exception.cs" Line="1" Column="1" />
-      <File FileName="Addins/sBlog/sBlog.Strings/LogDebug.cs" Line="1" Column="1" />
-      <File FileName="Addins/sBlog/sBlog.Addin/Render.cs" Line="1" Column="1" />
-      <File FileName="Addins/sBlog/sBlog.Addin/Ajax.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Collection.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.FastCgi/Responder.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Render/Variables.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Services/Database.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib/User.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib/Session.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Services/Datestore.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Services/MediaLibrary.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib/Media.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib/MediaTransformation.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Services/Scripting.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib/Usergroup.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Tools/Helpers.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Services/Snapshot.cs" Line="1" Column="1" />
-      <File FileName="SorentoLib/SorentoLib.Render/Condition.cs" Line="1" Column="1" />
-      <File FileName="Sorento/Sorento.Startup/SorentoMain.cs" Line="1" Column="1" />
-      <File FileName="Addins/Core/Core.Resolvers/Core.Resolvers.Addin/Function.cs" Line="1" Column="1" />
-      <File FileName="Addins/Core/Core.Resolvers/Core.Resolvers.Addin/Render.cs" Line="1" Column="1" />
-      <File FileName="Addins/Core/Core.Snapshots/Core.Snapshots.Addin/Snapshot.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Stylesheet.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS.Addin/Snapshot.cs" Line="1" Column="1" />
-      <File FileName="Addins/Autoform/Autoform/Form.cs" Line="1" Column="1" />
-      <File FileName="Addins/Autoform/Autoform.Addin/Snapshot.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Template.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Page.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.addin.xml" Line="1" Column="1" />
       <File FileName="Addins/sCMS/sCMS/Field.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS.Addin/Function.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Global.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/Root.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/RootFilter.cs" Line="1" Column="1" />
-      <File FileName="Addins/sCMS/sCMS/CollectionSchema.cs" Line="1" Column="1" />
-      <File FileName="Sorento/Sorento.exe.addins" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Collection.cs" Line="212" Column="32" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Addins" expanded="True">
-            <Node name="Core" expanded="True">
-              <Node name="Core.Resolvers" expanded="True" />
-              <Node name="Core.Responders" expanded="True">
-                <Node name="References" expanded="True" />
-              </Node>
-              <Node name="Core.Snapshots" expanded="True">
-                <Node name="References" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="Autoform" expanded="True">
-              <Node name="References" expanded="True" />
-            </Node>
-            <Node name="ConsoleLogger" expanded="True">
-              <Node name="References" expanded="True" />
-            </Node>
-            <Node name="Google" expanded="True">
-              <Node name="References" expanded="True" />
-            </Node>
-            <Node name="sBlog" expanded="True">
-              <Node name="References" expanded="True" />
-            </Node>
+            <Node name="Core" expanded="True" />
             <Node name="sCMS" expanded="True">
-              <Node name="References" expanded="True">
-                <Node name="/home/rvp/Projekter/mono/Sorento/Source/Lib/SNDK.dll" selected="True" />
+              <Node name="sCMS" expanded="True">
+                <Node name="Collection.cs" selected="True" />
               </Node>
+              <Node name="sCMS.Addin" expanded="True" />
             </Node>
           </Node>
           <Node name="Sorento" expanded="True">
             <Node name="References" expanded="True" />
+            <Node name="Sorento.Startup" expanded="True" />
           </Node>
-          <Node name="SorentoLib" expanded="True" />
+          <Node name="SorentoLib" expanded="True">
+            <Node name="SorentoLib" expanded="True" />
+            <Node name="SorentoLib.Addins" expanded="True" />
+            <Node name="SorentoLib.FastCgi" expanded="True" />
+            <Node name="SorentoLib.Render" expanded="True" />
+            <Node name="SorentoLib.Services" expanded="True" />
+            <Node name="SorentoLib.Tools" expanded="True" />
+          </Node>
+          <Node name="Test" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
