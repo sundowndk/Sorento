@@ -1,9 +1,10 @@
 ﻿<Properties>
   <AuthorInfo Name="Rasmus Pedersen" Email="rasmus@akvaservice.dk" Copyright="Rasmus Pedersen" Company="" Trademark="" />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService>
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,6 +12,39 @@
           <Node name="Addins" expanded="True" />
           <Node name="Sorento" expanded="True" />
           <Node name="SorentoLib" expanded="True" />
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Addins/sCMS/sCMS/Collection.cs">
+    <Files>
+      <File FileName="SorentoLib/SorentoLib.addin.xml" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Field.cs" Line="1" Column="1" />
+      <File FileName="Addins/sCMS/sCMS/Collection.cs" Line="212" Column="32" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Addins" expanded="True">
+            <Node name="Core" expanded="True" />
+            <Node name="sCMS" expanded="True">
+              <Node name="sCMS" expanded="True">
+                <Node name="Collection.cs" selected="True" />
+              </Node>
+              <Node name="sCMS.Addin" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="Sorento" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="Sorento.Startup" expanded="True" />
+          </Node>
+          <Node name="SorentoLib" expanded="True">
+            <Node name="SorentoLib" expanded="True" />
+            <Node name="SorentoLib.Addins" expanded="True" />
+            <Node name="SorentoLib.FastCgi" expanded="True" />
+            <Node name="SorentoLib.Render" expanded="True" />
+            <Node name="SorentoLib.Services" expanded="True" />
+            <Node name="SorentoLib.Tools" expanded="True" />
+          </Node>
+          <Node name="Test" expanded="True" />
+>>>>>>> a0b115a4246052accc3fe43eb3d6beb2fa59c7f4
         </State>
       </Pad>
       <Pad Id="ClassPad">
