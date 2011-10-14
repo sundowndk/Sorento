@@ -1,8 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Addins/sCMS/sCMS/Collection.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="SorentoLib/SorentoLib.Enums/UserStatus.cs">
     <Files>
       <File FileName="Addins/sCMS/sCMS/Collection.cs" Line="364" Column="1" />
+      <File FileName="SorentoLib/SorentoLib/User.cs" Line="26" Column="1" />
+      <File FileName="Addins/Core/Core.Resolvers/Core.Resolvers.Addin/Ajax.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Enums/Accesslevel.cs" Line="1" Column="1" />
+      <File FileName="SorentoLib/SorentoLib.Enums/UserStatus.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
