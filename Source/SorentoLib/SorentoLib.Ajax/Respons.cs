@@ -29,6 +29,7 @@
 #region Includes
 using System;
 using System.Xml;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 #endregion
@@ -43,16 +44,104 @@ namespace SorentoLib.Ajax
 		#region Private Fields
 		/// <summary>
 		///    Contains a list represention of the responsdata.
-		/// </summary>		
+		/// </summary>
+		private XmlDocument _xml = new XmlDocument ();
+		private XmlNode _test;
 		private Hashtable _data = new Hashtable();
 		#endregion
 
 		#region Constructors
 		public Respons()
 		{
+//			XmlElement root = xmldocumentc.CreateElement ("", "variables", "");
+//			xmldocument.AppendChild (root);
+
+			this._xml = new XmlDocument ();
+
+			this._test = this._xml.CreateElement ("", "ajax", "");
+			this._xml.AppendChild (this._test);
 		}
 		#endregion
-	
+
+		public void Add<T> (T Object)
+		{
+
+			switch (Object.GetType ().Name.ToLower ())
+			{
+			case "list`1":
+			{
+
+				MethodInfo GetEnumerator = typeof(T).GetMethod("GetEnumerator");
+				System.Collections.IEnumerator enumerator = (System.Collections.IEnumerator) GetEnumerator.Invoke (Object, null);
+
+				string name = Object.GetType ().GetGenericArguments ()[0].ToString ().ToLower ();
+
+				XmlElement variables = this._xml.CreateElement("", name +"s", "");
+
+				XmlAttribute type = this._xml.CreateAttribute ("type");
+				type.Value = "list";
+				variables.Attributes.Append (type);
+
+
+//				Console.WriteLine (enumerator);
+
+				while (enumerator.MoveNext ())
+				{
+
+						MethodInfo method2 = enumerator.Current.GetType ().GetMethod("ToXmlDocument");
+						XmlNodeList nodes = ((XmlDocument)method2.Invoke (enumerator.Current, null)).DocumentElement.ChildNodes;
+
+						XmlElement variable = this._xml.CreateElement("", name, "");
+
+						try
+						{
+							foreach (XmlNode node in nodes)
+							{
+								XmlNode copy = this._xml.ImportNode (node, true);
+								variable.AppendChild (copy);
+							}
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine (e);
+						}
+						variables.AppendChild (variable);
+
+
+				}
+
+					this._test.AppendChild (variables);
+				//this._xml.DocumentElement.AppendChild (variables);
+
+				break;
+			}
+
+				default:
+				{
+					MethodInfo ToXmlDocument = typeof(T).GetMethod("ToXmlDocument");
+					XmlNodeList nodes = ((XmlDocument)ToXmlDocument.Invoke (Object, null)).DocumentElement.ChildNodes;
+
+					string name = Object.GetType ().FullName.ToLower ();
+
+					XmlElement variable = this._xml.CreateElement("", name, "");
+
+					XmlAttribute type = this._xml.CreateAttribute ("type");
+					type.Value = "object";
+					variable.Attributes.Append (type);
+
+					foreach (XmlNode node in nodes)
+					{
+						XmlNode copy = this._xml.ImportNode (node, true);
+								variable.AppendChild (copy);
+					}
+
+					this._xml.DocumentElement.AppendChild (variable);
+
+				break;
+				}
+			}
+		}
+
 		#region Public Properties		
 		/// <summary>
 		///    Gets an hashtable representation of the data to be send as a
@@ -75,14 +164,15 @@ namespace SorentoLib.Ajax
 		{
 			string result = string.Empty;
 
-			XmlDocument xmldocument = new XmlDocument ();
+//			XmlDocument xmldocument = new XmlDocument ();
+//
+//			XmlElement root = xmldocument.CreateElement ("", "variables", "");
+//			xmldocument.AppendChild (root);
+//
+//			Test (xmldocument, root, this._data);
 
-			XmlElement root = xmldocument.CreateElement ("", "variables", "");
-			xmldocument.AppendChild (root);
-
-			Test (xmldocument, root, this._data);
-
-			result = xmldocument.OuterXml;
+//			result = xmldocument.OuterXml;
+			result = this._xml.OuterXml;
 
 			return result;
 		}

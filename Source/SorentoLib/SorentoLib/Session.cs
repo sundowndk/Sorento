@@ -323,6 +323,8 @@ namespace SorentoLib
 			           this._remoteaddress);
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
+
+//			Console.WriteLine (query.AffectedRows);
 			if (query.AffectedRows > 0)
 			{
 				success = true;
@@ -334,6 +336,7 @@ namespace SorentoLib
 
 			if (!success)
 			{
+//				Console.WriteLine ("BLA");
 				throw new Exception (string.Format (Strings.Exception.SessionSave, this._id));
 			}
 		}
