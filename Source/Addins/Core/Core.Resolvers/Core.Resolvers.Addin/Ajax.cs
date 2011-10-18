@@ -105,7 +105,7 @@ namespace Core.Resolvers.Addin
 							{
 								usergroups.Add (usergroup.ToAjaxItem ());
 							}
-							result.Data.Add ("usergroups", usergroups);
+//							result.Data.Add ("usergroups", usergroups);
 
 							break;
 						}
@@ -163,7 +163,7 @@ namespace Core.Resolvers.Addin
 							{
 								users.Add (user.ToAjaxItem ());
 							}
-							result.Data.Add ("users", users);
+//							result.Data.Add ("users", users);
 
 							break;
 						}
@@ -193,11 +193,11 @@ namespace Core.Resolvers.Addin
 						{
 							if (request.ContainsVariable ("id"))
 							{
-								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username"), new Guid (request.Key<string>("id"))));
+//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username"), new Guid (request.Key<string>("id"))));
 							}
 							else
 							{
-								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username")));
+//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username")));
 							}
 
 							break;
@@ -207,11 +207,11 @@ namespace Core.Resolvers.Addin
 						{
 							if (request.ContainsVariable ("id"))
 							{
-								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email"), new Guid (request.Key<string>("id"))));
+//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email"), new Guid (request.Key<string>("id"))));
 							}
 							else
 							{
-								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email")));
+//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email")));
 							}
 
 							break;
@@ -231,14 +231,14 @@ namespace Core.Resolvers.Addin
 					{
 						case "getcurrent":
 						{
-							result.Data = Session.ToItem ();
+//							result.Data = Session.ToItem ();
 							break;
 						}
 
 						case "logout":
 						{
 							Session.Logout ();
-							result.Data.Add ("success", "true");
+//							result.Data.Add ("success", "true");
 
 							break;
 						}
@@ -256,16 +256,16 @@ namespace Core.Resolvers.Addin
 						{
 							SorentoLib.Media media = SorentoLib.Media.Load (new Guid (request.Key<string> ("id")));
 
-							result.Data.Add ("id", media.Id);
-							result.Data.Add ("createtimestamp", media.CreateTimestamp);
-							result.Data.Add ("updatetimestamp", media.UpdateTimestamp);
-							result.Data.Add ("path", media.Path);
-							result.Data.Add ("directoryname", media.DirectoryName);
-							result.Data.Add ("filename", media.FileName);
-							result.Data.Add ("mimetype", media.Mimetype);
-							result.Data.Add ("size", media.Size);
-							result.Data.Add ("accesslevel", media.Accesslevel);
-							result.Data.Add ("status", media.Status);
+//							result.Data.Add ("id", media.Id);
+//							result.Data.Add ("createtimestamp", media.CreateTimestamp);
+//							result.Data.Add ("updatetimestamp", media.UpdateTimestamp);
+//							result.Data.Add ("path", media.Path);
+//							result.Data.Add ("directoryname", media.DirectoryName);
+//							result.Data.Add ("filename", media.FileName);
+//							result.Data.Add ("mimetype", media.Mimetype);
+//							result.Data.Add ("size", media.Size);
+//							result.Data.Add ("accesslevel", media.Accesslevel);
+//							result.Data.Add ("status", media.Status);
 
 							break;
 						}
@@ -318,7 +318,7 @@ namespace Core.Resolvers.Addin
 							{
 								mediatransformations.Add (mediatransformation.ToAjaxItem ());
 							}
-							result.Data.Add ("mediatransformations", mediatransformations);
+//							result.Data.Add ("mediatransformations", mediatransformations);
 
 							break;
 						}
@@ -344,11 +344,11 @@ namespace Core.Resolvers.Addin
 								{
 									data.Add (((Hashtable)request.Data["keys"])[key], SorentoLib.Services.Config.Get<string> (((Hashtable)request.Data["keys"])[key]));
 								}
-								result.Data.Add ("data", data);
+//								result.Data.Add ("data", data);
 							}
 							else
 							{
-								result.Data.Add ("value", SorentoLib.Services.Config.Get<string> (request.Key<string> ("module"), request.Key<string> ("key")));
+//								result.Data.Add ("value", SorentoLib.Services.Config.Get<string> (request.Key<string> ("module"), request.Key<string> ("key")));
 							}
 
 							break;
@@ -416,7 +416,7 @@ namespace Core.Resolvers.Addin
 							{
 								snapshots.Add (snapshot.ToAjaxItem ());
 							}
-							result.Data.Add ("snapshots", snapshots);
+//							result.Data.Add ("snapshots", snapshots);
 
 							break;
 						}

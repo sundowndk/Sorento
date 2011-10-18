@@ -102,7 +102,7 @@ namespace SorentoLib.Services
 		#region Public Methods
 		public void ToAjaxRespons (SorentoLib.Ajax.Respons Respons)
 		{
-			Respons.Data = this.ToAjaxItem ();
+//			Respons.Data = this.ToAjaxItem ();
 		}
 
 		public Hashtable ToAjaxItem ()

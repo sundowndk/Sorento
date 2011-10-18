@@ -286,7 +286,7 @@ namespace sCMS
 
 		public void ToAjaxResponse (SorentoLib.Ajax.Respons Respons)
 		{
-			Respons.Data = this.ToAjaxItem ();
+//			Respons.Data = this.ToAjaxItem ();
 		}
 
 		public Hashtable ToAjaxItem ()

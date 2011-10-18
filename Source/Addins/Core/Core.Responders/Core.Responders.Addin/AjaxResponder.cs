@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections;
 
 using Mono.Addins;
 
@@ -53,7 +54,11 @@ namespace Core.Responders.Addin
 					if (ajax.IsProvided(typename.Namspace))
 					{
 						respons = ajax.Process (Session, typename.Fullname, typename.Method);
-						respons.Data.Add ("success", "true");
+
+						Hashtable result = new Hashtable ();
+						result.Add ("success", "true");
+						respons.Add (result);
+
 						break;
 					}
 				}
@@ -63,12 +68,16 @@ namespace Core.Responders.Addin
 			catch (Exception exception)
 			{
 				respons = new SorentoLib.Ajax.Respons();
-				respons.Data.Add ("exception", exception.Message);
-				respons.Data.Add ("success", "false");
+
+				Hashtable result = new Hashtable ();
+				result.Add ("success", "false");
+				result.Add ("exception", exception.Message);
+
+				respons.Add (result);
 			}
 
 			Session.Responder.Request.SendOutputText (Session.Request.HttpHeader ("UTF-8", "text/xml"));
-			Session.Responder.Request.SendOutputText ("\n" + respons.WriteResponse ());
+			Session.Responder.Request.SendOutputText ("\n" + respons.OuterXml);
 
 			typename = null;
 			respons = null;

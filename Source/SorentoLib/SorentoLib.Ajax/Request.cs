@@ -1,5 +1,5 @@
 //
-// AjaxReqeust.cs: Parses Ajax requests data.
+// AjaxReqeust.cs
 //
 // Author:
 //   Rasmus Pedersen (rasmus@akvaservice.dk)
@@ -26,13 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#region Includes
 using System;
 using System.IO;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
-#endregion
 
 namespace SorentoLib.Ajax
 {	
@@ -57,8 +55,6 @@ namespace SorentoLib.Ajax
 		/// <param name="data">
 		///    A <see cref="string" /> of xmldata from request.
 		/// </param>
-		///
-
 		public void Test (XmlNodeList Nodes, Hashtable Data)
 		{
 			foreach (XmlNode node in Nodes)
