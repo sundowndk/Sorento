@@ -100,8 +100,8 @@ namespace SorentoLib.Ajax
 		private void Parse (object Object, XmlDocument XmlDocument)
 		{
 			switch (Object.GetType ().Name.ToLower ())
-			{
 				#region Hashtable
+			{
 				case "hashtable":
 				{
 					// Convert Hashtable to XmlDocument, and import nodes.
@@ -169,19 +169,20 @@ namespace SorentoLib.Ajax
 				default:
 				{
 					// Create new xml element.
-					XmlElement element = XmlDocument.CreateElement ("", Object.GetType ().FullName.ToLower (), "");
+//					XmlElement element = XmlDocument.CreateElement ("", Object.GetType ().FullName.ToLower (), "");
 
 					// Set xml element type to 'object'.
-					XmlAttribute type = XmlDocument.CreateAttribute ("type");
-					type.Value = "object";
-					element.Attributes.Append (type);
+//					XmlAttribute type = XmlDocument.CreateAttribute ("type");
+//					type.Value = "object";
+//					element.Attributes.Append (type);
 
 					if (Object.GetType ().GetMethod ("ToXmlDocument") != null)
 					{
 						// Call ToXMLDocument on all objects inside Object, and import nodes into XmlDocument.
-						foreach (XmlNode node in ((XmlDocument)Object.GetType ().GetMethod ("ToXmlDocument").Invoke (Object, null)).DocumentElement.ChildNodes)
+						foreach (XmlNode node in ((XmlDocument)Object.GetType ().GetMethod ("ToXmlDocument").Invoke (Object, null)).ChildNodes)
 						{
-							element.AppendChild (XmlDocument.ImportNode (node, true));
+//							element.AppendChild (XmlDocument.ImportNode (node, true));
+							XmlDocument.DocumentElement.AppendChild (XmlDocument.ImportNode (node, true));
 						}
 					}
 					else
@@ -191,7 +192,7 @@ namespace SorentoLib.Ajax
 					}
 
 					// Append element to XmlDocument.
-					XmlDocument.DocumentElement.AppendChild (element);
+//					XmlDocument.DocumentElement.AppendChild (element);
 					break;
 				}
 				#endregion

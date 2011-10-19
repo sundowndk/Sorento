@@ -56,7 +56,7 @@ namespace Core.Responders.Addin
 						respons = ajax.Process (Session, typename.Fullname, typename.Method);
 
 						Hashtable result = new Hashtable ();
-						result.Add ("success", "true");
+						result.Add ("success", true);
 						respons.Add (result);
 
 						break;
@@ -70,7 +70,7 @@ namespace Core.Responders.Addin
 				respons = new SorentoLib.Ajax.Respons();
 
 				Hashtable result = new Hashtable ();
-				result.Add ("success", "false");
+				result.Add ("success", false);
 				result.Add ("exception", exception.Message);
 
 				respons.Add (result);

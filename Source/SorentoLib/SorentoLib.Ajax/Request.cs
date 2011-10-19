@@ -44,7 +44,8 @@ namespace SorentoLib.Ajax
 		/// <summary>
 		///    Contains a list represention of the requestdata.
 		/// </summary>		
-		private Hashtable _data = new Hashtable();		
+		private Hashtable _data = new Hashtable ();
+		private Hashtable _data2 = new Hashtable ();
 		#endregion
 
 		#region Constructors
@@ -67,10 +68,29 @@ namespace SorentoLib.Ajax
 						break;
 					}
 
-//					case "boolean":
-//					{
-//						break;
-//					}
+					case "boolean":
+					{
+						Data.Add (node.Name, SNDK.Convert.IntToBool (int.Parse (node.InnerText)));
+						break;
+					}
+
+					case "object":
+					{
+//						Console.WriteLine (node.Name);
+						Hashtable hashtable = new Hashtable ();
+						Test (node.ChildNodes, hashtable);
+						Data.Add (node.Name, hashtable);
+
+						XmlDocument bla = new XmlDocument ();
+//						XmlElement element = bla.CreateElement ("", node.Name, "");
+
+						bla.AppendChild (bla.ImportNode (node, true));
+//						bla.AppendChild (element);
+
+
+						this._data2.Add (node.Name, bla);
+						break;
+					}
 
 					case "hashtable":
 					{
@@ -180,7 +200,13 @@ namespace SorentoLib.Ajax
 		{
 			get { return this._data; }
 		}
-		#endregion						
+
+		public Hashtable Data2
+		{
+			get { return this._data2; }
+		}
+
+		#endregion
 		
 		#region Public Methods
 		/// <summary>
