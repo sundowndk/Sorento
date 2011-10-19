@@ -28,8 +28,8 @@ using System.Threading;
 using System.Text;
 using System.Collections.Generic;
 using System.Collections;
-using Toolbox.DBI;
-using Toolbox.Enums;
+using SNDK.DBI;
+using SNDK.Enums;
 
 using System.Reflection;
 
@@ -80,16 +80,16 @@ namespace Test
 			comment2.Content = "blu blu blu blu blu";
 			comment2.Save ();
 
-			foreach (sBlog.Entry entry in blog1.Entries)
-			{
-				Console.WriteLine (entry.Title);
-
-				foreach (sBlog.Comment comment in entry.Comments)
-				{
-					Console.WriteLine ("\t"+ comment.Name);
-					Console.WriteLine ("\t\t"+ comment.Content);
-				}
-			}
+//			foreach (sBlog.Entry entry in blog1.Entries)
+//			{
+//				Console.WriteLine (entry.Title);
+//
+//				foreach (sBlog.Comment comment in entry.Comments)
+//				{
+//					Console.WriteLine ("\t"+ comment.Name);
+//					Console.WriteLine ("\t\t"+ comment.Content);
+//				}
+//			}
 //
 //
 //			sBlog.Blog.Delete (blog1.Id);
