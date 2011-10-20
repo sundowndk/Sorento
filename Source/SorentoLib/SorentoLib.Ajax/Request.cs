@@ -34,100 +34,204 @@ using System.Collections.Generic;
 
 namespace SorentoLib.Ajax
 {	
-	/// <summary>
-	///    This class handels ajax request data. It parses incomming data, and makes
-	///    it available as Hashtable.
-	/// </summary>
 	public class Request
-	{		
-		#region Private Fields
-		/// <summary>
-		///    Contains a list represention of the requestdata.
-		/// </summary>		
+	{
+		#region REMOVE
+		public T Key<T>(string variablename)
+		{
+			// Definitions
+			T result = default(T);
+
+			try
+			{
+				if (this._data.ContainsKey(variablename))
+				{
+					result = (T)this._data[variablename];
+				}
+			}
+			catch {}
+
+			// Finish
+			return (T)result;
+		}
+
+		public bool ContainsVariable(string variablename)
+		{
+			// Defintions
+			bool result = false;
+
+			result =  this._data.ContainsKey(variablename);
+
+			// Finish
+			return result;
+		}
+
 		private Hashtable _data = new Hashtable ();
 		private Hashtable _data2 = new Hashtable ();
-		#endregion
-
-		#region Constructors
-		/// <summary>
-		///    Constructs and initializes a new instance of
-		///    <see cref="AjaxRequest" /> from given requestdata.
-		/// </summary>
-		/// <param name="data">
-		///    A <see cref="string" /> of xmldata from request.
-		/// </param>
-		public void Test (XmlNodeList Nodes, Hashtable Data)
+		public Hashtable Data
 		{
-			foreach (XmlNode node in Nodes)
+			get
 			{
-				switch (node.Attributes["type"].Value.ToString().ToLower())
-				{
-					case "string":
-					{
-						Data.Add(node.Name, node.InnerText);
-						break;
-					}
-
-					case "boolean":
-					{
-						Data.Add (node.Name, SNDK.Convert.IntToBool (int.Parse (node.InnerText)));
-						break;
-					}
-
-					case "object":
-					{
-//						Console.WriteLine (node.Name);
-						Hashtable hashtable = new Hashtable ();
-						Test (node.ChildNodes, hashtable);
-						Data.Add (node.Name, hashtable);
-
-						XmlDocument bla = new XmlDocument ();
-//						XmlElement element = bla.CreateElement ("", node.Name, "");
-
-						bla.AppendChild (bla.ImportNode (node, true));
-//						bla.AppendChild (element);
-
-
-						this._data2.Add (node.Name, bla);
-						break;
-					}
-
-					case "hashtable":
-					{
-						Hashtable hashtable = new Hashtable ();
-						Test (node.ChildNodes, hashtable);
-						Data.Add (node.Name, hashtable);
-
-						break;
-					}
-
-					case "list":
-					{
-						List<Hashtable> list = new List<Hashtable>();
-						foreach (XmlNode node2 in node.ChildNodes)
-						{
-							Hashtable hashtable = new Hashtable ();
-							Test (node2.ChildNodes, hashtable);
-
-							list.Add (hashtable);
-						}
-						Data.Add (node.Name, list);
-
-						break;
-					}
-				}
+				return this._data;
 			}
 		}
 
-		public Request(string data)
+		public Hashtable Data2
 		{
-			// Parse xml.
+			get
+			{
+				return this._data2;
+			}
+		}
 
-			XmlDocument xml = new XmlDocument();
-			xml.Load(new StringReader(data));
-			XmlElement root = xml.DocumentElement;
+//		public T GetValue<T> (string xPath)
+//		{
+//			T result = default(T);
+//
+//			try
+//			{
+//				result = (T)this._data[variablename];
+//			}
+//			catch {}
+//
+//			// Finish
+//			return (T)result;
+//		}
+		#endregion
 
-			Test (root.ChildNodes, this._data);
+		#region Private Properties
+		private XmlDocument _xmldocument;
+		#endregion
+
+		#region Public Properties
+		public XmlDocument XmlDocument
+		{
+			get
+			{
+				return this._xmldocument;
+			}
+		}
+		#endregion
+
+		#region Constructor
+		public Request (string data)
+		{
+			// Create new xmldocument from data.
+			this._xmldocument = new XmlDocument ();
+			this._xmldocument.Load (new StringReader (data));
+		}
+		#endregion
+
+		#region Public Methods
+		public T getValue<T> (string xPath)
+		{
+			T result = default (T);
+
+			XmlDocument xml = GetXml (xPath);
+
+			try
+			{
+				if (typeof (T) == typeof (string))
+				{
+					result = (T)(object)xml.DocumentElement.InnerText;
+				}
+				else if (typeof (T) == typeof (Guid))
+				{
+					result = (T)(object)new Guid (xml.DocumentElement.InnerText);
+				}
+			}
+			catch
+			{
+				throw new Exception (string.Format (Strings.Exception.AjaxRequestCouldNotCastType, xPath, typeof(T).Name.ToUpper (), xml.DocumentElement.Attributes["type"].Value.ToString().ToUpper ()));
+			}
+
+			return result;
+		}
+
+		public XmlDocument GetXml (string xPath)
+		{
+			XmlDocument result = new XmlDocument ();
+
+			try
+			{
+				// Search for the given xPath.
+				result.AppendChild (result.ImportNode (this._xmldocument.SelectSingleNode ("/ajax/"+ xPath), true));
+			}
+			catch
+			{
+				throw new Exception (string.Format (Strings.Exception.AjaxRequestXPathNotFound, xPath));
+			}
+
+			return result;
+		}
+		#endregion
+	}
+}
+
+#region OLD
+//public void Test (XmlNodeList Nodes, Hashtable Data)
+//		{
+//			foreach (XmlNode node in Nodes)
+//			{
+//				switch (node.Attributes["type"].Value.ToString().ToLower())
+//				{
+//					case "string":
+//					{
+//						Data.Add(node.Name, node.InnerText);
+//						break;
+//					}
+//
+//					case "boolean":
+//					{
+//						Data.Add (node.Name, SNDK.Convert.IntToBool (int.Parse (node.InnerText)));
+//						break;
+//					}
+//
+//					case "object":
+//					{
+////						Console.WriteLine (node.Name);
+//						Hashtable hashtable = new Hashtable ();
+//						Test (node.ChildNodes, hashtable);
+//						Data.Add (node.Name, hashtable);
+//
+//						XmlDocument bla = new XmlDocument ();
+////						XmlElement element = bla.CreateElement ("", node.Name, "");
+//
+//						bla.AppendChild (bla.ImportNode (node, true));
+////						bla.AppendChild (element);
+//
+//
+//						this._data2.Add (node.Name, bla);
+//						break;
+//					}
+//
+//					case "hashtable":
+//					{
+//						Hashtable hashtable = new Hashtable ();
+//						Test (node.ChildNodes, hashtable);
+//						Data.Add (node.Name, hashtable);
+//
+//						break;
+//					}
+//
+//					case "list":
+//					{
+//						List<Hashtable> list = new List<Hashtable>();
+//						foreach (XmlNode node2 in node.ChildNodes)
+//						{
+//							Hashtable hashtable = new Hashtable ();
+//							Test (node2.ChildNodes, hashtable);
+//
+//							list.Add (hashtable);
+//						}
+//						Data.Add (node.Name, list);
+//
+//						break;
+//					}
+//				}
+//			}
+//		}
+
 
 //				if (node.Attributes["type"].Value.ToString().ToLower() == "string")
 //				{
@@ -151,7 +255,6 @@ namespace SorentoLib.Ajax
 //				}
 //			}
 
-		}
 
 //		public Request(string data)
 //		{
@@ -185,30 +288,7 @@ namespace SorentoLib.Ajax
 //			}
 //
 //		}
-		#endregion
-				
-		#region Public Properties		
-		/// <summary>
-		///    Gets an hashtable representation of the data recieved 
-		///    by the request.
-		/// </summary>
-		/// <value>
-		///    A <see cref="Hashtable" /> contains a list of variables
-		///    recieved from the request.
-		/// </value>
-		public Hashtable Data
-		{
-			get { return this._data; }
-		}
 
-		public Hashtable Data2
-		{
-			get { return this._data2; }
-		}
-
-		#endregion
-		
-		#region Public Methods
 		/// <summary>
 		///    Gets value of variable recieved by he request.
 		///    by the request.
@@ -230,43 +310,4 @@ namespace SorentoLib.Ajax
 //			// Finish
 //			return result;			
 //		}
-
-		/// <summary>
-		///    Gets value of variable recieved by he request.
-		///    by the request.
-		/// </summary>
-		/// <value>
-		///    A <see cref="string" /> contains value of variable.
-		/// </value>		
-		public T Key<T>(string variablename)
-		{
-			// Definitions
-			T result = default(T);
-			
-			try
-			{
-				if (this._data.ContainsKey(variablename))
-				{
-					result = (T)this._data[variablename];
-				}
-			}
-			catch {}
-			
-			// Finish
-			return (T)result;			
-		}
-
-		public bool ContainsVariable(string variablename)
-		{
-			// Defintions
-			bool result = false;
-
-			result =  this._data.ContainsKey(variablename);
-
-			// Finish
-			return result;
-		}
-
-		#endregion
-	}
-}
+#endregion

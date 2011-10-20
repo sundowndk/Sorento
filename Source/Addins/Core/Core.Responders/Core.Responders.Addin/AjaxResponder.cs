@@ -25,8 +25,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.Xml;
 using System.Collections;
-
 using Mono.Addins;
 
 using SorentoLib;
@@ -42,43 +42,51 @@ namespace Core.Responders.Addin
 		#endregion
 
 		#region Public Methods
-		public void Process (SorentoLib.Session Session)
+		public void Process (SorentoLib.Session session)
 		{
 			SorentoLib.Ajax.Respons respons = null;
-			SorentoLib.Tools.ParseTypeName typename = new SorentoLib.Tools.ParseTypeName(Session.Request.QueryJar.Get ("cmd.function").Value);
+			SorentoLib.Tools.ParseTypeName typename = new SorentoLib.Tools.ParseTypeName (session.Request.QueryJar.Get ("cmd.function").Value);
 
 			try
 			{
-				foreach (SorentoLib.Addins.IAjax ajax in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IAjax)))
+				// Find ajax addin that can respond to this request.
+				foreach (SorentoLib.Addins.IAjax ajax in AddinManager.GetExtensionObjects (typeof (SorentoLib.Addins.IAjax)))
 				{
-					if (ajax.IsProvided(typename.Namspace))
+					if (ajax.IsProvided (typename.Namspace))
 					{
-						respons = ajax.Process (Session, typename.Fullname, typename.Method);
+						respons = ajax.Process (session, typename.Fullname, typename.Method);
 
-						Hashtable result = new Hashtable ();
-						result.Add ("success", true);
-						respons.Add (result);
+						Hashtable status = new Hashtable ();
+						status.Add ("success", true);
+						respons.Add (status);
 
 						break;
 					}
 				}
 
-				//throw new Exception (string.Format ("[AJAX]: Namespace '{0}' was not found.", typename.Namspace));
+				// If no addin was found, throw exception.
+				if (respons == null)
+				{
+					throw new Exception (string.Format ("[AJAX]: Namespace '{0}' was not found.", typename.Namspace));
+				}
 			}
 			catch (Exception exception)
 			{
-				respons = new SorentoLib.Ajax.Respons();
+				// Handel exceptions, and parse the information onto the client.
+				respons = new SorentoLib.Ajax.Respons ();
 
-				Hashtable result = new Hashtable ();
-				result.Add ("success", false);
-				result.Add ("exception", exception.Message);
+				Hashtable status = new Hashtable ();
+				status.Add ("success", false);
+				status.Add ("exception", exception.Message);
 
-				respons.Add (result);
+				respons.Add (status);
 			}
 
-			Session.Responder.Request.SendOutputText (Session.Request.HttpHeader ("UTF-8", "text/xml"));
-			Session.Responder.Request.SendOutputText ("\n" + respons.OuterXml);
+			// Output ajax respons.
+			session.Responder.Request.SendOutputText (session.Request.HttpHeader ("UTF-8", "text/xml"));
+			session.Responder.Request.SendOutputText ("\n" + respons.XmlDocument.OuterXml);
 
+			// Cleanup
 			typename = null;
 			respons = null;
 		}
