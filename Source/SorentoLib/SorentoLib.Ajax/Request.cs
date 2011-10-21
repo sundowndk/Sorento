@@ -139,10 +139,14 @@ namespace SorentoLib.Ajax
 				{
 					result = (T)(object)new Guid (xml.DocumentElement.InnerText);
 				}
+				else if (typeof (T).BaseType == typeof (Enum))
+				{
+					result = SNDK.Convert.StringToEnum<T> (xml.DocumentElement.InnerText);
+				}
 			}
 			catch
 			{
-				throw new Exception (string.Format (Strings.Exception.AjaxRequestCouldNotCastType, xPath, typeof(T).Name.ToUpper (), xml.DocumentElement.Attributes["type"].Value.ToString().ToUpper ()));
+				throw new Exception (string.Format (Strings.Exception.AjaxRequestCouldNotCastType, xPath.ToUpper (), typeof(T).Name.ToUpper (), xml.DocumentElement.Attributes["type"].Value.ToString().ToUpper ()));
 			}
 
 			return result;
