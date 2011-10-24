@@ -66,6 +66,7 @@ namespace SorentoLib.Strings
 		public static string UserCreateEmail = "Could not create user. Email '{0}̈́' is allready in use.";
 		public static string UserSetUsername = "Username '{0}' is allready in use.";
 		public static string UserSetEmail = "Email '{0}' is allready in use.";
+		public static string UserLoad = "Could not load user. Please make sure you supplied a valid Id or Username.";
 		public static string UserLoadGuid = "Could not load user with id: {0}";
 		public static string UserLoadUsername = "Could not load user with username: {0}";
 		public static string UserSave = "Could not save user, with id: {0}";

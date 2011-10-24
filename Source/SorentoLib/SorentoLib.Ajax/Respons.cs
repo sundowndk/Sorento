@@ -200,7 +200,6 @@ namespace SorentoLib.Ajax
 						foreach (XmlNode node in ((XmlDocument)Object.GetType ().GetMethod ("ToXmlDocument").Invoke (Object, null)).DocumentElement.ChildNodes)
 						{
 							element.AppendChild (XmlDocument.ImportNode (node, true));
-//							XmlDocument.DocumentElement.AppendChild (XmlDocument.ImportNode (node, true));
 						}
 					}
 					else

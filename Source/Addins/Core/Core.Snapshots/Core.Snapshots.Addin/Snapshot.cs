@@ -55,51 +55,51 @@ namespace Core.Snapshots.Addin
 
 			#region USER
 			{
-				try
-				{
-					string root = SnapshotRoot + "sorentolib.user/";
-					Directory.CreateDirectory (root);
-					foreach (User user in User.List ())
-					{
-						try
-						{
-							SorentoLib.Tools.Helpers.ItemToFile (user.ToAjaxItem (), root + user.Id.ToString () +".xml");
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.user : " + exception.Message);
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add ("sorentolib.user : " + exception.Message);
-				}
+//				try
+//				{
+//					string root = SnapshotRoot + "sorentolib.user/";
+//					Directory.CreateDirectory (root);
+//					foreach (User user in User.List ())
+//					{
+//						try
+//						{
+//							SorentoLib.Tools.Helpers.ItemToFile (user.ToAjaxItem (), root + user.Id.ToString () +".xml");
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.user : " + exception.Message);
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add ("sorentolib.user : " + exception.Message);
+//				}
 			}
 			#endregion
 
 			#region USERGROUP
 			{
-				try
-				{
-					string root = SnapshotRoot + "sorentolib.usergroup/";
-					Directory.CreateDirectory (root);
-					foreach (Usergroup usergroup in Usergroup.List ())
-					{
-						try
-						{
-							SorentoLib.Tools.Helpers.ItemToFile (usergroup.ToAjaxItem (), root + usergroup.Id.ToString () +".xml");
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.usergroup : " + exception.Message);
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add ("sorentolib.usergroup : " + exception.Message);
-				}
+//				try
+//				{
+//					string root = SnapshotRoot + "sorentolib.usergroup/";
+//					Directory.CreateDirectory (root);
+//					foreach (Usergroup usergroup in Usergroup.List ())
+//					{
+//						try
+//						{
+//							SorentoLib.Tools.Helpers.ItemToFile (usergroup.ToAjaxItem (), root + usergroup.Id.ToString () +".xml");
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.usergroup : " + exception.Message);
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add ("sorentolib.usergroup : " + exception.Message);
+//				}
 			}
 			#endregion
 
@@ -315,91 +315,91 @@ namespace Core.Snapshots.Addin
 
 			#region USERGROUP
 			{
-				string root = SnapshotRoot + "sorentolib.usergroup/";
-
-				try
-				{
-					foreach (Usergroup usergroup in Usergroup.List ())
-					{
-						try
-						{
-							QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-							qb.Table (Usergroup.DatabaseTableName);
-							qb.AddWhere ("id", "=", usergroup.Id);
-
-							Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-							query.Dispose ();
-							query = null;
-							qb = null;
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.usergroup :"+ exception.Message);
-						}
-					}
-
-					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
-					{
-						try
-						{
-							Usergroup usergroup = SorentoLib.Usergroup.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
-							usergroup.Save ();
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.usergroup :"+ exception.Message);
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add ("sorentolib.usergroup: "+ exception.Message);
-				}
+//				string root = SnapshotRoot + "sorentolib.usergroup/";
+//
+//				try
+//				{
+//					foreach (Usergroup usergroup in Usergroup.List ())
+//					{
+//						try
+//						{
+//							QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
+//							qb.Table (Usergroup.DatabaseTableName);
+//							qb.AddWhere ("id", "=", usergroup.Id);
+//
+//							Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
+//							query.Dispose ();
+//							query = null;
+//							qb = null;
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.usergroup :"+ exception.Message);
+//						}
+//					}
+//
+//					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
+//					{
+//						try
+//						{
+//							Usergroup usergroup = SorentoLib.Usergroup.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
+//							usergroup.Save ();
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.usergroup :"+ exception.Message);
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add ("sorentolib.usergroup: "+ exception.Message);
+//				}
 			}
 			#endregion
 
 			#region USER
 			{
-				string root = SnapshotRoot + "sorentolib.user/";
-
-				try
-				{
-					foreach (User user in User.List ())
-					{
-						try
-						{
-							QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-							qb.Table (User.DatabaseTableName);
-							qb.AddWhere ("id", "=", user.Id);
-
-							Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-							query.Dispose ();
-							query = null;
-							qb = null;
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.user: "+ exception.Message);
-						}
-					}
-
-					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
-					{
-						try
-						{
-							User user = SorentoLib.User.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
-							user.Save ();
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.user: "+ exception.Message);
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add ("sorentolib.user: "+ exception.Message);
-				}
+//				string root = SnapshotRoot + "sorentolib.user/";
+//
+//				try
+//				{
+//					foreach (User user in User.List ())
+//					{
+//						try
+//						{
+//							QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
+//							qb.Table (User.DatabaseTableName);
+//							qb.AddWhere ("id", "=", user.Id);
+//
+//							Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
+//							query.Dispose ();
+//							query = null;
+//							qb = null;
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.user: "+ exception.Message);
+//						}
+//					}
+//
+//					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
+//					{
+//						try
+//						{
+//							User user = SorentoLib.User.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
+//							user.Save ();
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.user: "+ exception.Message);
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add ("sorentolib.user: "+ exception.Message);
+//				}
 			}
 			#endregion
 

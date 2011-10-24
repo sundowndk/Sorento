@@ -52,6 +52,8 @@ namespace Core.Responders.Addin
 				// Find ajax addin that can respond to this request.
 				foreach (SorentoLib.Addins.IAjax ajax in AddinManager.GetExtensionObjects (typeof (SorentoLib.Addins.IAjax)))
 				{
+
+
 					if (ajax.IsProvided (typename.Namspace))
 					{
 						respons = ajax.Process (session, typename.Fullname, typename.Method);

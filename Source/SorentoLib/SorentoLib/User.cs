@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -51,40 +52,6 @@ namespace SorentoLib
 		private string _email;
 		private Guid _avatarid;
 		private Enums.UserStatus _status;
-
-
-
-//		private Media _avatar;
-//		private List<Usergroup> _usergroups;
-
-//		private string _avatarid
-//		{
-//			get
-//			{
-//				if (this._avatar != null)
-//				{
-//					return this._avatar.Id.ToString ();
-//				}
-//				else
-//				{
-//					return string.Empty;
-//				}
-//			}
-//
-//			set
-//			{
-//				try
-//				{
-//					this._avatar = Media.Load (new Guid (value));
-//				}
-//				catch
-//				{
-//					// LOG: ErrorUserLoadAvatar
-//					Services.Logging.LogError (string.Format (Strings.LogError.UserLoadAvatar, value));
-//				}
-//			}
-//		}
-
 
 		private string __usergroups_as_string
 		{
@@ -312,31 +279,32 @@ namespace SorentoLib
 		}
 		#endregion
 
-		#region Constructors
-		public User (string Username, string Email)
+		#region Constructor
+		public User (string username, string email)
 		{
 			this._id = Guid.NewGuid ();
 			this._createtimestamp = Date.CurrentDateTimeToTimestamp ();
 			this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
 			this._usergroups = new List<Usergroup> ();
-			this._username = string.Empty;
+			this._username = username;
 			this._password = string.Empty;
 			this._realname = string.Empty;
-			this._email = string.Empty;
+			this._email = email;
 			this._avatarid = Guid.Empty;
 			this._status = Enums.UserStatus.None;
 
-			// Check if specified username and email is available.
-			if (User.IsUsernameInUse (Username))
+			// Check if specified username is available.
+			if (User.IsUsernameInUse (username))
 			{
 				// EXCEPTION: UserCreateUsername
-				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateUsername, Username));
+				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateUsername, username));
 			}
 
-			if (User.IsEmailInUse (Email))
+			// Check if specified email is available.
+			if (User.IsEmailInUse (email))
 			{
 				// EXCEPTION: UserCreateEmail
-				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateEmail, Email));
+				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateEmail, email));
 			}
 
 			// Add default usergroup.
@@ -386,7 +354,9 @@ namespace SorentoLib
 			this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
 
 			qb.Table (DatabaseTableName);
-			qb.Columns ("id",
+			qb.Columns
+				(
+					"id",
 			            "createtimestamp",
 			            "updatetimestamp",
 			            "usergroups",
@@ -395,18 +365,22 @@ namespace SorentoLib
 			            "realname",
 			            "email",
 			            "avatar",
-			            "status");
+			            "status"
+				);
 
-			qb.Values (this._id,
-			           this._createtimestamp,
-			           this._updatetimestamp,
-			           this.__usergroups_as_string,
-			           this._username,
-			           this._password,
-			           this._realname,
-			           this._email,
-			           this._avatarid,
-			           this._status);
+			qb.Values
+				(
+					this._id,
+					this._createtimestamp,
+					this._updatetimestamp,
+					this.__usergroups_as_string,
+					this._username,
+					this._password,
+					this._realname,
+					this._email,
+					this._avatarid,
+					this._status
+				);
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
 
@@ -425,42 +399,15 @@ namespace SorentoLib
 			}
 		}
 
-		public bool Authenticate (string Password)
-		{
-			bool result = false;
 
-			if (this._status != Enums.UserStatus.Disabled)
-			{
-				if (this._password == Password)
-				{
-					result = true;
-				}
-			}
-
-			return result;
-		}
-
-		public void ToAjaxRespons (SorentoLib.Ajax.Respons Respons)
-		{
-//			Respons.Data = this.ToAjaxItem ();
-		}
-
-		public Hashtable ToAjaxItem ()
+		public XmlDocument ToXmlDocument ()
 		{
 			Hashtable result = new Hashtable ();
 
 			result.Add ("id", this._id);
 			result.Add ("createtimestamp", this._createtimestamp);
 			result.Add ("updatetimestamp", this._updatetimestamp);
-			result.Add ("usergroupids", this.__usergroups_as_string);
-
-//			List<Hashtable> usergroups = new List<Hashtable> ();
-//			foreach (Usergroup usergroup in this.Usergroups)
-//			{
-//				usergroups.Add (usergroup.ToAjaxItem ());
-//			}
-//			result.Add ("usergroups", usergroups);
-
+			result.Add ("usergroups", this._usergroups);
 			result.Add ("username", this._username);
 			result.Add ("password", this._password);
 			result.Add ("realname", this._realname);
@@ -469,47 +416,53 @@ namespace SorentoLib
 			result.Add ("accesslevel", this.Accesslevel);
 			result.Add ("status", this._status);
 
-
-			return result;
+			return SNDK.Convert.HashtabelToXmlDocument (result, this.GetType ().FullName.ToLower ());
 		}
 		#endregion
 
 		#region Public Static Methods
-		public static User Load (string Username)
+		public static User Load (string username)
 		{
-			return Load (Guid.Empty, Username);
+			return Load (Guid.Empty, username);
 		}
 
-		public static User Load (Guid Id)
+		public static User Load (Guid id)
 		{
-			return Load (Id, string.Empty);
+			return Load (id, string.Empty);
 		}
 
-		private static User Load (Guid Id, string Username)
+		private static User Load (Guid id, string username)
 		{
 			bool success = false;
 			User result = new User ();
 
 			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
 			qb.Table (SorentoLib.User.DatabaseTableName);
-			qb.Columns ("id",
-			            "createtimestamp",
-			            "updatetimestamp",
+			qb.Columns
+				(
+					"id",
+					"createtimestamp",
+					"updatetimestamp",
 			            "usergroups",
 			            "username",
 			            "password",
 			            "realname",
 			            "email",
 			            "avatar",
-			            "status");
+			            "status"
+				);
 
-			if (Id != Guid.Empty)
+			if (id != Guid.Empty)
 			{
-				qb.AddWhere ("id", "=", Id);
+				qb.AddWhere ("id", "=", id);
+			}
+			else if (username != string.Empty)
+			{
+				qb.AddWhere ("username", "=", username);
 			}
 			else
 			{
-				qb.AddWhere ("username", "=", Username);
+				throw new Exception (Strings.Exception.UserLoad);
 			}
 
 			Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
@@ -539,43 +492,43 @@ namespace SorentoLib
 
 			if (!success)
 			{
-				if (Id != Guid.Empty)
+				if (id != Guid.Empty)
 				{
-					throw new Exception (string.Format (Strings.Exception.UserLoadGuid, Id));
+					throw new Exception (string.Format (Strings.Exception.UserLoadGuid, id));
 				}
 				else
 				{
-					throw new Exception (string.Format (Strings.Exception.UserLoadUsername, Username));
+					throw new Exception (string.Format (Strings.Exception.UserLoadUsername, username));
 				}
 			}
 
 			return result;
 		}
 
-		public static void Delete (string Username)
+		public static void Delete (string username)
 		{
-			Delete (Guid.Empty, Username);
+			Delete (Guid.Empty, username);
 		}
 
-		public static void Delete (Guid Id)
+		public static void Delete (Guid id)
 		{
-			Delete (Id, string.Empty);
+			Delete (id, string.Empty);
 		}
 
-		private static void Delete (Guid Id, string Username)
+		private static void Delete (Guid id, string username)
 		{
 			bool success = false;
 
 			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
 			qb.Table (DatabaseTableName);
 
-			if (Id != Guid.Empty)
+			if (id != Guid.Empty)
 			{
-				qb.AddWhere ("id", "=", Id);
+				qb.AddWhere ("id", "=", id);
 			}
 			else
 			{
-				qb.AddWhere ("username", "=", Username);
+				qb.AddWhere ("username", "=", username);
 			}
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
@@ -595,23 +548,23 @@ namespace SorentoLib
 			}
 			else
 			{
-				if (Id != Guid.Empty)
+				if (id != Guid.Empty)
 				{
-					throw new Exception (string.Format (Strings.Exception.UserDeleteGuid, Id));
+					throw new Exception (string.Format (Strings.Exception.UserDeleteGuid, id));
 				}
 				else
 				{
-					throw new Exception (string.Format (Strings.Exception.UserDeleteUsername, Username));
+					throw new Exception (string.Format (Strings.Exception.UserDeleteUsername, username));
 				}
 			}
 		}
 
-		public static List<User> List()
+		public static List<User> List ()
 		{
 			return List (Enums.UserListFilter.None, null);
 		}
 
-		public static List<User> List(Enums.UserListFilter Filter, Object FilterData)
+		public static List<User> List (Enums.UserListFilter filter, object filterData)
 		{
 			List<User> result = new List<User>();
 
@@ -619,10 +572,10 @@ namespace SorentoLib
 			qb.Table (DatabaseTableName);
 			qb.Columns ("id");
 
-			switch (Filter) {
+			switch (filter) {
 				case SorentoLib.Enums.UserListFilter.OnlyUsersThatIsMemberOfUsergroupId:
 				{
-					qb.AddWhere ("usergroups", "like", "%"+ ((Guid)FilterData).ToString () +"%");
+					qb.AddWhere ("usergroups", "like", "%"+ ((Guid)filterData).ToString () +"%");
 					break;
 				}
 			}
@@ -644,24 +597,24 @@ namespace SorentoLib
 			return result;
 		}
 
-		static public bool IsUsernameInUse (string Username)
+		static public bool IsUsernameInUse (string username)
 		{
-			return IsUsernameInUse (Username, Guid.Empty);
+			return IsUsernameInUse (username, Guid.Empty);
 		}
 
-		static public bool IsUsernameInUse (string Username, Guid FilterOutUserId)
+		static public bool IsUsernameInUse (string username, Guid filterOutUserId)
 		{
 			bool result = false;
 
 			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
 			qb.Table (DatabaseTableName);
 			qb.Columns ("id");
-			qb.AddWhere ("username", "=", Username);
+			qb.AddWhere ("username", "=", username);
 
-			if (FilterOutUserId != Guid.Empty)
+			if (filterOutUserId != Guid.Empty)
 			{
 				qb.AddWhereAND ();
-				qb.AddWhere ("id", "!=", FilterOutUserId);
+				qb.AddWhere ("id", "!=", filterOutUserId);
 			}
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
@@ -685,7 +638,7 @@ namespace SorentoLib
 			return IsEmailInUse(Email, Guid.Empty);
 		}
 
-		static public bool IsEmailInUse (string Email, Guid FilterOutUserId)
+		static public bool IsEmailInUse (string Email, Guid filterOutUserId)
 		{
 			bool result = false;
 
@@ -694,10 +647,10 @@ namespace SorentoLib
 			qb.Columns ("id");
 			qb.AddWhere ("email", "=", Email);
 
-			if (FilterOutUserId != Guid.Empty)
+			if (filterOutUserId != Guid.Empty)
 			{
 				qb.AddWhereAND ();
-				qb.AddWhere ("id", "!=", FilterOutUserId);
+				qb.AddWhere ("id", "!=", filterOutUserId);
 			}
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
@@ -716,96 +669,72 @@ namespace SorentoLib
 			return result;
 		}
 
-		public static User FromAjaxRequest (SorentoLib.Ajax.Request Request)
+		public static User FromXmlDocument (XmlDocument xmlDocument)
 		{
-			return User.FromAjaxItem (Request.Data);
-		}
+			Hashtable item = SNDK.Convert.XmlDocumentToHashtable (xmlDocument);
 
-		public static User FromAjaxItem (Hashtable Item)
-		{
-			User result = null;
+			User result;
 
-			Guid id = Guid.Empty;
-
-			try
-			{
-				id = new Guid ((string)Item["id"]);
-			}
-			catch {}
-
-			if (id != Guid.Empty)
+			if (item.ContainsKey ("id"))
 			{
 				try
 				{
-					result = User.Load (id);
+					result = User.Load (new Guid ((string)item["id"]));
 				}
 				catch
 				{
 					result = new User ();
-					result._id = id;
-					if (Item.ContainsKey ("createtimestamp"))
-					{
-						result._createtimestamp = int.Parse ((string)Item["createtimestamp"]);
-					}
-
-					if (Item.ContainsKey ("updatetimestamp"))
-					{
-						result._createtimestamp = int.Parse ((string)Item["updatetimestamp"]);
-					}
+					result._id = new Guid ((string)item["id"]);
+					result._username = (string)item["name"];
+					result._email = (string)item["email"];
 				}
 			}
 			else
 			{
-				try
-				{
-					result = new User ((string)Item["username"], (string)Item["email"]);
-				}
-				catch (Exception E)
-				{
-					throw new Exception (string.Format (Strings.Exception.UserFromAjaxItem, E.ToString ()));
-				}
+				throw new Exception ("USER1");
 			}
 
-			if (Item.ContainsKey ("usergroupids"))
+
+			if (item.ContainsKey ("usergroupids"))
 			{
-				result.__usergroups_as_string = (string)Item["usergroupids"];
+				result.__usergroups_as_string = (string)item["usergroupids"];
 			}
 
-			if (Item.ContainsKey ("username"))
+			if (item.ContainsKey ("username"))
 			{
-				result.Username = (string)Item["username"];
+				result.Username = (string)item["username"];
 			}
 
-			if (Item.ContainsKey ("password"))
+			if (item.ContainsKey ("password"))
 			{
-				if ((string)Item["password"] != string.Empty)
+				if ((string)item["password"] != string.Empty)
 				{
-					result._password = (string)Item["password"];
+					result._password = (string)item["password"];
 				}
 			}
 
-			if (Item.ContainsKey ("email"))
+			if (item.ContainsKey ("email"))
 			{
-				result.Email = (string)Item["email"];
+				result.Email = (string)item["email"];
 			}
 
-			if (Item.ContainsKey ("realname"))
+			if (item.ContainsKey ("realname"))
 			{
-				result._realname = (string)Item["realname"];
+				result._realname = (string)item["realname"];
 			}
 
-			if (Item.ContainsKey ("avatarid"))
+			if (item.ContainsKey ("avatarid"))
 			{
 				try
 				{
-					result._avatarid = new Guid ((string)Item["avatarid"]);
+					result._avatarid = new Guid ((string)item["avatarid"]);
 				}
 				catch {}
 			}
 
-			if (Item.ContainsKey ("status"))
+			if (item.ContainsKey ("status"))
 			{
-				result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UserStatus> ((string)Item["status"]);
+				result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UserStatus> ((string)item["status"]);
 			}
 
 			return result;
@@ -858,5 +787,63 @@ namespace SorentoLib
 			Services.Logging.LogDebug (Strings.LogDebug.UserStats);
 		}
 		#endregion
+
+
+		#region OLD
+//		private Media _avatar;
+//		private List<Usergroup> _usergroups;
+
+//		private string _avatarid
+//		{
+//			get
+//			{
+//				if (this._avatar != null)
+//				{
+//					return this._avatar.Id.ToString ();
+//				}
+//				else
+//				{
+//					return string.Empty;
+//				}
+//			}
+//
+//			set
+//			{
+//				try
+//				{
+//					this._avatar = Media.Load (new Guid (value));
+//				}
+//				catch
+//				{
+//					// LOG: ErrorUserLoadAvatar
+//					Services.Logging.LogError (string.Format (Strings.LogError.UserLoadAvatar, value));
+//				}
+//			}
+//		}
+					//result.Add ("usergroupids", this.__usergroups_as_string);
+//			List<Hashtable> usergroups = new List<Hashtable> ();
+//			foreach (Usergroup usergroup in this.Usergroups)
+//			{
+//				usergroups.Add (usergroup ());
+//			}
+		public bool Authenticate (string Password)
+		{
+			bool result = false;
+
+			if (this._status != Enums.UserStatus.Disabled)
+			{
+				if (this._password == Password)
+				{
+					result = true;
+				}
+			}
+
+			return result;
+		}
+
+		#endregion
+
 	}
 }
+
+

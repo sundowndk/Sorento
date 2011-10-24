@@ -32,29 +32,20 @@ using SorentoLib;
 
 namespace Core.Resolvers.Addin
 {
-	public class Ajax : SorentoLib.Addins.IAjax
+	public class Ajax : SorentoLib.Addins.IAjaxBaseClass, SorentoLib.Addins.IAjax
 	{
-		#region Private Fields
-		private List<string> _namespaces = new List<string> ();
-		#endregion
-
 		#region Constructor
 		public Ajax ()
 		{
-			this._namespaces.Add ("sorentolib");
-			this._namespaces.Add ("sorentolib.services");
-			this._namespaces.Add ("sorentolib.services.config");
-			this._namespaces.Add ("sorentolib.services.snapshot");
+			base.NameSpaces.Add ("sorentolib");
+			base.NameSpaces.Add ("sorentolib.services");
+			base.NameSpaces.Add ("sorentolib.services.config");
+			base.NameSpaces.Add ("sorentolib.services.snapshot");
 		}
 		#endregion
 
 		#region Public Methods
-		public bool IsProvided (string Namespace)
-		{
-			return this._namespaces.Exists (delegate (string s) {return (s == Namespace.ToLower ());});
-		}
-
-		public SorentoLib.Ajax.Respons Process (SorentoLib.Session Session, string Fullname, string Method)
+		new public SorentoLib.Ajax.Respons Process (SorentoLib.Session Session, string Fullname, string Method)
 		{
 			SorentoLib.Ajax.Respons result = new SorentoLib.Ajax.Respons ();
 			SorentoLib.Ajax.Request request = new SorentoLib.Ajax.Request (Session.Request.QueryJar.Get ("data").Value);
@@ -68,50 +59,33 @@ namespace Core.Resolvers.Addin
 					{
 						case "new":
 						{
-							Usergroup usergroup = Usergroup.FromAjaxRequest (request);
-							usergroup.Save ();
-							usergroup.ToAjaxRespons (result);
-
+							result.Add (new SorentoLib.Usergroup ());
 							break;
 						}
 
 						case "load":
 						{
-							Usergroup usergroup = Usergroup.Load (new Guid (request.Key<string> ("id")));
-							usergroup.ToAjaxRespons (result);
-
+							result.Add (SorentoLib.Usergroup.Load (request.getValue<Guid> ("id")));
 							break;
 						}
 
 						case "save":
 						{
-							Usergroup usergroup = Usergroup.FromAjaxRequest (request);
-							usergroup.Save ();
-
+							SorentoLib.Usergroup.FromXmlDocument (request.GetXml ("sorentolib.usergroup")).Save ();
 							break;
 						}
 
 						case "delete":
 						{
-							Usergroup.Delete (new Guid (request.Key<string> ("id")));
-
+							SorentoLib.Usergroup.Delete (request.getValue<Guid> ("id"));
 							break;
 						}
 
 						case "list":
 						{
-							List<Hashtable> usergroups = new List<Hashtable> ();
-							foreach (SorentoLib.Usergroup usergroup in SorentoLib.Usergroup.List ())
-							{
-								usergroups.Add (usergroup.ToAjaxItem ());
-							}
-//							result.Data.Add ("usergroups", usergroups);
-
+							result.Add (SorentoLib.Usergroup.List ());
 							break;
 						}
-
-						default:
-							break;
 					}
 					break;
 				}
@@ -126,52 +100,39 @@ namespace Core.Resolvers.Addin
 
 						case "new":
 						{
-							User user = User.FromAjaxRequest (request);
-							user.Save ();
-							user.ToAjaxRespons (result);
+//							result.Add (new SorentoLib.User)
 
 							break;
 						}
 
 						case "load":
 						{
-							User user = User.Load (new Guid (request.Key<string> ("id")));
-							user.ToAjaxRespons (result);
-
+							result.Add (SorentoLib.User.Load (request.getValue<Guid> ("id")));
 							break;
 						}
 
 						case "save":
 						{
-							User user = User.FromAjaxRequest (request);
-							user.Save ();
-
+							SorentoLib.User.FromXmlDocument (request.GetXml ("sorentolib.user"));
 							break;
 						}
 
 						case "delete":
 						{
-							User.Delete (new Guid (request.Key<string> ("id")));
-
+							SorentoLib.User.Delete (request.getValue<Guid> ("id"));
 							break;
 						}
 
 						case "list":
 						{
-							List<Hashtable> users = new List<Hashtable> ();
-							foreach (SorentoLib.User user in SorentoLib.User.List ())
-							{
-								users.Add (user.ToAjaxItem ());
-							}
-//							result.Data.Add ("users", users);
-
+							result.Add (SorentoLib.User.List ());
 							break;
 						}
 
 						case "changepassword":
 						{
-							string oldpassword = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (request.Key<string> ("oldpassword"))));
-							string newpassword = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (request.Key<string> ("newpassword"))));
+//							string oldpassword = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (request.Key<string> ("oldpassword"))));
+//							string newpassword = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (request.Key<string> ("newpassword"))));
 
 //							SorentoLib.User user = new SorentoLib.User ();
 //							if (user.Load (new Guid (request.Data<string> ("id"))))

@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -159,21 +160,27 @@ namespace SorentoLib
 			}
 
 			qb.Table (DatabaseTableName);
-			qb.Columns ("id",
+			qb.Columns
+				(
+					"id",
 			            "createtimestamp",
 			            "updatetimestamp",
 			            "type",
 			            "name",
 			            "accesslevel",
-			            "status");
+			            "status"
+				);
 
-			qb.Values (this._id,
-			           this._createtimestamp,
-			           this._updatetimestamp,
-			           this._type,
-			           this._name,
-			           this._accesslevel,
-			           this._status);
+			qb.Values
+				(
+					this._id,
+					this._createtimestamp,
+					this._updatetimestamp,
+					this._type,
+					this._name,
+					this._accesslevel,
+					this._status
+				);
 				
 			Query query = Services.Database.Connection.Query (qb.QueryString);
 			
@@ -192,12 +199,7 @@ namespace SorentoLib
 			}
 		}
 
-		public void ToAjaxRespons (SorentoLib.Ajax.Respons Respons)
-		{
-//			Respons.Data = this.ToAjaxItem ();
-		}
-
-		public Hashtable ToAjaxItem ()
+		public XmlDocument ToXmlDocument ()
 		{
 			Hashtable result = new Hashtable ();
 
@@ -209,12 +211,12 @@ namespace SorentoLib
 			result.Add ("accesslevel", this._accesslevel);
 			result.Add ("status", this._status);
 
-			return result;
+			return SNDK.Convert.HashtabelToXmlDocument (result, this.GetType ().FullName.ToLower ());
 		}
 		#endregion
 
 		#region Public Static Methods
-		public static Usergroup Load (Guid Id)
+		public static Usergroup Load (Guid id)
 		{
 			bool success = false;
 			Usergroup result = new Usergroup ();
@@ -222,15 +224,18 @@ namespace SorentoLib
 			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
 
 			qb.Table (DatabaseTableName);
-			qb.Columns ("id",
+			qb.Columns
+				(
+					"id",
 			            "createtimestamp",
 			            "updatetimestamp",
 			            "type",
 			            "name",
 			            "accesslevel",
-			            "status");
+			            "status"
+				);
 
-			qb.AddWhere ("id", "=", Id);
+			qb.AddWhere ("id", "=", id);
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
 			if (query.Success)
@@ -255,20 +260,20 @@ namespace SorentoLib
 
 			if (!success)
 			{
-				throw new Exception (string.Format (Strings.Exception.UsergroupLoad, Id));
+				throw new Exception (string.Format (Strings.Exception.UsergroupLoad, id));
 			}
 
 			return result;
 		}
 
-		public static void Delete (Guid Id)
+		public static void Delete (Guid id)
 		{
 			bool success = false;
 
 			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
 
 			qb.Table (DatabaseTableName);
-			qb.AddWhere ("id", "=", Id);
+			qb.AddWhere ("id", "=", id);
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
 
@@ -283,7 +288,7 @@ namespace SorentoLib
 
 			if (!success)
 			{
-				throw new Exception (string.Format (Strings.Exception.UsergroupDelete, Id));
+				throw new Exception (string.Format (Strings.Exception.UsergroupDelete, id));
 			}
 		}
 		
@@ -292,7 +297,7 @@ namespace SorentoLib
 			return List (Enums.UsergroupListFilter.None, null);
 		}
 							
-		public static List<Usergroup> List(Enums.UsergroupListFilter Filter , object FilterData)
+		public static List<Usergroup> List(Enums.UsergroupListFilter filter , object filterData)
 		{
 			List<Usergroup> result = new List<Usergroup>();
 
@@ -301,11 +306,11 @@ namespace SorentoLib
 			qb.Table (DatabaseTableName);
 			qb.Columns ("id");
 
-			switch (Filter)
+			switch (filter)
 			{
 				case SorentoLib.Enums.UsergroupListFilter.ExcludeUsergroupsThatUserIdIsMemberOf:
 				{
-					User user = User.Load ((Guid)FilterData);
+					User user = User.Load ((Guid)filterData);
 
 					foreach (Usergroup usergroup in user.Usergroups)
 					{
@@ -318,7 +323,7 @@ namespace SorentoLib
 
 				case SorentoLib.Enums.UsergroupListFilter.ExcludeUsergroupsThatUsernameIsMemberOf:
 				{
-					User user = User.Load ((string)FilterData);
+					User user = User.Load ((string)filterData);
 
 					foreach (Usergroup usergroup in user.Usergroups)
 					{
@@ -352,73 +357,50 @@ namespace SorentoLib
 			query = null;
 			qb = null;
 
-			// TODO: this should probally be done by the render.
-			result.Sort(delegate(Usergroup o1, Usergroup o2) { return o1._name.CompareTo(o2._name); });
-
 			return result;
 		}
 
-		public static Usergroup FromAjaxRequest (SorentoLib.Ajax.Request Request)
+		public static Usergroup FromXmlDocument (XmlDocument xmlDocument)
 		{
-			return FromAjaxItem (Request.Data);
-		}
+			Hashtable item = SNDK.Convert.XmlDocumentToHashtable (xmlDocument);
 
-		public static Usergroup FromAjaxItem (Hashtable Item)
-		{
-			Usergroup result = null;
+			Usergroup result;
 
-			Guid id = Guid.Empty;
-
-			try
-			{
-				id = new Guid ((string)Item["id"]);
-			}
-			catch {}
-
-			if (id != Guid.Empty)
+			if (item.ContainsKey ("id"))
 			{
 				try
 				{
-					result = Usergroup.Load (id);
+					result = Usergroup.Load (new Guid ((string)item["id"]));
 				}
 				catch
 				{
 					result = new Usergroup ();
-					result._id = id;
-					if (Item.ContainsKey ("createtimestamp"))
-					{
-						result._createtimestamp = int.Parse ((string)Item["createtimestamp"]);
-					}
-
-					if (Item.ContainsKey ("updatetimestamp"))
-					{
-						result._createtimestamp = int.Parse ((string)Item["updatetimestamp"]);
-					}
+					result._id = new Guid ((string)item["id"]);
 				}
 			}
 			else
 			{
-				result = new Usergroup ();
+				throw new Exception ("USERGROUP1");
 			}
 
-			if (Item.ContainsKey ("type"))
+			if (item.ContainsKey ("type"))
 			{
-				result._type = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupType> ((string)Item["type"]);
+				result._type = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupType> ((string)item["type"]);
 			}
 
-			if (Item.ContainsKey ("name"))
+			if (item.ContainsKey ("name"))
 			{
-				result._name = (string)Item["name"];
+				result._name = (string)item["name"];
 			}
 
-			if (Item.ContainsKey ("accesslevel"))
+			if (item.ContainsKey ("accesslevel"))
 			{
-				result._accesslevel = SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel> ((string)Item["accesslevel"]);
+				result._accesslevel = SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel> ((string)item["accesslevel"]);
 			}
 
-			if (Item.ContainsKey ("status"))
+			if (item.ContainsKey ("status"))
 			{
-				result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupStatus> ((string)Item["status"]);
+				result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupStatus> ((string)item["status"]);
 			}
 
 			return result;
@@ -448,3 +430,9 @@ namespace SorentoLib
 		#endregion
 	}
 }
+
+#region OLD
+			// TODO: this should probally be done by the render.
+			//result.Sort(delegate(Usergroup o1, Usergroup o2) { return o1._name.CompareTo(o2._name); });
+
+#endregion
