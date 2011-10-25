@@ -143,8 +143,12 @@ namespace SorentoLib.Ajax
 				{
 					result = SNDK.Convert.StringToEnum<T> (xml.DocumentElement.InnerText);
 				}
+				else
+				{
+					result = (T)typeof (T).GetMethod ("FromXmlDocument").Invoke (null, new Object[] { xml });
+				}
 			}
-			catch
+			catch (Exception e)
 			{
 				throw new Exception (string.Format (Strings.Exception.AjaxRequestCouldNotCastType, xPath.ToUpper (), typeof(T).Name.ToUpper (), xml.DocumentElement.Attributes["type"].Value.ToString().ToUpper ()));
 			}

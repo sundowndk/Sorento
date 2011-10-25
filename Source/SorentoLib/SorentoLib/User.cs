@@ -416,7 +416,7 @@ namespace SorentoLib
 			result.Add ("accesslevel", this.Accesslevel);
 			result.Add ("status", this._status);
 
-			return SNDK.Convert.HashtabelToXmlDocument (result, this.GetType ().FullName.ToLower ());
+			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
 		}
 		#endregion
 
@@ -671,7 +671,7 @@ namespace SorentoLib
 
 		public static User FromXmlDocument (XmlDocument xmlDocument)
 		{
-			Hashtable item = SNDK.Convert.XmlDocumentToHashtable (xmlDocument);
+			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (xmlDocument);
 
 			User result;
 
@@ -694,10 +694,14 @@ namespace SorentoLib
 				throw new Exception ("USER1");
 			}
 
-
-			if (item.ContainsKey ("usergroupids"))
+			if (item.ContainsKey ("usergroups"))
 			{
-				result.__usergroups_as_string = (string)item["usergroupids"];
+				result._usergroups.Clear ();
+
+				foreach (XmlDocument usergroup in (List<XmlDocument>)item["usergroups"])
+				{
+					result._usergroups.Add (Usergroup.FromXmlDocument (usergroup));
+				}
 			}
 
 			if (item.ContainsKey ("username"))

@@ -52,45 +52,6 @@ namespace Core.Resolvers.Addin
 
 			switch (Fullname.ToLower ())
 			{
-				#region SorentoLib.Usergroup
-				case "sorentolib.usergroup":
-				{
-					switch (Method.ToLower ())
-					{
-						case "new":
-						{
-							result.Add (new SorentoLib.Usergroup ());
-							break;
-						}
-
-						case "load":
-						{
-							result.Add (SorentoLib.Usergroup.Load (request.getValue<Guid> ("id")));
-							break;
-						}
-
-						case "save":
-						{
-							SorentoLib.Usergroup.FromXmlDocument (request.GetXml ("sorentolib.usergroup")).Save ();
-							break;
-						}
-
-						case "delete":
-						{
-							SorentoLib.Usergroup.Delete (request.getValue<Guid> ("id"));
-							break;
-						}
-
-						case "list":
-						{
-							result.Add (SorentoLib.Usergroup.List ());
-							break;
-						}
-					}
-					break;
-				}
-				#endregion
-
 				#region SorentoLib.User
 				case "sorentolib.user":
 				{
@@ -113,7 +74,7 @@ namespace Core.Resolvers.Addin
 
 						case "save":
 						{
-							SorentoLib.User.FromXmlDocument (request.GetXml ("sorentolib.user"));
+							request.getValue<SorentoLib.User> ("sorentolib.user").Save ();
 							break;
 						}
 
@@ -180,6 +141,45 @@ namespace Core.Resolvers.Addin
 
 						default:
 							break;
+					}
+					break;
+				}
+				#endregion
+
+				#region SorentoLib.Usergroup
+				case "sorentolib.usergroup":
+				{
+					switch (Method.ToLower ())
+					{
+						case "new":
+						{
+							result.Add (new SorentoLib.Usergroup ());
+							break;
+						}
+
+						case "load":
+						{
+							result.Add (SorentoLib.Usergroup.Load (request.getValue<Guid> ("id")));
+							break;
+						}
+
+						case "save":
+						{
+							request.getValue<SorentoLib.Usergroup> ("sorentolib.usergroup").Save ();
+							break;
+						}
+
+						case "delete":
+						{
+							SorentoLib.Usergroup.Delete (request.getValue<Guid> ("id"));
+							break;
+						}
+
+						case "list":
+						{
+							result.Add (SorentoLib.Usergroup.List ());
+							break;
+						}
 					}
 					break;
 				}

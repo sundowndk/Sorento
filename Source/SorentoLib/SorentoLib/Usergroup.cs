@@ -211,7 +211,7 @@ namespace SorentoLib
 			result.Add ("accesslevel", this._accesslevel);
 			result.Add ("status", this._status);
 
-			return SNDK.Convert.HashtabelToXmlDocument (result, this.GetType ().FullName.ToLower ());
+			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
 		}
 		#endregion
 
@@ -362,7 +362,7 @@ namespace SorentoLib
 
 		public static Usergroup FromXmlDocument (XmlDocument xmlDocument)
 		{
-			Hashtable item = SNDK.Convert.XmlDocumentToHashtable (xmlDocument);
+			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (xmlDocument);
 
 			Usergroup result;
 
