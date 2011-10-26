@@ -94,7 +94,7 @@ namespace SorentoLib.Strings
 
 		#region AJAX.REQUEST
 		public static string AjaxRequestXPathNotFound = "Could not find xpath: {0}";
-		public static string AjaxRequestCouldNotCastType = "Could not cast xpath: {0} to type: {1}. Xml node type is given as: {2}";
+		public static string AjaxRequestCouldNotCastType = "Could not cast xpath: {0} to type: {1}. Xml node type is given as: {2} - \n {3}";
 		#endregion
 	}
 }

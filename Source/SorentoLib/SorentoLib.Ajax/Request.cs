@@ -129,6 +129,7 @@ namespace SorentoLib.Ajax
 
 			XmlDocument xml = GetXml (xPath);
 
+			Console.WriteLine (typeof (T));
 			try
 			{
 				if (typeof (T) == typeof (string))
@@ -150,7 +151,7 @@ namespace SorentoLib.Ajax
 			}
 			catch (Exception e)
 			{
-				throw new Exception (string.Format (Strings.Exception.AjaxRequestCouldNotCastType, xPath.ToUpper (), typeof(T).Name.ToUpper (), xml.DocumentElement.Attributes["type"].Value.ToString().ToUpper ()));
+				throw new Exception (string.Format (Strings.Exception.AjaxRequestCouldNotCastType, xPath.ToUpper (), typeof(T).Name.ToUpper (), xml.DocumentElement.Attributes["type"].Value.ToString().ToUpper (), e));
 			}
 
 			return result;
