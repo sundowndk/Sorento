@@ -61,8 +61,7 @@ namespace Core.Resolvers.Addin
 
 						case "new":
 						{
-//							result.Add (new SorentoLib.User)
-
+							result.Add (new SorentoLib.User (request.getValue<string> ("username"), request.getValue<string> ("email")));
 							break;
 						}
 

@@ -291,7 +291,7 @@ namespace SorentoLib
 			this._realname = string.Empty;
 			this._email = email;
 			this._avatarid = Guid.Empty;
-			this._status = Enums.UserStatus.None;
+			this._status = Enums.UserStatus.Disabled;
 
 			// Check if specified username is available.
 			if (User.IsUsernameInUse (username))
@@ -330,7 +330,7 @@ namespace SorentoLib
 			this._realname = string.Empty;
 			this._email = string.Empty;
 			this._avatarid = Guid.Empty;
-			this._status = Enums.UserStatus.None;
+			this._status = Enums.UserStatus.Disabled;
 		}
 		#endregion
 
