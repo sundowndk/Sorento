@@ -123,13 +123,25 @@ namespace SorentoLib.Ajax
 		#endregion
 
 		#region Public Methods
+		public bool xPathExists (string xPath)
+		{
+			try
+			{
+				GetXml (xPath);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		public T getValue<T> (string xPath)
 		{
 			T result = default (T);
 
 			XmlDocument xml = GetXml (xPath);
 
-			Console.WriteLine (typeof (T));
 			try
 			{
 				if (typeof (T) == typeof (string))
