@@ -74,6 +74,7 @@ namespace Core.Responders.Addin
 			}
 			catch (Exception exception)
 			{
+				Console.WriteLine (exception);
 				// Handel exceptions, and parse the information onto the client.
 				respons = new SorentoLib.Ajax.Respons ();
 
