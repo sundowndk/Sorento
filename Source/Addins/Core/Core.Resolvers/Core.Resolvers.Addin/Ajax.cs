@@ -197,9 +197,7 @@ namespace Core.Resolvers.Addin
 
 						case "logout":
 						{
-							Session.Logout ();
-//							result.Data.Add ("success", "true");
-
+							result.Add (Session.Logout ());
 							break;
 						}
 					}

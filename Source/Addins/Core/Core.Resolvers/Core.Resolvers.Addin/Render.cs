@@ -283,6 +283,12 @@ namespace Core.Resolvers.Addin
 						case "realname":
 							return ((SorentoLib.User)Variable).Realname;
 
+						case "firstname":
+							return ((SorentoLib.User)Variable).FirstName;
+
+						case "lastname":
+							return ((SorentoLib.User)Variable).LastName;
+
 						case "accesslevel":
 							return ((SorentoLib.User)Variable).Accesslevel;
 

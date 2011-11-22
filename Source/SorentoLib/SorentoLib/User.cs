@@ -213,6 +213,22 @@ namespace SorentoLib
 			}
 		}
 
+		public string FirstName
+		{
+			get
+			{
+				return this._realname.Split (" ".ToCharArray ())[0];
+			}
+		}
+
+		public string LastName
+		{
+			get
+			{
+				return this._realname.Split (" ".ToCharArray ())[1];
+			}
+		}
+
 		public string Email
 		{
 			get
