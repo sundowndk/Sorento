@@ -628,6 +628,12 @@ namespace Core.Resolvers.Addin
 
 						case "serversoftware":
 							return Session.Request.Environment.ServerSoftware;
+
+						case "version":
+							return SorentoLib.Runtime.GetVersionString ();
+
+						case "compiledate":
+							return SorentoLib.Runtime.GetCompileDate ();
 						#endregion
 
 						#region Default

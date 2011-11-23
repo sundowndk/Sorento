@@ -112,13 +112,16 @@ namespace Core.Resolvers.Addin
 
 						case "isusernameinuse":
 						{
-							if (request.ContainsVariable ("id"))
+							if (request.xPathExists ("id"))
 							{
-//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username"), new Guid (request.Key<string>("id"))));
+								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.getValue<string> ("username"), new Guid (request.Key<string>("id"))));
+//								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username"), new Guid (request.Key<string>("id"))));
 							}
 							else
 							{
-//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username")));
+								Console.WriteLine (SorentoLib.User.IsUsernameInUse (request.getValue<string> ("username")));
+								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.getValue<string> ("username")));
+//								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username")));
 							}
 
 							break;
@@ -128,11 +131,11 @@ namespace Core.Resolvers.Addin
 						{
 							if (request.ContainsVariable ("id"))
 							{
-//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email"), new Guid (request.Key<string>("id"))));
+								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email"), new Guid (request.Key<string>("id"))));
 							}
 							else
 							{
-//								result.Data.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email")));
+								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email")));
 							}
 
 							break;

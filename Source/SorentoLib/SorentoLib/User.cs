@@ -615,6 +615,8 @@ namespace SorentoLib
 
 		static public bool IsUsernameInUse (string username)
 		{
+
+
 			return IsUsernameInUse (username, Guid.Empty);
 		}
 

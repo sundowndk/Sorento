@@ -108,6 +108,13 @@ namespace SorentoLib.Ajax
 		#endregion
 
 		#region Public Methods
+		public void Add (string Key, object Value)
+		{
+			Hashtable hashtable = new Hashtable ();
+			hashtable.Add (Key, true);
+			this._data.Add (hashtable);
+		}
+
 		public void Add (object Value)
 		{
 			this._data.Add (Value);
@@ -123,7 +130,8 @@ namespace SorentoLib.Ajax
 				case "hashtable":
 				{
 					// Convert Hashtable to XmlDocument, and import nodes.
-					foreach (XmlNode node in SNDK.Convert.HashtabelToXmlDocument ((Hashtable)System.Convert.ChangeType (Object, typeof (Hashtable))).DocumentElement)
+//					foreach (XmlNode node in SNDK.Convert.ToXmlDocument ((Hashtable)System.Convert.ChangeType (Object, typeof (Hashtable))).DocumentElement)
+					foreach (XmlNode node in SNDK.Convert.ToXmlDocument (Object).DocumentElement)
 					{
 						XmlDocument.DocumentElement.AppendChild (XmlDocument.ImportNode (node, true));
 					}
