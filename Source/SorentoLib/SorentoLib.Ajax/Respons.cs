@@ -92,8 +92,16 @@ namespace SorentoLib.Ajax
 				// Parse all data added the respons.
 				foreach (object data in this._data)
 				{
-					Parse (data, result);
+					foreach (XmlNode node in SNDK.Convert.ToXmlDocument (data).DocumentElement)
+					{
+						root.AppendChild (result.ImportNode (node, true));
+					}
 				}
+
+//				foreach (object data in this._data)
+//				{
+//					Parse (data, result);
+//				}
 
 				return result;
 			}
@@ -111,7 +119,7 @@ namespace SorentoLib.Ajax
 		public void Add (string Key, object Value)
 		{
 			Hashtable hashtable = new Hashtable ();
-			hashtable.Add (Key, true);
+			hashtable.Add (Key, Value);
 			this._data.Add (hashtable);
 		}
 
@@ -122,107 +130,112 @@ namespace SorentoLib.Ajax
 		#endregion
 
 		#region Private Methods
-		private void Parse (object Object, XmlDocument XmlDocument)
-		{
-			switch (Object.GetType ().Name.ToLower ())
-			{
-				#region Hashtable
-				case "hashtable":
-				{
-					// Convert Hashtable to XmlDocument, and import nodes.
-//					foreach (XmlNode node in SNDK.Convert.ToXmlDocument ((Hashtable)System.Convert.ChangeType (Object, typeof (Hashtable))).DocumentElement)
-					foreach (XmlNode node in SNDK.Convert.ToXmlDocument (Object).DocumentElement)
-					{
-						XmlDocument.DocumentElement.AppendChild (XmlDocument.ImportNode (node, true));
-					}
-					break;
-				}
-				#endregion
-
-				#region List<T>
-				case "list`1":
-				{
-					// Create new xml element.
-					XmlElement elements = XmlDocument.CreateElement ("", Object.GetType ().GetGenericArguments ()[0].ToString ().ToLower () +"s", "");
-
-					// Set xml element type to 'list'.
-					XmlAttribute type = XmlDocument.CreateAttribute ("type");
-					type.Value = "list";
-					elements.Attributes.Append (type);
-
-					// Get IEnumerator of Object.
-					System.Collections.IEnumerator enumerator = (System.Collections.IEnumerator)Object.GetType ().GetMethod("GetEnumerator").Invoke (Object, null);
-
-					// Enumerate objects inside Object.
-					while (enumerator.MoveNext ())
-					{
-						// Create new xml element.
-						XmlElement element = XmlDocument.CreateElement ("", Object.GetType ().GetGenericArguments ()[0].ToString ().ToLower (), "");
-
-						// DEBUG: TryCatch, Console.WriteLine
-						try
-						{
-							if (enumerator.Current.GetType ().GetMethod ("ToXmlDocument") != null)
-							{
-								// Call ToXMLDocument on all objects inside Object, and import nodes into XmlDocument.
-								foreach (XmlNode node in ((XmlDocument)enumerator.Current.GetType ().GetMethod ("ToXmlDocument").Invoke (enumerator.Current, null)).DocumentElement.ChildNodes)
-								{
-									element.AppendChild (XmlDocument.ImportNode (node, true));
-								}
-							}
-							else
-							{
-								// TODO: Objects without the ToXmlDocument method will be skipped.
-								continue;
-							}
-						}
-						catch (Exception e)
-						{
-							Console.WriteLine (e);
-						}
-
-						// Append element to elements
-						elements.AppendChild (element);
-					}
-
-					// Append elements to XmlDocument.
-					XmlDocument.DocumentElement.AppendChild (elements);
-					break;
-				}
-				#endregion
-
-				#region Default
-				default:
-				{
-					// Create new xml element.
-					XmlElement element = XmlDocument.CreateElement ("", Object.GetType ().FullName.ToLower (), "");
-
-					// Set xml element type to 'object'.
-					XmlAttribute type = XmlDocument.CreateAttribute ("type");
-					type.Value = "object";
-					element.Attributes.Append (type);
-
-					if (Object.GetType ().GetMethod ("ToXmlDocument") != null)
-					{
-						// Call ToXMLDocument on all objects inside Object, and import nodes into XmlDocument.
-						foreach (XmlNode node in ((XmlDocument)Object.GetType ().GetMethod ("ToXmlDocument").Invoke (Object, null)).DocumentElement.ChildNodes)
-						{
-							element.AppendChild (XmlDocument.ImportNode (node, true));
-						}
-					}
-					else
-					{
-						// TODO: Objects without the ToXmlDocument method will be skipped.
-						break;
-					}
-
-					// Append element to XmlDocument.
-					XmlDocument.DocumentElement.AppendChild (element);
-					break;
-				}
-				#endregion
-			}
-		}
+//		private void Parse (object Object, XmlDocument XmlDocument)
+//		{
+//			switch (Object.GetType ().Name.ToLower ())
+//			{
+//				#region Hashtable
+//				case "hashtable":
+//				{
+//					// Convert Hashtable to XmlDocument, and import nodes.
+////					foreach (XmlNode node in SNDK.Convert.ToXmlDocument ((Hashtable)System.Convert.ChangeType (Object, typeof (Hashtable))).DocumentElement)
+//					foreach (XmlNode node in SNDK.Convert.ToXmlDocument (Object).DocumentElement)
+//					{
+//						XmlDocument.DocumentElement.AppendChild (XmlDocument.ImportNode (node, true));
+//					}
+//					break;
+//				}
+//				#endregion
+//
+//				#region List<T>
+//				case "list`1":
+//				{
+//					// Create new xml element.
+//					XmlElement elements = XmlDocument.CreateElement ("", Object.GetType ().GetGenericArguments ()[0].ToString ().ToLower () +"s", "");
+//
+//					// Set xml element type to 'list'.
+//					XmlAttribute type = XmlDocument.CreateAttribute ("type");
+//					type.Value = "list";
+//					elements.Attributes.Append (type);
+//
+//					// Get IEnumerator of Object.
+//					System.Collections.IEnumerator enumerator = (System.Collections.IEnumerator)Object.GetType ().GetMethod("GetEnumerator").Invoke (Object, null);
+//
+//					// Enumerate objects inside Object.
+//					while (enumerator.MoveNext ())
+//					{
+//						// Create new xml element.
+//						XmlElement element = XmlDocument.CreateElement ("", Object.GetType ().GetGenericArguments ()[0].ToString ().ToLower (), "");
+//
+//						// DEBUG: TryCatch, Console.WriteLine
+//						try
+//						{
+//							if (enumerator.Current.GetType ().GetMethod ("ToXmlDocument") != null)
+//							{
+//								// Call ToXMLDocument on all objects inside Object, and import nodes into XmlDocument.
+//								foreach (XmlNode node in ((XmlDocument)enumerator.Current.GetType ().GetMethod ("ToXmlDocument").Invoke (enumerator.Current, null)).DocumentElement.ChildNodes)
+//								{
+//									element.AppendChild (XmlDocument.ImportNode (node, true));
+//								}
+//							}
+//							else
+//							{
+//								Console.WriteLine (enumerator.Current.GetType ().ToString ());
+////								SNDK.Convert.ToXmlDocument (enumerator.Current);
+//								foreach (XmlNode node in SNDK.Convert.ToXmlDocument (enumerator.Current).DocumentElement)
+//								{
+////									Console.WriteLine (enumerator.Current.GetType ().ToString ());
+//									element.AppendChild (XmlDocument.ImportNode (node, true));
+//								}
+//							}
+//						}
+//						catch (Exception e)
+//						{
+//							Console.WriteLine (e);
+//						}
+//
+//						// Append element to elements
+//						elements.AppendChild (element);
+//					}
+//
+//					// Append elements to XmlDocument.
+//					XmlDocument.DocumentElement.AppendChild (elements);
+//					break;
+//				}
+//				#endregion
+//
+//				#region Default
+//				default:
+//				{
+//					// Create new xml element.
+//					XmlElement element = XmlDocument.CreateElement ("", Object.GetType ().FullName.ToLower (), "");
+//
+//					// Set xml element type to 'object'.
+//					XmlAttribute type = XmlDocument.CreateAttribute ("type");
+//					type.Value = "object";
+//					element.Attributes.Append (type);
+//
+//					if (Object.GetType ().GetMethod ("ToXmlDocument") != null)
+//					{
+//						// Call ToXMLDocument on all objects inside Object, and import nodes into XmlDocument.
+//						foreach (XmlNode node in ((XmlDocument)Object.GetType ().GetMethod ("ToXmlDocument").Invoke (Object, null)).DocumentElement.ChildNodes)
+//						{
+//							element.AppendChild (XmlDocument.ImportNode (node, true));
+//						}
+//					}
+//					else
+//					{
+//						// TODO: Objects without the ToXmlDocument method will be skipped.
+//						break;
+//					}
+//
+//					// Append element to XmlDocument.
+//					XmlDocument.DocumentElement.AppendChild (element);
+//					break;
+//				}
+//				#endregion
+//			}
+//		}
 		#endregion
 	}
 }

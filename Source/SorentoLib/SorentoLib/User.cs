@@ -76,7 +76,7 @@ namespace SorentoLib
 			{
 				this._usergroups.Clear ();
 
-				foreach (string id in value.Split (";".ToCharArray ()))
+				foreach (string id in value.Split (";".ToCharArray (), StringSplitOptions.RemoveEmptyEntries))
 				{
 					try
 					{
@@ -266,7 +266,7 @@ namespace SorentoLib
 				Enums.Accesslevel result = Enums.Accesslevel.Guest;
 				foreach (Usergroup usergroup in this.Usergroups)
 				{
-					if (usergroup.Type == Enums.UsergroupType.Core)
+					if (usergroup.Type == Enums.UsergroupType.BuildIn)
 					{
 						if (usergroup.Accesslevel > result)
 						{
@@ -848,6 +848,31 @@ namespace SorentoLib
 //			{
 //				usergroups.Add (usergroup ());
 //			}
+
+		public bool Authenticate (Usergroup usergroup)
+		{
+			bool result = false;
+
+			if (this._usergroups.Find (delegate (Usergroup u) { return u.Id == usergroup.Id;}) != null)
+			{
+				result = true;
+			}
+
+			return result;
+		}
+
+		public bool Authenticate (Accesslevel accesslevel)
+		{
+			bool result = false;
+
+			if (this.Accesslevel <= accesslevel)
+			{
+				result = true;
+			}
+
+			return result;
+		}
+
 		public bool Authenticate (string Password)
 		{
 			bool result = false;

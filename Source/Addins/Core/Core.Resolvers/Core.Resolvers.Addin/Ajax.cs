@@ -91,6 +91,29 @@ namespace Core.Resolvers.Addin
 
 						case "changepassword":
 						{
+							if (request.getValue<Guid> ("userid") == Session.User.Id)
+							{
+								if (request.xPathExists ("oldpassword"))
+								{
+									string oldpassword = request.getValue<string> ("oldpassword");
+									string newpassword = request.getValue<string> ("newpassword");
+
+									if (Session.User.Authenticate (oldpassword))
+									{
+										Session.User.Password = newpassword;
+										Session.User.Save ();
+									}
+								}
+							}
+							else
+							{
+								string newpassword = request.getValue<string> ("newpassword");
+
+								SorentoLib.User user = SorentoLib.User.Load (request.getValue<Guid> ("userid"));
+								user.Password = newpassword;
+								user.Save ();
+							}
+
 //							string oldpassword = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (request.Key<string> ("oldpassword"))));
 //							string newpassword = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (request.Key<string> ("newpassword"))));
 
@@ -119,7 +142,6 @@ namespace Core.Resolvers.Addin
 							}
 							else
 							{
-								Console.WriteLine (SorentoLib.User.IsUsernameInUse (request.getValue<string> ("username")));
 								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.getValue<string> ("username")));
 //								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("username")));
 							}
@@ -129,13 +151,13 @@ namespace Core.Resolvers.Addin
 
 						case "isemailinuse":
 						{
-							if (request.ContainsVariable ("id"))
+							if (request.xPathExists ("id"))
 							{
-								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email"), new Guid (request.Key<string>("id"))));
+								result.Add ("result", SorentoLib.User.IsEmailInUse (request.getValue<string>("email"), new Guid (request.getValue<string>("id"))));
 							}
 							else
 							{
-								result.Add ("result", SorentoLib.User.IsUsernameInUse (request.Key<string>("email")));
+								result.Add ("result", SorentoLib.User.IsEmailInUse (request.getValue<string>("email")));
 							}
 
 							break;
@@ -180,6 +202,23 @@ namespace Core.Resolvers.Addin
 						case "list":
 						{
 							result.Add (SorentoLib.Usergroup.List ());
+							break;
+						}
+
+						case "accesslevels":
+						{
+							List<SorentoLib.Enums.Accesslevel> test1 = new List<SorentoLib.Enums.Accesslevel> ();
+							foreach (SorentoLib.Enums.Accesslevel accesslevel in Enum.GetValues(typeof(SorentoLib.Enums.Accesslevel)))
+							{
+
+//								Hashtable test2 = new Hashtable ();
+//								test2.Add ("name", accesslevel.ToString ());
+//								test2.Add ("value", (int)accesslevel);
+
+								test1.Add (accesslevel);
+							}
+
+							result.Add (test1);
 							break;
 						}
 					}

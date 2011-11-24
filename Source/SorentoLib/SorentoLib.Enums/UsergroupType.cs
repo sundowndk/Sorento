@@ -30,7 +30,7 @@ namespace SorentoLib.Enums
 {
 	public enum UsergroupType
 	{
-		Core = 1,
+		BuildIn = 1,
 		Addin = 2,
 		Custom = 3
 	}

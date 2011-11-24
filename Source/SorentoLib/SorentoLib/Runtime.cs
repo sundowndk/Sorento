@@ -51,6 +51,10 @@ namespace SorentoLib
 		{
 			SorentoLib.Runtime.WatchApplicationFiles ();
 
+			// Usergroups
+			SorentoLib.Usergroup.Runtime ();
+
+
 			// Subscribe to events.
 			SorentoLib.Services.Events.ServiceConfigChanged += EventhandlerServiceConfigChanged;
 			SorentoLib.Services.Events.ServiceGarbageCollector += EventhandlerServiceGarbageCollector;

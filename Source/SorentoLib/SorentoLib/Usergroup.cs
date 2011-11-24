@@ -39,6 +39,7 @@ namespace SorentoLib
 	{
 		#region Static Fields
 		public static string DatabaseTableName = SorentoLib.Services.Database.Prefix + "usergroups";
+		private static List<Usergroup> BuiltInUsergroups = new List<Usergroup> ();
 		#endregion
 
 		#region Private Fields
@@ -126,6 +127,18 @@ namespace SorentoLib
 			{
 				this._status = value;
 			}
+		}
+		#endregion
+
+		#region Runtime
+		internal static void Runtime ()
+		{
+			AddBuildInUsergroup (new Guid ("2b46cce5-0234-4fb7-a226-acc676a093c9"), "Guest", SorentoLib.Enums.Accesslevel.Guest);
+			AddBuildInUsergroup (new Guid ("476b824f-86a1-4d8d-baff-f341b110ef08"), "User", SorentoLib.Enums.Accesslevel.User);
+			AddBuildInUsergroup (new Guid ("76b80364-bc8f-4177-8c08-26697ac8dfbd"), "Moderator", SorentoLib.Enums.Accesslevel.Moderator);
+			AddBuildInUsergroup (new Guid ("8016152c-bb4c-4af0-ad4e-8867f196e334"), "Author", SorentoLib.Enums.Accesslevel.Author);
+			AddBuildInUsergroup (new Guid ("c7be09c5-e23f-4a9f-b218-28b982299a54"), "Editor", SorentoLib.Enums.Accesslevel.Editor);
+			AddBuildInUsergroup (new Guid ("c76e32de-7e4c-4152-868f-e450d0a6c145"), "Administrator", SorentoLib.Enums.Accesslevel.Administrator);
 		}
 		#endregion
 
@@ -219,44 +232,54 @@ namespace SorentoLib
 		public static Usergroup Load (Guid id)
 		{
 			bool success = false;
-			Usergroup result = new Usergroup ();
 
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
+			Usergroup result = Usergroup.BuiltInUsergroups.Find (delegate (Usergroup u) { return u.Id == id;});
 
-			qb.Table (DatabaseTableName);
-			qb.Columns
-				(
-					"id",
-			            "createtimestamp",
-			            "updatetimestamp",
-			            "type",
-			            "name",
-			            "accesslevel",
-			            "status"
-				);
-
-			qb.AddWhere ("id", "=", id);
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
+			if (result == null)
 			{
-				if (query.NextRow ())
+				result = new Usergroup ();
+
+				QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
+	
+				qb.Table (DatabaseTableName);
+				qb.Columns
+					(
+						"id",
+				            "createtimestamp",
+				            "updatetimestamp",
+				            "type",
+				            "name",
+				            "accesslevel",
+				            "status"
+					);
+	
+				qb.AddWhere ("id", "=", id);
+	
+				Query query = Services.Database.Connection.Query (qb.QueryString);
+				if (query.Success)
 				{
-					result._id = query.GetGuid (qb.ColumnPos ("id"));
-					result._createtimestamp = query.GetInt(qb.ColumnPos("createtimestamp"));
-					result._updatetimestamp = query.GetInt(qb.ColumnPos("updatetimestamp"));
-					result._type = query.GetEnum<Enums.UsergroupType> (qb.ColumnPos ("type"));
-					result._name = query.GetString(qb.ColumnPos("name"));
-					result._accesslevel = query.GetEnum<Enums.Accesslevel> (qb.ColumnPos ("accesslevel"));
-					result._status = query.GetEnum<Enums.UsergroupStatus> (qb.ColumnPos ("status"));
-
-					success = true;
+					if (query.NextRow ())
+					{
+						result._id = query.GetGuid (qb.ColumnPos ("id"));
+						result._createtimestamp = query.GetInt(qb.ColumnPos("createtimestamp"));
+						result._updatetimestamp = query.GetInt(qb.ColumnPos("updatetimestamp"));
+						result._type = query.GetEnum<Enums.UsergroupType> (qb.ColumnPos ("type"));
+						result._name = query.GetString(qb.ColumnPos("name"));
+						result._accesslevel = query.GetEnum<Enums.Accesslevel> (qb.ColumnPos ("accesslevel"));
+						result._status = query.GetEnum<Enums.UsergroupStatus> (qb.ColumnPos ("status"));
+	
+						success = true;
+					}
 				}
+	
+				query.Dispose ();
+				query = null;
+				qb = null;
 			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
+			else
+			{
+				success = true;
+			}
 
 			if (!success)
 			{
@@ -357,7 +380,22 @@ namespace SorentoLib
 			query = null;
 			qb = null;
 
+			foreach (Usergroup usergroup in BuiltInUsergroups)
+			{
+				result.Add (usergroup);
+			}
+
 			return result;
+		}
+
+		public static void AddBuildInUsergroup (Guid id, string name, SorentoLib.Enums.Accesslevel accesslevel)
+		{
+			SorentoLib.Usergroup usergroup = new SorentoLib.Usergroup ();
+			usergroup._id = id;
+			usergroup._type = SorentoLib.Enums.UsergroupType.BuildIn;
+			usergroup._accesslevel = accesslevel;
+			usergroup._name = name;
+			BuiltInUsergroups.Add (usergroup);
 		}
 
 		public static Usergroup FromXmlDocument (XmlDocument xmlDocument)
