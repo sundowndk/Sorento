@@ -115,16 +115,16 @@ namespace Core.Resolvers.Addin
 						case "remoteaddress":
 							return ((SorentoLib.Session)Variable).RemoteAdress;
 
-						case "accesslevel":
-							return ((SorentoLib.Session)Variable).AccessLevel;
+//						case "accesslevel":
+//							return ((SorentoLib.Session)Variable).AccessLevel;
 
 						case "loggedin":
 							return ((SorentoLib.Session)Variable).LoggedIn;
 						#endregion
 
 						#region Methods
-						case "authenticatebyaccesslevel":
-							return ((SorentoLib.Session)Variable).AuthenticateByAccesslevel (SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel>(Parameters.Get<string>(0)));
+//						case "authenticatebyaccesslevel":
+//							return ((SorentoLib.Session)Variable).AuthenticateByAccesslevel (SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel>(Parameters.Get<string>(0)));
 
 						case "authenticatebyusergroup":
 							return ((SorentoLib.Session)Variable).AuthenticateByUsergroup (Parameters.Get<Guid>(0));
@@ -289,8 +289,8 @@ namespace Core.Resolvers.Addin
 						case "lastname":
 							return ((SorentoLib.User)Variable).LastName;
 
-						case "accesslevel":
-							return ((SorentoLib.User)Variable).Accesslevel;
+//						case "accesslevel":
+//							return ((SorentoLib.User)Variable).Accesslevel;
 
 						case "usergroups":
 							return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.Usergroup> (((SorentoLib.User)Variable).Usergroups);
@@ -355,8 +355,8 @@ namespace Core.Resolvers.Addin
 						case "name":
 							return ((SorentoLib.Usergroup)Variable).Name;
 
-						case "accesslevel":
-							return ((SorentoLib.Usergroup)Variable).Accesslevel;
+//						case "accesslevel":
+//							return ((SorentoLib.Usergroup)Variable).Accesslevel;
 
 						case "status":
 							return ((SorentoLib.Usergroup)Variable).Status;

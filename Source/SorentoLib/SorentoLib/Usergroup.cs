@@ -48,7 +48,7 @@ namespace SorentoLib
 		private int _updatetimestamp;
 		private SorentoLib.Enums.UsergroupType _type;
 		private string _name;
-		private Enums.Accesslevel _accesslevel;
+//		private Enums.Accesslevel _accesslevel;
 		private Enums.UsergroupStatus _status;
 		#endregion
 
@@ -103,18 +103,18 @@ namespace SorentoLib
 			}
 		}
 
-		public Enums.Accesslevel Accesslevel
-		{
-			get
-			{
-				return this._accesslevel;
-			}
-
-			set
-			{
-				this._accesslevel = value;
-			}
-		}
+//		public Enums.Accesslevel Accesslevel
+//		{
+//			get
+//			{
+//				return this._accesslevel;
+//			}
+//
+//			set
+//			{
+//				this._accesslevel = value;
+//			}
+//		}
 
 		public Enums.UsergroupStatus Status
 		{
@@ -130,18 +130,6 @@ namespace SorentoLib
 		}
 		#endregion
 
-		#region Runtime
-		internal static void Runtime ()
-		{
-			AddBuildInUsergroup (new Guid ("2b46cce5-0234-4fb7-a226-acc676a093c9"), "Guest", SorentoLib.Enums.Accesslevel.Guest);
-			AddBuildInUsergroup (new Guid ("476b824f-86a1-4d8d-baff-f341b110ef08"), "User", SorentoLib.Enums.Accesslevel.User);
-			AddBuildInUsergroup (new Guid ("76b80364-bc8f-4177-8c08-26697ac8dfbd"), "Moderator", SorentoLib.Enums.Accesslevel.Moderator);
-			AddBuildInUsergroup (new Guid ("8016152c-bb4c-4af0-ad4e-8867f196e334"), "Author", SorentoLib.Enums.Accesslevel.Author);
-			AddBuildInUsergroup (new Guid ("c7be09c5-e23f-4a9f-b218-28b982299a54"), "Editor", SorentoLib.Enums.Accesslevel.Editor);
-			AddBuildInUsergroup (new Guid ("c76e32de-7e4c-4152-868f-e450d0a6c145"), "Administrator", SorentoLib.Enums.Accesslevel.Administrator);
-		}
-		#endregion
-
 		#region Constructors
 		public Usergroup()
 		{
@@ -150,7 +138,7 @@ namespace SorentoLib
 			this._updatetimestamp = Date.CurrentDateTimeToTimestamp();
 			this._type = SorentoLib.Enums.UsergroupType.Custom;
 			this._name = string.Empty;
-			this._accesslevel = Enums.Accesslevel.Guest;
+//			this._accesslevel = Enums.Accesslevel.Guest;
 			this._status = Enums.UsergroupStatus.Enabled;
 		}
 		#endregion
@@ -180,7 +168,7 @@ namespace SorentoLib
 			            "updatetimestamp",
 			            "type",
 			            "name",
-			            "accesslevel",
+//			            "accesslevel",
 			            "status"
 				);
 
@@ -191,7 +179,7 @@ namespace SorentoLib
 					this._updatetimestamp,
 					this._type,
 					this._name,
-					this._accesslevel,
+//					this._accesslevel,
 					this._status
 				);
 				
@@ -221,7 +209,7 @@ namespace SorentoLib
 			result.Add ("updatetimestamp", this._updatetimestamp);
 			result.Add ("type", this._type);
 			result.Add ("name", this._name);
-			result.Add ("accesslevel", this._accesslevel);
+//			result.Add ("accesslevel", this._accesslevel);
 			result.Add ("status", this._status);
 
 			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
@@ -249,7 +237,7 @@ namespace SorentoLib
 				            "updatetimestamp",
 				            "type",
 				            "name",
-				            "accesslevel",
+//				            "accesslevel",
 				            "status"
 					);
 	
@@ -265,7 +253,7 @@ namespace SorentoLib
 						result._updatetimestamp = query.GetInt(qb.ColumnPos("updatetimestamp"));
 						result._type = query.GetEnum<Enums.UsergroupType> (qb.ColumnPos ("type"));
 						result._name = query.GetString(qb.ColumnPos("name"));
-						result._accesslevel = query.GetEnum<Enums.Accesslevel> (qb.ColumnPos ("accesslevel"));
+//						result._accesslevel = query.GetEnum<Enums.Accesslevel> (qb.ColumnPos ("accesslevel"));
 						result._status = query.GetEnum<Enums.UsergroupStatus> (qb.ColumnPos ("status"));
 	
 						success = true;
@@ -388,14 +376,16 @@ namespace SorentoLib
 			return result;
 		}
 
-		public static void AddBuildInUsergroup (Guid id, string name, SorentoLib.Enums.Accesslevel accesslevel)
+		public static Usergroup AddBuildInUsergroup (Guid id, string name, SorentoLib.Enums.Accesslevel accesslevel)
 		{
-			SorentoLib.Usergroup usergroup = new SorentoLib.Usergroup ();
-			usergroup._id = id;
-			usergroup._type = SorentoLib.Enums.UsergroupType.BuildIn;
-			usergroup._accesslevel = accesslevel;
-			usergroup._name = name;
-			BuiltInUsergroups.Add (usergroup);
+			SorentoLib.Usergroup result = new SorentoLib.Usergroup ();
+			result._id = id;
+			result._type = SorentoLib.Enums.UsergroupType.BuildIn;
+//			result._accesslevel = accesslevel;
+			result._name = name;
+			BuiltInUsergroups.Add (result);
+
+			return result;
 		}
 
 		public static Usergroup FromXmlDocument (XmlDocument xmlDocument)
@@ -431,10 +421,10 @@ namespace SorentoLib
 				result._name = (string)item["name"];
 			}
 
-			if (item.ContainsKey ("accesslevel"))
-			{
-				result._accesslevel = SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel> ((string)item["accesslevel"]);
-			}
+//			if (item.ContainsKey ("accesslevel"))
+//			{
+//				result._accesslevel = SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel> ((string)item["accesslevel"]);
+//			}
 
 			if (item.ContainsKey ("status"))
 			{

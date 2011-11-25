@@ -259,24 +259,24 @@ namespace SorentoLib
 			}
 		}
 
-		public Enums.Accesslevel Accesslevel
-		{
-			get
-			{
-				Enums.Accesslevel result = Enums.Accesslevel.Guest;
-				foreach (Usergroup usergroup in this.Usergroups)
-				{
-					if (usergroup.Type == Enums.UsergroupType.BuildIn)
-					{
-						if (usergroup.Accesslevel > result)
-						{
-							result = usergroup.Accesslevel;
-						}
-					}
-				}
-				return result;
-			}
-		}
+//		public Enums.Accesslevel Accesslevel
+//		{
+//			get
+//			{
+//				Enums.Accesslevel result = Enums.Accesslevel.Guest;
+//				foreach (Usergroup usergroup in this.Usergroups)
+//				{
+//					if (usergroup.Type == Enums.UsergroupType.BuildIn)
+//					{
+//						if (usergroup.Accesslevel > result)
+//						{
+//							result = usergroup.Accesslevel;
+//						}
+//					}
+//				}
+//				return result;
+//			}
+//		}
 
 		public Enums.UserStatus Status
 		{
@@ -324,6 +324,7 @@ namespace SorentoLib
 			}
 
 			// Add default usergroup.
+			this._usergroups.Add (Runtime.UsergroupUser);
 			try
 			{
 				this._usergroups.Add (Usergroup.Load (Services.Config.Get<Guid> (Enums.ConfigKey.core_defaultusergroup)));
@@ -429,7 +430,7 @@ namespace SorentoLib
 			result.Add ("realname", this._realname);
 			result.Add ("email", this._email);
 			result.Add ("avatarid", this._avatarid);
-			result.Add ("accesslevel", this.Accesslevel);
+//			result.Add ("accesslevel", this.Accesslevel);
 			result.Add ("status", this._status);
 
 			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
@@ -861,17 +862,17 @@ namespace SorentoLib
 			return result;
 		}
 
-		public bool Authenticate (Accesslevel accesslevel)
-		{
-			bool result = false;
-
-			if (this.Accesslevel <= accesslevel)
-			{
-				result = true;
-			}
-
-			return result;
-		}
+//		public bool Authenticate (SorentoLib.Enums.Accesslevel accesslevel)
+//		{
+//			bool result = false;
+//
+//			if (this.Accesslevel >= accesslevel)
+//			{
+//				result = true;
+//			}
+//
+//			return result;
+//		}
 
 		public bool Authenticate (string Password)
 		{

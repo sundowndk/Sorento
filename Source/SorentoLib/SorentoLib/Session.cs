@@ -181,20 +181,20 @@ namespace SorentoLib
 			}
 		}
 
-		public Enums.Accesslevel AccessLevel
-		{
-			get
-			{
-				if (this._user != null)
-				{
-					return this._user.Accesslevel;
-				}
-				else
-				{
-					return Enums.Accesslevel.Guest;
-				}
-			}
-		}
+//		public Enums.Accesslevel AccessLevel
+//		{
+//			get
+//			{
+//				if (this._user != null)
+//				{
+//					return this._user.Accesslevel;
+//				}
+//				else
+//				{
+//					return Enums.Accesslevel.Guest;
+//				}
+//			}
+//		}
 
 		public bool LoggedIn
 		{
@@ -400,27 +400,27 @@ namespace SorentoLib
 			return result;
 		}
 
-		public bool AuthenticateByAccesslevel (Enums.Accesslevel Accesslevel)
-		{
-			bool result = false;
-
-			if (this._user != null)
-			{
-				if (this._user.Accesslevel >= Accesslevel)
-				{
-					result = true;
-				}
-			}
-			else
-			{
-				if (Enums.Accesslevel.Guest >= Accesslevel)
-				{
-					result = true;
-				}
-			}
-
-			return result;
-		}
+//		public bool AuthenticateByAccesslevel (Enums.Accesslevel Accesslevel)
+//		{
+//			bool result = false;
+//
+//			if (this._user != null)
+//			{
+//				if (this._user.Accesslevel >= Accesslevel)
+//				{
+//					result = true;
+//				}
+//			}
+//			else
+//			{
+//				if (Enums.Accesslevel.Guest >= Accesslevel)
+//				{
+//					result = true;
+//				}
+//			}
+//
+//			return result;
+//		}
 
 		public bool AuthenticateByUsergroup (Guid Id)
 		{
@@ -454,7 +454,7 @@ namespace SorentoLib
 			}
 
 			result.Add ("loggedin", this.LoggedIn);
-			result.Add ("accesslevel", this.AccessLevel);
+//			result.Add ("accesslevel", this.AccessLevel);
 
 			result.Add ("remoteaddress", this._remoteaddress);
 

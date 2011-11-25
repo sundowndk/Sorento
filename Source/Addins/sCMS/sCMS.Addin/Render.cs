@@ -155,7 +155,7 @@ namespace sCMS.Addin
 
 						#region Static Methods
 						case "list":
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.ResolverSessionPriviliges, "template.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.ResolverSessionPriviliges, "template.list"));
 
 							return SorentoLib.Render.Variables.ConvertToListObject<sCMS.Template> (sCMS.Template.List ());
 						#endregion

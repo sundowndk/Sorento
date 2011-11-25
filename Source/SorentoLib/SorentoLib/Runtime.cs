@@ -44,6 +44,13 @@ namespace SorentoLib
 
 		#region Public Static Fields
 		public static int CurrentlyOpenFiles = 0;
+
+		public static Usergroup UsergroupGuest;
+		public static Usergroup UsergroupUser;
+		public static Usergroup UsergroupModerator;
+		public static Usergroup UsergroupAuthor;
+		public static Usergroup UsergroupEditor;
+		public static Usergroup UsergroupAdministrator;
 		#endregion
 
 		#region Public Static Methods
@@ -51,9 +58,12 @@ namespace SorentoLib
 		{
 			SorentoLib.Runtime.WatchApplicationFiles ();
 
-			// Usergroups
-			SorentoLib.Usergroup.Runtime ();
-
+			UsergroupGuest = Usergroup.AddBuildInUsergroup (new Guid ("2b46cce5-0234-4fb7-a226-acc676a093c9"), "Guest", SorentoLib.Enums.Accesslevel.Guest);
+			UsergroupUser = Usergroup.AddBuildInUsergroup (new Guid ("476b824f-86a1-4d8d-baff-f341b110ef08"), "User", SorentoLib.Enums.Accesslevel.User);
+			UsergroupModerator = Usergroup.AddBuildInUsergroup (new Guid ("76b80364-bc8f-4177-8c08-26697ac8dfbd"), "Moderator", SorentoLib.Enums.Accesslevel.Moderator);
+			UsergroupAuthor =	Usergroup.AddBuildInUsergroup (new Guid ("8016152c-bb4c-4af0-ad4e-8867f196e334"), "Author", SorentoLib.Enums.Accesslevel.Author);
+			UsergroupEditor =	Usergroup.AddBuildInUsergroup (new Guid ("c7be09c5-e23f-4a9f-b218-28b982299a54"), "Editor", SorentoLib.Enums.Accesslevel.Editor);
+			UsergroupAdministrator = Usergroup.AddBuildInUsergroup (new Guid ("c76e32de-7e4c-4152-868f-e450d0a6c145"), "Administrator", SorentoLib.Enums.Accesslevel.Administrator);
 
 			// Subscribe to events.
 			SorentoLib.Services.Events.ServiceConfigChanged += EventhandlerServiceConfigChanged;

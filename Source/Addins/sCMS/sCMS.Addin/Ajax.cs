@@ -64,7 +64,7 @@ namespace sCMS.Addin
 					{
 						case "new":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.new"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.new"));
 
 							Template template = Template.FromAjaxRequest (request);
 							template.Save ();
@@ -83,7 +83,7 @@ namespace sCMS.Addin
 
 						case "save":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.save"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.save"));
 
 							Template template = Template.FromAjaxRequest (request);
 							template.Save ();
@@ -93,7 +93,7 @@ namespace sCMS.Addin
 
 						case "delete":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.delete"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.delete"));
 
 							sCMS.Template.Delete (new Guid (request.Key<string> ("id")));
 
@@ -102,7 +102,7 @@ namespace sCMS.Addin
 
 						case "list":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "template.list"));
 
 							List<Hashtable> templates = new List<Hashtable> ();
 							foreach (Template template in Template.List ())
@@ -174,7 +174,7 @@ namespace sCMS.Addin
 					{
 						case "new":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.new"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.new"));
 
 							Page page = Page.FromAjaxRequest (request);
 							page.Save ();
@@ -193,7 +193,7 @@ namespace sCMS.Addin
 
 						case "save":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.save"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.save"));
 
 							Page page = Page.FromAjaxRequest (request);
 							page.Save ();
@@ -203,7 +203,7 @@ namespace sCMS.Addin
 
 						case "delete":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.delete"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.delete"));
 
 							sCMS.Page.Delete (new Guid (request.Key<string> ("id")));
 
@@ -212,7 +212,7 @@ namespace sCMS.Addin
 
 						case "list":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "page.list"));
 
 							List<Hashtable> pages = new List<Hashtable> ();
 							foreach (sCMS.Page page in sCMS.Page.List ())
@@ -233,7 +233,7 @@ namespace sCMS.Addin
 					{
 						case "new":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.new"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.new"));
 
 							Collection collection = Collection.FromAjaxRequest (request);
 							collection.Save ();
@@ -252,7 +252,7 @@ namespace sCMS.Addin
 
 						case "save":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.save"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.save"));
 
 							Collection collection = Collection.FromAjaxRequest (request);
 							collection.Save ();
@@ -262,7 +262,7 @@ namespace sCMS.Addin
 
 						case "delete":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.delete"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.delete"));
 
 							Collection.Delete (new Guid (request.Key<string> ("id")));
 
@@ -271,7 +271,7 @@ namespace sCMS.Addin
 
 						case "list":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collection.list"));
 
 							List<Hashtable> collections = new List<Hashtable> ();
 							foreach (Collection collection in Collection.List ())
@@ -292,7 +292,7 @@ namespace sCMS.Addin
 					{
 						case "new":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.new"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.new"));
 
 							CollectionSchema collectionschema = CollectionSchema.FromAjaxRequest (request);
 							collectionschema.Save ();
@@ -311,7 +311,7 @@ namespace sCMS.Addin
 
 						case "save":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.save"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.save"));
 
 							CollectionSchema collectionschema = CollectionSchema.FromAjaxRequest (request);
 							collectionschema.Save ();
@@ -321,7 +321,7 @@ namespace sCMS.Addin
 
 						case "delete":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.delete"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.delete"));
 
 							CollectionSchema.Delete (new Guid (request.Key<string> ("id")));
 
@@ -330,7 +330,7 @@ namespace sCMS.Addin
 
 						case "list":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "collectionschema.list"));
 
 							List<Hashtable> collectionschemas = new List<Hashtable> ();
 							foreach (CollectionSchema collectionschema in CollectionSchema.List ())
@@ -351,7 +351,7 @@ namespace sCMS.Addin
 					{
 						case "new":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.new"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.new"));
 
 							Stylesheet stylesheet = Stylesheet.FromAjaxRequest (request);
 							stylesheet.Save ();
@@ -370,7 +370,7 @@ namespace sCMS.Addin
 
 						case "save":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.save"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.save"));
 
 							Stylesheet stylesheet = Stylesheet.FromAjaxRequest (request);
 							stylesheet.Save ();
@@ -380,7 +380,7 @@ namespace sCMS.Addin
 
 						case "delete":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.delete"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.delete"));
 
 							sCMS.Stylesheet.Delete (request.Key<string> ("id"));
 
@@ -389,7 +389,7 @@ namespace sCMS.Addin
 
 						case "list":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.list"));
 
 							List<Hashtable> stylesheets = new List<Hashtable> ();
 							foreach (sCMS.Stylesheet stylesheet in sCMS.Stylesheet.List ())
@@ -403,14 +403,14 @@ namespace sCMS.Addin
 					}
 					break;
 				#endregion
-
+//
 				#region sCMS.Global
 				case "scms.global":
 					switch (Method.ToLower ())
 					{
 						case "new":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "global.new"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "global.new"));
 
 							Global global = Global.FromAjaxRequest (request);
 							global.Save ();
@@ -429,7 +429,7 @@ namespace sCMS.Addin
 
 						case "save":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "global.save"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "global.save"));
 
 							Global global = Global.FromAjaxRequest (request);
 							global.Save ();
@@ -439,7 +439,7 @@ namespace sCMS.Addin
 
 						case "delete":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "global.delete"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "global.delete"));
 
 							Global.Delete (new Guid (request.Key<string> ("id")));
 
@@ -448,7 +448,7 @@ namespace sCMS.Addin
 
 						case "list":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (sCMS.Strings.Exception.AjaxSessionPriviliges, "stylesheet.list"));
 
 							List<Hashtable> globals = new List<Hashtable> ();
 							foreach (Global global in Global.List ())

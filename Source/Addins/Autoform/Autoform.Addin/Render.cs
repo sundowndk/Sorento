@@ -113,7 +113,7 @@ namespace Autoform.Addin
 							return Form.Load (Parameters.Get<Guid>(0));
 
 						case "list":
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.ResolverSessionPriviliges, "list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.ResolverSessionPriviliges, "list"));
 
 							return Form.List ();
 						#endregion

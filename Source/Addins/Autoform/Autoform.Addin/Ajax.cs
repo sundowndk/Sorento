@@ -64,7 +64,7 @@ namespace Autoform.Addin
 					{
 						case "new":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.new"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.new"));
 
 							Form form = Form.FromAjaxRequest (request);
 							form.Save ();
@@ -83,7 +83,7 @@ namespace Autoform.Addin
 
 						case "save":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.save"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.save"));
 
 							Form form = Form.FromAjaxRequest (request);
 							form.Save ();
@@ -93,7 +93,7 @@ namespace Autoform.Addin
 
 						case "delete":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.delete"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Editor) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.delete"));
 
 							Autoform.Form.Delete (new Guid (request.Key<string> ("id")));
 
@@ -102,7 +102,7 @@ namespace Autoform.Addin
 
 						case "list":
 						{
-							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.list"));
+//							if (Session.AccessLevel < SorentoLib.Enums.Accesslevel.Author) throw new Exception (string.Format (Autoform.Strings.Exception.AjaxSessionPriviliges, "form.list"));
 
 							List<Hashtable> forms = new List<Hashtable> ();
 							foreach (Form form in Form.List ())
