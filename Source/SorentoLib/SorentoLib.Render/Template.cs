@@ -28,6 +28,7 @@
 
 using System;
 using System.IO;
+using Mono.CSharp;
 using System.Text;
 using System.Reflection;
 using System.Threading;
@@ -215,6 +216,7 @@ namespace SorentoLib.Render
 		{
 			string result = string.Empty;
 
+//			Console.WriteLine (Token);
 
 			Match statement = Template.ExpStatement.Match (Token);
 			if (statement.Success)
@@ -237,19 +239,14 @@ namespace SorentoLib.Render
 							// Render Block if needed.
 							if (block.Render)
 							{
-								
-								SorentoLib.Render.Condition condition = new SorentoLib.Render.Condition (this._session, statement.Groups["body"].Value);
-								if (condition.Result)
+								if (Condition.Evaluate (this._session, statement.Groups["body"].Value))
 								{
 									block.LastIfStatementWasTrue = true;
 								}
-
 								else
 								{
 									block.Render = false;
 								}
-
-								condition = null;
 							}
 
 							this._blocks.Add (block);
@@ -269,14 +266,11 @@ namespace SorentoLib.Render
 
 							else
 							{
-								SorentoLib.Render.Condition condition = new SorentoLib.Render.Condition (this._session, statement.Groups["body"].Value);
-								if (condition.Result)
+								if (Condition.Evaluate (this._session, statement.Groups["body"].Value))
 								{
 									this.CurrentBlock.Render = true;
 									this.CurrentBlock.LastIfStatementWasTrue = true;
 								}
-
-								condition = null;
 							}
 						}
 						break;
@@ -469,13 +463,13 @@ namespace SorentoLib.Render
 						{
 							if (statement.Groups["set"].Success)
 							{
+//								Console.WriteLine (statement.Groups["value"].Value);
 								SorentoLib.Render.Resolver resolver = new SorentoLib.Render.Resolver (this._session);
 								resolver.Parse(statement.Groups["value"].Value);
 
 								this._session.Page.Variables.Add (statement.Groups["head"].Value, resolver.Result);
 								resolver = null;
 							}
-
 							else
 							{
 								SorentoLib.Render.Resolver resolver = new SorentoLib.Render.Resolver (this._session);

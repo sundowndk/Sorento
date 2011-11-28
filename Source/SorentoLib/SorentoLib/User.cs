@@ -376,7 +376,7 @@ namespace SorentoLib
 					"id",
 			            "createtimestamp",
 			            "updatetimestamp",
-			            "usergroups",
+			            "usergroupids",
 			            "username",
 			            "password",
 			            "realname",
@@ -424,7 +424,7 @@ namespace SorentoLib
 			result.Add ("id", this._id);
 			result.Add ("createtimestamp", this._createtimestamp);
 			result.Add ("updatetimestamp", this._updatetimestamp);
-			result.Add ("usergroups", this._usergroups);
+			result.Add ("usergroupids", this._usergroups);
 			result.Add ("username", this._username);
 			result.Add ("password", this._password);
 			result.Add ("realname", this._realname);
@@ -460,7 +460,7 @@ namespace SorentoLib
 					"id",
 					"createtimestamp",
 					"updatetimestamp",
-			            "usergroups",
+			            "usergroupids",
 			            "username",
 			            "password",
 			            "realname",
@@ -491,7 +491,7 @@ namespace SorentoLib
 					result._id = query.GetGuid (qb.ColumnPos ("id"));
 					result._createtimestamp = query.GetInt (qb.ColumnPos ("createtimestamp"));
 					result._updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
-					result.__usergroups_as_string = query.GetString (qb.ColumnPos ("usergroups"));
+					result.__usergroups_as_string = query.GetString (qb.ColumnPos ("usergroupids"));
 					result._username = query.GetString (qb.ColumnPos ("username"));
 					result._password = query.GetString (qb.ColumnPos ("password"));
 					result._realname = query.GetString (qb.ColumnPos ("realname"));

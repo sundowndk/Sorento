@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using Mono.CSharp;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -35,7 +36,7 @@ namespace SorentoLib.Render
 	public class Resolver
 	{
 		#region Private Static Fields		
-		private static Regex ExpIsString = new Regex(@"^\""", RegexOptions.Compiled);
+		private static Regex ExpIsString = new Regex(@"^\""|\+", RegexOptions.Compiled);
 		private static Regex ExpIsVariable = new Regex(@"^\$", RegexOptions.Compiled);
 		private static Regex ExpIndexer = new Regex(@"\[(?<indexer>.*)\]", RegexOptions.Compiled);
 		private static Regex ExpVariable = new Regex(@"\$(?<fullname>[^ (]*) *\(?((?<parameters>.*)\))?", RegexOptions.Compiled);
@@ -127,18 +128,28 @@ namespace SorentoLib.Render
 		#region Public Methods
 		public void Parse (System.String statement)
 		{
+//			Console.WriteLine (statement);
+
 			if (SorentoLib.Render.Resolver.ExpIsString.IsMatch (statement))
 			{
+//				Console.WriteLine ("STRING : "+ statement);
 				#region Strings
 				Match match = SorentoLib.Render.Resolver.ExpString.Match (statement);
 				if (match.Success)
 				{
-					this._result = match.Groups["string"].ToString ();
+
+					this._result = ParseString (this._session, statement);
+
+//					this._result = match.Groups["string"].ToString ();
+
+
+//					this._result = (string)Mono.CSharp.Evaluator.Evaluate (statement +";");
 				}
 				#endregion
 			}
 			else if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
 			{
+//				Console.WriteLine ("VARIABLE");
 				#region Dynamic
 				Match match = SorentoLib.Render.Resolver.ExpVariable.Match (statement);
 				if (match.Success)
@@ -202,6 +213,7 @@ namespace SorentoLib.Render
 			}
 			else
 			{
+//				Console.WriteLine ("METHOD");
 				#region Static
 				Match match = Resolver.ExpMethod.Match (statement);
 				if (match.Success)
@@ -371,6 +383,155 @@ namespace SorentoLib.Render
 //			}
 
 			#endregion
+		}
+
+		public static object ParseString (Session session, string statement)
+		{
+			string result = string.Empty;
+			
+			bool inquot = false;			
+			bool invariable = false;			
+			string block = string.Empty;
+			string prevcharacter = string.Empty;
+			
+			for (int pos = 0; pos < statement.Length; pos++) 
+			{	
+				string character = statement.Substring (pos, 1);
+								
+				if (prevcharacter != "\\")
+				{
+					if (character == "\"")
+					{
+						if (inquot)						
+						{
+							inquot = false;
+							result += block;
+							block = string.Empty;
+						}
+						else
+						{
+							inquot = true;
+						}
+					}
+				}
+								
+				if (!inquot)
+				{
+					if (invariable)
+					{
+						if (!Regex.IsMatch (character, "[A-z]|[0-9]"))
+						{
+							Resolver r = new Resolver (session);
+							r.Parse (block);
+
+							invariable = false;
+							result += "\""+ r.Result +"\"";
+							block = string.Empty;
+						}
+					}
+					
+					if (character == "$")
+					{
+						invariable = true;
+					}
+				}
+				
+				if (inquot || invariable)
+				{
+					block += character;
+				}
+				else
+				{
+					result += character;
+				}
+				
+				prevcharacter = character;
+			}
+
+			Console.WriteLine ("STRINGPARSER: "+ result);
+
+			return Evaluator.Evaluate (result +";");
+		}
+
+
+		public string Test (string test)
+		{
+			List<string> bla = new List<string> ();
+			bool inquots = false;			
+			bool invar = false;
+			string character = string.Empty;
+			string prevcharacter = string.Empty;
+			string part = string.Empty;
+			
+			for (int i = 0; i < test.Length; i++) 
+			{	
+				character = test.Substring (i, 1);
+														
+				if (prevcharacter != "\\")
+				{
+					if (character == "\"")
+					{
+						if (inquots)						
+						{
+							inquots = false;
+							bla.Add (part);
+							part = string.Empty;
+							continue;
+						}
+						else
+						{
+							inquots = true;
+							continue;
+						}
+					}
+				}
+				
+				if (!inquots)
+				{
+					if (invar)
+					{
+						if (!Regex.IsMatch (character, "[A-z]|[0-9]"))
+						{
+							invar = false;
+							Resolver r = new Resolver (this._session);
+							Console.WriteLine ("::"+ part);
+							r.Parse ("$"+ part);
+							bla.Add ((string)r.Result);
+//							bla.Add ("Part 3");
+//							bla.Add ()
+							part = string.Empty;
+							continue;
+						}
+					}
+
+					if (character == "+")
+					{
+						continue;
+					}
+					
+					if (character == "$")
+					{
+						invar = true;
+						continue;
+					}
+				}
+				
+				if (inquots || invar)
+				{
+					part += character;
+				}
+				
+				prevcharacter = character;
+			}
+					
+			string b = string.Empty;
+			foreach (string s in bla)
+			{
+				b += s;
+			}
+
+//			Console.WriteLine (b);
+			return b;
 		}
 		#endregion
 	}

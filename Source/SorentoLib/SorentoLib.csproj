@@ -39,10 +39,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="Jyc.Expr, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Jyc.Expr.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Web" />
     <Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
@@ -54,10 +50,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Mono.FastCgi.dll</HintPath>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4313.41856, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SNDK, Version=1.0.4346.42423, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
