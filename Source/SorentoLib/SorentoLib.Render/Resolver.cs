@@ -35,12 +35,36 @@ namespace SorentoLib.Render
 {
 	public class Resolver
 	{
-		#region Private Static Fields		
-		private static Regex ExpIsString = new Regex(@"^\""|\+", RegexOptions.Compiled);
-		private static Regex ExpIsVariable = new Regex(@"^\$", RegexOptions.Compiled);
+		#region REGEX SOURCE
+		// System.Function ("test", $test)
+		// System.Class.Field
+		// System.Field
+		// $variable + "test" + $variable
+		// $variable
+		// $variable.field
+		// false
+		// (10 + 10)
+
+		// ISVARIABLE:
+		// ((^\$[A-z|0-9|.]*)$)
+
+		// ISMETHOD:
+		// ^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$
+		#endregion
+
+		#region Private Static Fields
+		private static Regex ExpIsVariable = new Regex (@"((^\$[A-z|0-9|.]*)$)");
+		private static Regex ExpIsMethod = new Regex (@"^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$");
+
+
+//		private static Regex ExpIsString = new Regex(@"^\""|\+", RegexOptions.Compiled);
+//		private static Regex ExpIsVariable = new Regex(@"^\$", RegexOptions.Compiled);
+
+
 		private static Regex ExpIndexer = new Regex(@"\[(?<indexer>.*)\]", RegexOptions.Compiled);
 		private static Regex ExpVariable = new Regex(@"\$(?<fullname>[^ (]*) *\(?((?<parameters>.*)\))?", RegexOptions.Compiled);
-		private static Regex ExpString = new Regex("\"(?<string>.*)\"", RegexOptions.Compiled);
+//		private static Regex ExpString = new Regex("\"(?<string>.*)\"", RegexOptions.Compiled);
+//		private static Regex ExpString = new Regex("\"(?<string>.*)\"", RegexOptions.Compiled);
 		private static Regex ExpMethod = new Regex(@"^(?<fullname>[^ (]*) *\(?((?<parameters>.*)\))?", RegexOptions.Compiled);
 		private static Regex ExpParams = new Regex("(\"(?<word>[^\"]+|\"\")*\"|(?<word>[^ ,]*))", RegexOptions.Compiled);
 		#endregion
@@ -126,36 +150,19 @@ namespace SorentoLib.Render
 		#endregion
 
 		#region Public Methods
-		public void Parse (System.String statement)
+		public void Parse (string statement)
 		{
 //			Console.WriteLine (statement);
 
-			if (SorentoLib.Render.Resolver.ExpIsString.IsMatch (statement))
+//			if (statement.Substring (0, 1) == "$")
+			if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
 			{
-//				Console.WriteLine ("STRING : "+ statement);
-				#region Strings
-				Match match = SorentoLib.Render.Resolver.ExpString.Match (statement);
-				if (match.Success)
-				{
+				#region VARIABLE
+				Console.WriteLine ("VARIABLE" + statement);
 
-					this._result = ParseString (this._session, statement);
-
-//					this._result = match.Groups["string"].ToString ();
-
-
-//					this._result = (string)Mono.CSharp.Evaluator.Evaluate (statement +";");
-				}
-				#endregion
-			}
-			else if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
-			{
-//				Console.WriteLine ("VARIABLE");
-				#region Dynamic
 				Match match = SorentoLib.Render.Resolver.ExpVariable.Match (statement);
 				if (match.Success)
 				{
-
-
 					string[] split = match.Groups["fullname"].Value.Split (".".ToCharArray ());
 					this._name = split[split.Length - 1];
 					
@@ -211,10 +218,10 @@ namespace SorentoLib.Render
 				match = null;
 				#endregion
 			}
-			else
+			else if (SorentoLib.Render.Resolver.ExpIsMethod.IsMatch (statement))
 			{
-//				Console.WriteLine ("METHOD");
-				#region Static
+				#region METHOD
+				Console.WriteLine ("METHOD" + statement);
 				Match match = Resolver.ExpMethod.Match (statement);
 				if (match.Success)
 				{
@@ -282,6 +289,13 @@ namespace SorentoLib.Render
 					// Cleanup
 					match = null;
 				}
+				#endregion
+			}
+			else
+			{
+				#region STRING
+				Console.WriteLine ("STRING" + statement);
+				this._result = ParseString (this._session, statement);
 				#endregion
 			}
 		}
@@ -387,6 +401,7 @@ namespace SorentoLib.Render
 
 		public static object ParseString (Session session, string statement)
 		{
+//			Console.WriteLine ("PREPARS: "+ statement);
 			string result = string.Empty;
 			
 			bool inquot = false;			
@@ -419,14 +434,49 @@ namespace SorentoLib.Render
 				{
 					if (invariable)
 					{
-						if (!Regex.IsMatch (character, "[A-z]|[0-9]"))
+						if (!Regex.IsMatch (character, "[A-z]|[0-9.]") || (pos == statement.Length-1))
 						{
+							if (pos == statement.Length-1)
+							{
+								block += character;
+							}
+
 							Resolver r = new Resolver (session);
+//							Console.WriteLine ("BLOCK : "+ block);
 							r.Parse (block);
 
 							invariable = false;
-							result += "\""+ r.Result +"\"";
+
+//							Console.WriteLine ("RESULT: "+ r.Result);
+
+							switch (r.Result.GetType ().Name.ToLower ())
+							{
+								case "string":
+								{
+									result += "\""+ r.Result +"\"";
+									break;
+								}
+
+								case "boolean":
+								{
+									result += r.Result.ToString ().ToLower ();
+									break;
+								}
+
+								default:
+								{
+									result += "\""+ r.Result +"\"";
+									break;
+								}
+							}
+
+//							result += "\""+ r.Result +"\"";
 							block = string.Empty;
+
+							if (pos == statement.Length-1)
+							{
+								continue;
+							}
 						}
 					}
 					
@@ -448,90 +498,10 @@ namespace SorentoLib.Render
 				prevcharacter = character;
 			}
 
-			Console.WriteLine ("STRINGPARSER: "+ result);
+//			Console.WriteLine ("STRINGPARSER: "+ result);
+
 
 			return Evaluator.Evaluate (result +";");
-		}
-
-
-		public string Test (string test)
-		{
-			List<string> bla = new List<string> ();
-			bool inquots = false;			
-			bool invar = false;
-			string character = string.Empty;
-			string prevcharacter = string.Empty;
-			string part = string.Empty;
-			
-			for (int i = 0; i < test.Length; i++) 
-			{	
-				character = test.Substring (i, 1);
-														
-				if (prevcharacter != "\\")
-				{
-					if (character == "\"")
-					{
-						if (inquots)						
-						{
-							inquots = false;
-							bla.Add (part);
-							part = string.Empty;
-							continue;
-						}
-						else
-						{
-							inquots = true;
-							continue;
-						}
-					}
-				}
-				
-				if (!inquots)
-				{
-					if (invar)
-					{
-						if (!Regex.IsMatch (character, "[A-z]|[0-9]"))
-						{
-							invar = false;
-							Resolver r = new Resolver (this._session);
-							Console.WriteLine ("::"+ part);
-							r.Parse ("$"+ part);
-							bla.Add ((string)r.Result);
-//							bla.Add ("Part 3");
-//							bla.Add ()
-							part = string.Empty;
-							continue;
-						}
-					}
-
-					if (character == "+")
-					{
-						continue;
-					}
-					
-					if (character == "$")
-					{
-						invar = true;
-						continue;
-					}
-				}
-				
-				if (inquots || invar)
-				{
-					part += character;
-				}
-				
-				prevcharacter = character;
-			}
-					
-			string b = string.Empty;
-			foreach (string s in bla)
-			{
-				b += s;
-			}
-
-//			Console.WriteLine (b);
-			return b;
 		}
 		#endregion
 	}

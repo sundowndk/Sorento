@@ -79,6 +79,7 @@ namespace Core.Resolvers.Addin
 		#region Private Methods
 		private object Process (SorentoLib.Session Session, string Fullname, string Method, object Variable, SorentoLib.Render.Resolver.Parameters Parameters)
 		{
+			Console.WriteLine (Fullname);
 			switch (Fullname)
 			{
 				#region SorentoLib.Session
@@ -789,6 +790,23 @@ namespace Core.Resolvers.Addin
 						default:
 							return null;
 						#endregion
+					}
+					break;
+				#endregion
+
+				#region System.String
+				case "system.boolean":
+					switch (Method)
+					{
+						case "":
+						{
+							return ((bool)Variable);
+						}
+
+						default:
+						{
+							return null;
+						}
 					}
 					break;
 				#endregion

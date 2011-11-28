@@ -492,6 +492,7 @@ namespace SorentoLib.Render
 			Token = Regex.Replace (Token, "\\+", "\\+", RegexOptions.Compiled);
 			Token = Regex.Replace (Token, "\\[", "\\[", RegexOptions.Compiled);
 			Token = Regex.Replace (Token, "\\]", "\\]", RegexOptions.Compiled);
+			Token = Regex.Replace (Token, "\\*", "\\*", RegexOptions.Compiled);
 
 			// Render Token.
 			if ((!this.CurrentBlock.InLoop) && (this.CurrentBlock.Render))
