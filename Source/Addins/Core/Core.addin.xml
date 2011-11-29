@@ -1,0 +1,43 @@
+<Addin id          = "Core.Resolvers"              
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "Provides core functionality to the Sorento render engine."
+	   category    = "Resolvers"
+       version     = "1.0">
+	<Runtime>
+		<Import assembly="Core.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0" />
+	</Dependencies>
+	
+	<Extension path = "/SorentoLib/Resolver/Renders">
+		<Type type="Core.Addin.Render"/>
+	</Extension>	
+	
+	<Extension path = "/SorentoLib/Resolver/Functions">
+		<Type type="Core.Addin.Function"/>
+	</Extension>		
+
+	<Extension path = "/SorentoLib/Resolver/Ajaxes">
+		<Type type="Core.Addin.Ajax"/>
+	</Extension>				
+	
+	<Extension path = "/SorentoLib/PageResponders">
+		<Type type="Core.Addin.PageResponder"/>
+	</Extension>	
+	
+	<Extension path = "/SorentoLib/FunctionResponders">
+		<Type type="Core.Addin.FunctionResponder"/>
+	</Extension>	
+	
+	<Extension path = "/SorentoLib/AjaxResponders">
+		<Type type="Core.Addin.AjaxResponder"/>	
+	</Extension>	
+		
+	<Extension path = "/SorentoLib/Services/Snapshots">
+		<Type type="Core.Addin.Snapshot"/>
+	</Extension>		
+</Addin>

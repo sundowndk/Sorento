@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{838C5FC3-9296-48D5-AA27-B6DAE2198E4F}</ProjectGuid>
+    <ProjectGuid>{BDCF8CD1-AFA3-4E99-BA67-26CE827CD66C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>sBlog</AssemblyName>
+    <RootNamespace>Core</RootNamespace>
+    <AssemblyName>Core</AssemblyName>
     <ReleaseVersion>1.0</ReleaseVersion>
-    <RootNamespace>sBlog</RootNamespace>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\cgi-bin\Addins\sBlog</OutputPath>
+    <OutputPath>bin\Debug\cgi-bin\Addins\Core</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="javascript-build.sh bin/Debug" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\cgi-bin\Addins\sBlog</OutputPath>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\cgi-bin\Addins\Core</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Test\cgi-bin\Addins\sBlog</OutputPath>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins</Package>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="SNDK, Version=1.0.4346.42423, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\SNDK.dll</HintPath>
@@ -49,20 +49,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="sBlog.Enums\SortBy.cs" />
-    <Compile Include="sBlog.Enums\SortOrder.cs" />
-    <Compile Include="sBlog.Addin\Ajax.cs" />
-    <Compile Include="sBlog.Strings\Exception.cs" />
-    <Compile Include="sBlog.Strings\LogDebug.cs" />
-    <Compile Include="sBlog\Entry.cs" />
-    <Compile Include="sBlog\Comment.cs" />
-    <Compile Include="sBlog\Blog.cs" />
-    <Compile Include="sBlog.Addin\Render.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="sBlog.Addin\" />
-    <Folder Include="sBlog\" />
-    <Folder Include="sBlog.Enums\" />
+    <Compile Include="Core.Enums\EmailBodyType.cs" />
+    <Compile Include="Core.Strings\LogDebug.cs" />
+    <Compile Include="Core.Strings\ErrorMessage.cs" />
+    <Compile Include="Core.Addin\Function.cs" />
+    <Compile Include="Core.Addin\Ajax.cs" />
+    <Compile Include="Core.Addin\Render.cs" />
+    <Compile Include="Core.Addin\AjaxResponder.cs" />
+    <Compile Include="Core.Addin\FunctionResponder.cs" />
+    <Compile Include="Core.Addin\MediaResponder.cs" />
+    <Compile Include="Core.Addin\PageResponder.cs" />
+    <Compile Include="Core.Addin\Snapshot.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -71,16 +68,22 @@
       <Name>SorentoLib</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\sCMS\sCMS.csproj">
-      <Project>{F33C25BF-942F-4365-9CFB-D2628D4704BA}</Project>
-      <Name>sCMS</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="sBlog\Content.cs" />
+    <EmbeddedResource Include="Core.addin.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="sBlog.addin.xml" />
+    <Folder Include="javascript\services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="javascript\services\config.js" />
+    <None Include="javascript\services\snapshot.js" />
+    <None Include="javascript\media.js" />
+    <None Include="javascript\mediatransformation.js" />
+    <None Include="javascript\session.js" />
+    <None Include="javascript\user.js" />
+    <None Include="javascript\usergroup.js" />
+    <None Include="javascript.jsb" />
+    <None Include="javascript-build.sh" />
   </ItemGroup>
 </Project>

@@ -36,19 +36,24 @@ namespace SorentoLib.Render
 	public class Resolver
 	{
 		#region REGEX SOURCE
-		// System.Function ("test", $test)
-		// System.Class.Field
-		// System.Field
-		// $variable + "test" + $variable
-		// $variable
-		// $variable.field
-		// false
-		// (10 + 10)
+		//System.Classname.Method ("test", $test)
+		//System.Classname.Method ($variable.field)
+		//System.Classname.Field
+		//System.Classname.Field ("test")
+		//$variable + "test" + $variable
+		//$variable
+		//$variable.field
+		//$variable.method ("PARAM1")
+		//$variable.method ($variable.field)
+		//false
+		//(10 + 10)
 
 		// ISVARIABLE:
-		// ((^\$[A-z|0-9|.]*)$)
+		// ((^\$[A-z|0-9|.]*)(( )*\(.*\))*$)
 
 		// ISMETHOD:
+//		^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?
+
 		// ^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$
 		#endregion
 
