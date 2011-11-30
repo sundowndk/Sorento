@@ -376,12 +376,11 @@ namespace SorentoLib
 			return result;
 		}
 
-		public static Usergroup AddBuildInUsergroup (Guid id, string name, SorentoLib.Enums.Accesslevel accesslevel)
+		public static Usergroup AddBuildInUsergroup (Guid id, string name)
 		{
 			SorentoLib.Usergroup result = new SorentoLib.Usergroup ();
 			result._id = id;
 			result._type = SorentoLib.Enums.UsergroupType.BuildIn;
-//			result._accesslevel = accesslevel;
 			result._name = name;
 			BuiltInUsergroups.Add (result);
 

@@ -42,6 +42,8 @@ namespace SorentoLib.Render
 		//System.Classname.Field ("test")
 		//$variable + "test" + $variable
 		//$variable
+		//$variable[10]
+		//$variable.field[10]
 		//$variable.field
 		//$variable.method ("PARAM1")
 		//$variable.method ($variable.field)
@@ -52,12 +54,37 @@ namespace SorentoLib.Render
 		// ((^\$[A-z|0-9|.]*)(( )*\(.*\))*$)
 
 		// ISMETHOD:
-//		^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?
+		// ^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?
 
 		// ^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$
+
+
+
+		// METHODS
+		// (?<method>[A-z0-9\.]+? *?\(.*?\))
+
+		// VARIABLES
+		// (?<variable>\$[A-z0-9\.]*( *\(.*?\))?)
+
+		// STRINGS
+		// (?<string>\".*?\")
+
+		// NATIVE
+		// (?<native>[A-z]+)
+
+		// CONDITION
+		// (?<condition>\(.*?\))
+
+		// COMBINED
+		// (?<method>[A-z0-9\.]+? *?\(.*?\))|(?<variable>\$[A-z0-9\.]*( *\(.*?\))?)|(?<string>\".*?\")|(?<native>[A-z]+)|(?<condition>\(.*?\))
+
+		// TEST
+		// $variable.field + Namespace.Classname.Method ($test, "PARAM2") + Namespace.Classname.Method ("PARAM1", "PARAM2")+"Test1"+$variable.field +"Test2" + $variable.field ("test", "test") + false + true + (10 + 10) + $variable[10] + $variable.field[10]
 		#endregion
 
 		#region Private Static Fields
+		private static Regex ExpParseString = new Regex (@"(?<method>[A-z0-9\.]+? *?\(.*?\))|(?<variable>\$[A-z0-9\.]*( *\(.*?\))?)|(?<string>\"".*?\"")|(?<native>[A-z]+)|(?<condition>\(.*?\))", RegexOptions.Compiled);
+
 		private static Regex ExpIsVariable = new Regex (@"((^\$[A-z|0-9|.]*)$)");
 		private static Regex ExpIsMethod = new Regex (@"^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$");
 
@@ -154,154 +181,252 @@ namespace SorentoLib.Render
 		}
 		#endregion
 
-		#region Public Methods
-		public void Parse (string statement)
+		private object ParseMethod (string statement)
 		{
-//			Console.WriteLine (statement);
+			Console.WriteLine ("METHOD" + statement);
 
-//			if (statement.Substring (0, 1) == "$")
-			if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
+			object result = null;
+
+			Match match = Resolver.ExpMethod.Match (statement);
+			if (match.Success)
 			{
-				#region VARIABLE
-				Console.WriteLine ("VARIABLE" + statement);
+				// Get fullname
+				this._fullname = match.Groups["fullname"].Value;
 
-				Match match = SorentoLib.Render.Resolver.ExpVariable.Match (statement);
-				if (match.Success)
+				// Split fullname
+				string[] split = this._fullname.Split (".".ToCharArray ());
+
+				if (split.Length > 2)
 				{
-					string[] split = match.Groups["fullname"].Value.Split (".".ToCharArray ());
-					this._name = split[split.Length - 1];
-					
-					if (split.Length > 1)
+					// Get Namespace
+					for (int i = 0; i < split.Length - 2; i++)
 					{
-						this._variablename = split[0];
-						this._method = split[1];
-					}
-					else
-					{
-						this._variablename = split[0];
+						this._namespace += split[i] + ".";
 					}
 
+					this._namespace = this._namespace.TrimEnd (".".ToCharArray ());
 
+					// Get Name
+					this._name = split[split.Length - 2];
 
-
-					Match indexer = SorentoLib.Render.Resolver.ExpIndexer.Match (statement);
-					if (indexer.Success)
-					{
-						this._indexer = int.Parse (indexer.Groups["indexer"].Value);
-						string bla = "["+ this._indexer.ToString () +"]";
-						this._variablename = this._variablename.TrimEnd (bla.ToCharArray ());
-						Console.WriteLine ("indexer "+ this._indexer +" "+ this._variablename);
-						this._parameters.Add (this._indexer);
-					}
-
-
-					this._namespace = this._session.Page.Variables[this._variablename].Value.GetType ().Namespace;
-
-//					Console.WriteLine (this._variablename +" "+ this._namespace);
-
-
-					if (match.Groups["parameters"].Success)
-					{
-						this.ParseParameters (match.Groups["parameters"].ToString ());
-					}
-
-
-
-
-
-					foreach (SorentoLib.Addins.IRender irender in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IRender)))
-					{
-						if (irender.IsProvided(this._namespace))
-						{
-							this._result = irender.Process (this._session, this._session.Page.Variables[this._variablename].Value, this._method, this._parameters);
-//							this._result = iclass.Dynamic (this._session, this._method, this._parameters, this._session.Page.Variables[this._variablename].Value);
-							break;
-						}
-					}
+					// Get Method
+					this._method = split[split.Length - 1];
 				}
-
-				match = null;
-				#endregion
-			}
-			else if (SorentoLib.Render.Resolver.ExpIsMethod.IsMatch (statement))
-			{
-				#region METHOD
-				Console.WriteLine ("METHOD" + statement);
-				Match match = Resolver.ExpMethod.Match (statement);
-				if (match.Success)
+				else
 				{
-					// Get fullname
-					this._fullname = match.Groups["fullname"].Value;
+					// Get Namespace
+					this._namespace = "core";
 
-					// Split fullname
-					string[] split = this._fullname.Split (".".ToCharArray ());
+					// Get Fullname
+					//						this._fullname = "Render." + this._fullname;
 
-					if (split.Length > 2)
-					{
-						// Get Namespace
-						for (int i = 0; i < split.Length - 2; i++)
-						{
-							this._namespace += split[i] + ".";
-						}
+					// Get Name
+					this._name = "render";
 
-						this._namespace = this._namespace.TrimEnd (".".ToCharArray ());
-
-						// Get Name
-						this._name = split[split.Length - 2];
-
-						// Get Method
-						this._method = split[split.Length - 1];
-					}
-					else
-					{
-						// Get Namespace
-						this._namespace = "core";
-
-						// Get Fullname
-						//						this._fullname = "Render." + this._fullname;
-
-						// Get Name
-						this._name = "render";
-
-						// Get Method
-						this._method = split[split.Length - 1];
-					}
+					// Get Method
+					this._method = split[split.Length - 1];
+				}
 
 //					Console.WriteLine(this._namespace);
 //					Console.WriteLine(this._name);
 //					Console.WriteLine(this._method);
 
-					// Parse paremeters
-					if (match.Groups["parameters"].Success)
-					{
-						this.ParseParameters (match.Groups["parameters"].ToString ());
-					}
+				// Parse paremeters
+				if (match.Groups["parameters"].Success)
+				{
+					this.ParseParameters (match.Groups["parameters"].ToString ());
+				}
 
-					// Find Addin to handle resolve.
-					foreach (SorentoLib.Addins.IRender irender in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IRender)))
+				// Find Addin to handle resolve.
+				foreach (SorentoLib.Addins.IRender irender in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IRender)))
+				{
+					if (irender.IsProvided(this._namespace))
 					{
-						if (irender.IsProvided(this._namespace))
-						{
-							this._result = irender.Process (this._session, this._namespace +"."+ this._name, this._method, this._parameters);
+						result = irender.Process (this._session, this._namespace +"."+ this._name, this._method, this._parameters);
 //							this._result = iclass.Static (this._session, this._namespace +"."+ this._name, this._method, this._parameters);
-							break;
+						break;
+					}
+				}
+
+				// Cleanup
+				split = null;
+
+				// Cleanup
+				match = null;
+			}
+
+			return result;
+		}
+
+		private object ParseVariable (string statement)
+		{
+			Console.WriteLine ("VARIABLE" + statement);
+
+			object result = null;
+
+			Match match = SorentoLib.Render.Resolver.ExpVariable.Match (statement);
+			if (match.Success)
+			{
+				string[] split = match.Groups["fullname"].Value.Split (".".ToCharArray ());
+				this._name = split[split.Length - 1];
+
+				if (split.Length > 1)
+				{
+					this._variablename = split[0];
+					this._method = split[1];
+				}
+				else
+				{
+					this._variablename = split[0];
+				}
+
+
+
+
+				Match indexer = SorentoLib.Render.Resolver.ExpIndexer.Match (statement);
+				if (indexer.Success)
+				{
+					this._indexer = int.Parse (indexer.Groups["indexer"].Value);
+					string bla = "["+ this._indexer.ToString () +"]";
+					this._variablename = this._variablename.TrimEnd (bla.ToCharArray ());
+					Console.WriteLine ("indexer "+ this._indexer +" "+ this._variablename);
+					this._parameters.Add (this._indexer);
+				}
+
+
+				this._namespace = this._session.Page.Variables[this._variablename].Value.GetType ().Namespace;
+
+//					Console.WriteLine (this._variablename +" "+ this._namespace);
+
+
+				if (match.Groups["parameters"].Success)
+				{
+					this.ParseParameters (match.Groups["parameters"].ToString ());
+				}
+
+
+
+
+
+				foreach (SorentoLib.Addins.IRender irender in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IRender)))
+				{
+					if (irender.IsProvided(this._namespace))
+					{
+						result = irender.Process (this._session, this._session.Page.Variables[this._variablename].Value, this._method, this._parameters);
+//							this._result = iclass.Dynamic (this._session, this._method, this._parameters, this._session.Page.Variables[this._variablename].Value);
+						break;
+					}
+				}
+			}
+
+			match = null;
+
+			return result;
+		}
+
+		private object ParseString2 (string statement)
+		{
+			string result = string.Empty;
+
+			result = ExpParseString.Replace
+				(
+					statement, match =>
+				{
+					if (match.Groups["method"].Success)
+					{
+						Resolver r = new Resolver (this._session);
+						r.Parse (match.Groups["method"].Value);
+
+						switch (r.Result.GetType ().Name.ToLower ())
+						{
+							case "string":
+							{
+								return "\""+ r.Result +"\"";
+							}
+
+							case "boolean":
+							{
+								return r.Result.ToString ().ToLower ();
+							}
+
+							case "int32":
+							{
+								return r.Result.ToString ().ToLower ();
+							}
+
+							default:
+							{
+								return "\""+ r.Result +"\"";
+							}
 						}
 					}
 
-					// Cleanup
-					split = null;
+					if (match.Groups["variable"].Success)
+					{
+						Resolver r = new Resolver (this._session);
+						r.Parse (match.Groups["variable"].Value);
 
-					// Cleanup
-					match = null;
+						switch (r.Result.GetType ().Name.ToLower ())
+						{
+							case "string":
+							{
+								return "\""+ r.Result +"\"";
+							}
+
+							case "boolean":
+							{
+								return r.Result.ToString ().ToLower ();
+							}
+
+							case "int32":
+							{
+								return r.Result.ToString ().ToLower ();
+							}
+
+							default:
+							{
+								return "\""+ r.Result +"\"";
+							}
+						}
+					}
+
+					if (match.Groups["string"].Success)
+					{
+						return match.Groups["string"].Value;
+					}
+
+					if (match.Groups["native"].Success)
+					{
+						return match.Groups["native"].Value;
+					}
+
+					if (match.Groups["condition"].Success)
+					{
+						return match.Groups["condition"].Value;
+					}
+
+					return "BLANK";
 				}
-				#endregion
+				);
+
+			return Evaluator.Evaluate (result +";");
+
+		}
+
+		#region Public Methods
+		public void Parse (string statement)
+		{
+			if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
+			{
+				this._result = ParseVariable (statement);
+			}
+			else if (SorentoLib.Render.Resolver.ExpIsMethod.IsMatch (statement))
+			{
+				this._result = ParseMethod (statement);
 			}
 			else
 			{
-				#region STRING
-				Console.WriteLine ("STRING" + statement);
-				this._result = ParseString (this._session, statement);
-				#endregion
+				this._result = ParseString2 (statement);
 			}
 		}
 		#endregion
@@ -403,6 +528,8 @@ namespace SorentoLib.Render
 
 			#endregion
 		}
+
+
 
 		public static object ParseString (Session session, string statement)
 		{

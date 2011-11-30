@@ -424,7 +424,8 @@ namespace SorentoLib
 			result.Add ("id", this._id);
 			result.Add ("createtimestamp", this._createtimestamp);
 			result.Add ("updatetimestamp", this._updatetimestamp);
-			result.Add ("usergroupids", this._usergroups);
+//			result.Add ("usergroupids", this._usergroups);
+			result.Add ("usergroups", this._usergroups);
 			result.Add ("username", this._username);
 			result.Add ("password", this._password);
 			result.Add ("realname", this._realname);
