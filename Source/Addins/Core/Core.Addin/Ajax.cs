@@ -102,7 +102,16 @@ namespace Core.Addin
 									{
 										Session.User.Password = newpassword;
 										Session.User.Save ();
+										result.Add ("result", true);
 									}
+									else
+									{
+										result.Add ("result", false);
+									}
+								}
+								else
+								{
+									result.Add ("result", false);
 								}
 							}
 							else
@@ -112,6 +121,7 @@ namespace Core.Addin
 								SorentoLib.User user = SorentoLib.User.Load (request.getValue<Guid> ("userid"));
 								user.Password = newpassword;
 								user.Save ();
+								result.Add ("result", true);
 							}
 
 //							string oldpassword = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (request.Key<string> ("oldpassword"))));
@@ -233,7 +243,7 @@ namespace Core.Addin
 					{
 						case "getcurrent":
 						{
-//							result.Data = Session.ToItem ();
+							result.Add (Session);
 							break;
 						}
 

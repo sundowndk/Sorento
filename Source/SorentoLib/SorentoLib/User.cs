@@ -30,6 +30,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using SNDK;
+using SNDK.Enums;
 using SNDK.DBI;
 
 namespace SorentoLib
@@ -427,7 +428,7 @@ namespace SorentoLib
 //			result.Add ("usergroupids", this._usergroups);
 			result.Add ("usergroups", this._usergroups);
 			result.Add ("username", this._username);
-			result.Add ("password", this._password);
+//			result.Add ("password", this._password);
 			result.Add ("realname", this._realname);
 			result.Add ("email", this._email);
 			result.Add ("avatarid", this._avatarid);
@@ -884,6 +885,13 @@ namespace SorentoLib
 				if (this._password == Password)
 				{
 					result = true;
+				}
+				else
+				{
+					if (this._password == SNDK.Crypto.SHAHash (SHAHashAlgorithm.SHA1, Password + Password))
+					{
+						result = true;
+					}
 				}
 			}
 

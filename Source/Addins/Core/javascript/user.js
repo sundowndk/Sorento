@@ -66,10 +66,10 @@ changePassword : function (userid, newPassword, oldPassword)
 	{
 		content["oldpassword"] = oldPassword;
 	}
+		
+	request.send (content);
 	
-	request.send (content);				
-	
-	return true;	
+	return request.respons ()["result"];	
 },
 
 isUsernameInUse : function (username, id)

@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -459,6 +460,18 @@ namespace SorentoLib
 			result.Add ("remoteaddress", this._remoteaddress);
 
 			return result;
+		}
+
+		public XmlDocument ToXmlDocument ()
+		{
+			Hashtable result = new Hashtable ();
+
+			result.Add ("id", this._id);
+			result.Add ("createtimestamp", this._createtimestamp);
+			result.Add ("updatetimestamp", this._updatetimestamp);
+			result.Add ("user", this._user);
+
+			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
 		}
 		#endregion
 
