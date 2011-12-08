@@ -50,11 +50,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Mono.FastCgi.dll</HintPath>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4346.42423, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Mono.CSharp" />
+    <Reference Include="SNDK, Version=1.0.4358.28438, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.CSharp" />
+    <Reference Include="MySql.Data, Version=6.4.3.0, Culture=neutral, PublicKeyToken=20449f9ba87f7ae2">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\MySql.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
