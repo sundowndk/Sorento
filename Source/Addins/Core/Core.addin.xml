@@ -1,10 +1,12 @@
-<Addin id          = "Core.Resolvers"              
+<Addin id          = "Core"              
        author      = "Rasmus Pedersen"
        copyright   = "MIT X11"
        url         = "http://www.sundown.dk/"
        description = "Provides core functionality to the Sorento render engine."
 	   category    = "Resolvers"
-       version     = "1.0">
+       version     = "1.0"
+       flags	   = "CantDisable"
+       >
 	<Runtime>
 		<Import assembly="Core.dll"/>
 	</Runtime>

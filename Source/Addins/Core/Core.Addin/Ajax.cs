@@ -25,8 +25,10 @@
 // THE SOFTWARE.
 
 using System;
+using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
+using Mono.Addins;
 
 using SorentoLib;
 
@@ -41,6 +43,7 @@ namespace Core.Addin
 			base.NameSpaces.Add ("sorentolib.services");
 			base.NameSpaces.Add ("sorentolib.services.config");
 			base.NameSpaces.Add ("sorentolib.services.snapshot");
+			base.NameSpaces.Add ("sorentolib.services.addins");
 		}
 		#endregion
 
@@ -366,20 +369,93 @@ namespace Core.Addin
 
 						case "set":
 						{
-							if (request.Data.ContainsKey ("keys"))
+							Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (request.XmlDocument);
+
+							foreach (XmlDocument xml in (List<XmlDocument>)item["config"])
 							{
-								foreach (string key in ((Hashtable)request.Data["keys"]).Keys)
-								{
-									SorentoLib.Services.Config.Set (key, ((Hashtable)request.Data["keys"])[key]);
-								}
+								Hashtable conf = (Hashtable)SNDK.Convert.FromXmlDocument (xml);
+//								SorentoLib.Services.Config.Set (conf["module"], conf["key"], (object)conf["value"]);
+								SorentoLib.Services.Config.Set (conf["key"], conf["value"]);
+								Console.WriteLine (conf["module"] +" "+ conf["key"] +" "+ conf["value"]);
 							}
-							else
-							{
-								SorentoLib.Services.Config.Set (request.Key<string> ("module"), request.Key<string> ("key"), request.Key<string> ("value"));
-							}
+
+//							foreach (string key in item.Keys)
+//							{
+//								Console.WriteLine (item[key].GetType ());
+//							}
+
+							//Console.WriteLine (request.GetXml ("config").OuterXml);
+
+//							foreach (XmlDocument usergroup in (List<XmlDocument>)item["usergroups"])
+//							{
+//								result._usergroups.Add (Usergroup.FromXmlDocument (usergroup));
+//							}
+
+//							foreach (XmlDocument config in request.getValue<List<XmlDocument>> ("config"))
+//							{
+//								//result._usergroups.Add (Usergroup.FromXmlDocument (usergroup));
+//							}
+
+//							if (request.Data.ContainsKey ("keys"))
+//							{
+//								foreach (string key in ((Hashtable)request.Data["keys"]).Keys)
+//								{
+//									SorentoLib.Services.Config.Set (key, ((Hashtable)request.Data["keys"])[key]);
+//								}
+//							}
+//							else
+//							{
+//								SorentoLib.Services.Config.Set (request.Key<string> ("module"), request.Key<string> ("key"), request.Key<string> ("value"));
+//							}
 
 							break;
 						}
+					}
+					break;
+				}
+				#endregion
+
+				#region SorentoLib.Services.Addins
+				case "sorentolib.services.addins":
+				{
+					switch (Method.ToLower ())
+					{
+						case "enableaddin":
+						{
+							SorentoLib.Services.Addins.EnableAddin (request.getValue<string> ("id"));
+							break;
+						}
+
+						case "disableaddin":
+						{
+							SorentoLib.Services.Addins.DisableAddin (request.getValue<string> ("id"));
+							break;
+						}
+
+						case "list":
+						{
+							List<Hashtable> addins = new List<Hashtable> ();
+							foreach (Mono.Addins.Addin addin in SorentoLib.Services.Addins.List ())
+							{
+								Hashtable item = new Hashtable ();
+								item.Add ("id", addin.Id);
+								item.Add ("enabled", addin.Enabled);
+								item.Add ("name", addin.LocalId);
+								item.Add ("version", addin.Version);
+								item.Add ("author", addin.Description.Author);
+								item.Add ("description", addin.Description.Description);
+								item.Add ("url", addin.Description.Url);
+								item.Add ("candisable", addin.Description.CanDisable);
+
+								addins.Add (item);
+							}
+
+							result.Add ("sorentolib.services.addins", addins);
+							break;
+						}
+
+						default:
+							break;
 					}
 					break;
 				}

@@ -28,8 +28,10 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
 using Mono.Addins;
+using Mono.Addins.Setup;
 
 namespace SorentoLib.Services
 {
@@ -47,7 +49,7 @@ namespace SorentoLib.Services
 			AddinManager.AddinLoaded += SorentoLib.Services.Addins.OnLoad;
 			AddinManager.AddinLoadError += SorentoLib.Services.Addins.OnLoadError;
 			AddinManager.Registry.Update (null);
-			
+
 			// Monitor addin folder for changes.
 			FileSystemWatcher applicationwatcher1 = new FileSystemWatcher ();
 			applicationwatcher1.Path = "../Addins/";
@@ -60,8 +62,28 @@ namespace SorentoLib.Services
 			applicationwatcher2.IncludeSubdirectories = true;
 			applicationwatcher2.Deleted += new FileSystemEventHandler (SorentoLib.Services.Addins.OnDeleted);
 			applicationwatcher2.EnableRaisingEvents = true;
+		}
 
+		public static void DisableAddin (string id)
+		{
+			AddinManager.Registry.DisableAddin (id);
+		}
 
+		public static void EnableAddin (string id)
+		{
+			AddinManager.Registry.EnableAddin (id);
+		}
+
+		public static List<Mono.Addins.Addin> List ()
+		{
+			List<Mono.Addins.Addin> result = new List<Mono.Addins.Addin> ();
+
+			foreach (Mono.Addins.Addin addin in AddinManager.Registry.GetAddins ())
+			{
+				result.Add (addin);
+			}
+
+			return result;
 		}
 		#endregion
 

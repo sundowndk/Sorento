@@ -32,22 +32,12 @@ get : function (module, key)
 	}
 },
 
-set : function (module, key, value)
+set : function (config)
 {					
 	var request = new SNDK.ajax.request ("/", "cmd=Ajax;cmd.function=SorentoLib.Services.Config.Set", "data", "POST", false);	
 
 	var content = new Array ();
-
-	if (key == null && value == null)
-	{
-		content["keys"] = module;
-	}
-	else
-	{
-		content['module'] = module;
-		content['key'] = key;
-		content['value'] = value;
-	}
+	content["config"] = config;
 
 	request.send (content);
 

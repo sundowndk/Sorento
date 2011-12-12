@@ -23,6 +23,10 @@
 				<class name="snapshot">
 					<js file="javascript/services/snapshot.js" />
 				</class>
+				<class name="addins">
+					<js file="javascript/services/addins.js" />
+				</class>
+				
 			</class>	
 		</class>
 	</project>	

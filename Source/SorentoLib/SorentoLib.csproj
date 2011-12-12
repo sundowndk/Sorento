@@ -51,13 +51,16 @@
       <HintPath>..\Lib\Mono.FastCgi.dll</HintPath>
     </Reference>
     <Reference Include="Mono.CSharp" />
-    <Reference Include="SNDK, Version=1.0.4358.28438, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\SNDK.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data, Version=6.4.3.0, Culture=neutral, PublicKeyToken=20449f9ba87f7ae2">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="SNDK, Version=1.0.4360.18898, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\SNDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Addins.Setup, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <Package>mono-addins-setup</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
