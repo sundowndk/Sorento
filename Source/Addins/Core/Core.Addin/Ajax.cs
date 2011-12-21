@@ -350,19 +350,19 @@ namespace Core.Addin
 					{
 						case "get":
 						{
-							if (request.Data.ContainsKey ("keys"))
+							Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (request.XmlDocument);
+
+							List<Hashtable> test = new List<Hashtable> ();
+
+							foreach (XmlDocument key in (List<XmlDocument>)item["config"])
 							{
-								Hashtable data = new Hashtable ();
-								foreach (string key in ((Hashtable)request.Data["keys"]).Keys)
-								{
-									data.Add (((Hashtable)request.Data["keys"])[key], SorentoLib.Services.Config.Get<string> (((Hashtable)request.Data["keys"])[key]));
-								}
-//								result.Data.Add ("data", data);
+								string keyname = (string)((Hashtable)SNDK.Convert.FromXmlDocument (key))["value"];
+								Hashtable val = new Hashtable ();
+								val.Add (keyname, SorentoLib.Services.Config.Get<string> (keyname));
+								test.Add (val);
 							}
-							else
-							{
-//								result.Data.Add ("value", SorentoLib.Services.Config.Get<string> (request.Key<string> ("module"), request.Key<string> ("key")));
-							}
+
+							result.Add ("config", test);
 
 							break;
 						}
@@ -376,7 +376,7 @@ namespace Core.Addin
 								Hashtable conf = (Hashtable)SNDK.Convert.FromXmlDocument (xml);
 //								SorentoLib.Services.Config.Set (conf["module"], conf["key"], (object)conf["value"]);
 								SorentoLib.Services.Config.Set (conf["key"], conf["value"]);
-								Console.WriteLine (conf["module"] +" "+ conf["key"] +" "+ conf["value"]);
+//								Console.WriteLine (conf["module"] +" "+ conf["key"] +" "+ conf["value"]);
 							}
 
 //							foreach (string key in item.Keys)
