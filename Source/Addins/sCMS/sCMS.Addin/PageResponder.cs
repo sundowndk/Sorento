@@ -95,6 +95,7 @@ namespace sCMS.Addin
 
 			template.Render ();
 			template = null;
+			
 			Session.Responder.Request.SendOutputText (Session.Page.Write (Session));
 
 
