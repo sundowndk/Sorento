@@ -56,12 +56,14 @@ namespace SorentoLib.Services
 			applicationwatcher1.IncludeSubdirectories = true;
 			applicationwatcher1.Created += new FileSystemEventHandler (SorentoLib.Services.Addins.OnCreated);
 			applicationwatcher1.EnableRaisingEvents = true;
+			applicationwatcher1.Filter = "*.dll";
 			
 			FileSystemWatcher applicationwatcher2 = new FileSystemWatcher ();
 			applicationwatcher2.Path = "../Addins/";
 			applicationwatcher2.IncludeSubdirectories = true;
 			applicationwatcher2.Deleted += new FileSystemEventHandler (SorentoLib.Services.Addins.OnDeleted);
 			applicationwatcher2.EnableRaisingEvents = true;
+			applicationwatcher2.Filter = "*.dll";
 		}
 
 		public static void DisableAddin (string id)
