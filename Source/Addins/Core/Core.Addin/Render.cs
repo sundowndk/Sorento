@@ -86,12 +86,9 @@ namespace Core.Addin
 				case "sorentolib.session":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((SorentoLib.Session)Variable);
-						#endregion
 
-						#region Fields
 						case "id":
 							return ((SorentoLib.Session)Variable).Id;
 
@@ -121,28 +118,47 @@ namespace Core.Addin
 
 						case "loggedin":
 							return ((SorentoLib.Session)Variable).LoggedIn;
-						#endregion
 
-						#region Methods
 //						case "authenticatebyaccesslevel":
 //							return ((SorentoLib.Session)Variable).AuthenticateByAccesslevel (SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel>(Parameters.Get<string>(0)));
 
 						case "authenticatebyusergroup":
 							return ((SorentoLib.Session)Variable).AuthenticateByUsergroup (Parameters.Get<Guid>(0));
-						#endregion
 
-						#region Static Methods
 						case "current":
 							return Session;
-						#endregion
 
-						#region Default
+						case "error":
+							return Session.Error;
+
 						default:
 							return null;
-						#endregion
 					}
 					break;
 				#endregion
+
+				#region SorentoLib.Error
+				case "sorentolib.error":
+					switch (Method)
+					{
+						case "":
+							return ((SorentoLib.Error)Variable);
+
+						case "id":
+							return ((SorentoLib.Error)Variable).Id;
+
+						case "title":
+							return ((SorentoLib.Error)Variable).Title;
+
+						case "text":
+							return ((SorentoLib.Error)Variable).Text;
+
+						default:
+							return null;
+					}
+					break;
+				#endregion
+
 
 				#region SorentoLib.FastCgi.CookieJar
 				case "sorentolib.fastcgi.cookiejar":

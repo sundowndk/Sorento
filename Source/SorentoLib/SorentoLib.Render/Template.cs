@@ -473,7 +473,10 @@ namespace SorentoLib.Render
 							else
 							{
 								SorentoLib.Render.Resolver resolver = new SorentoLib.Render.Resolver (this._session);
+
+
 								resolver.Parse(Token);
+
 
 								resolver = null;
 							}

@@ -36,6 +36,7 @@ namespace SorentoLib.Render
 	public class Resolver
 	{
 		#region REGEX SOURCE
+		//System ("test")
 		//System.Classname.Method ("test", $test)
 		//System.Classname.Method ($variable.field)
 		//System.Classname.Field
@@ -86,7 +87,7 @@ namespace SorentoLib.Render
 		private static Regex ExpParseString = new Regex (@"(?<method>[A-z0-9\.]+? *?\(.*?\))|(?<variable>\$[A-z0-9\.]*( *\(.*?\))?)|(?<string>\"".*?\"")|(?<native>[A-z]+)|(?<condition>\(.*?\))", RegexOptions.Compiled);
 
 		private static Regex ExpIsVariable = new Regex (@"((^\$[A-z|0-9|.]*)$)");
-		private static Regex ExpIsMethod = new Regex (@"^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$");
+		private static Regex ExpIsMethod = new Regex (@"^(([A-z|0-9])+\.+)+([A-z|0-9])+ *(\((.)*\))?$");
 
 
 //		private static Regex ExpIsString = new Regex(@"^\""|\+", RegexOptions.Compiled);
@@ -328,12 +329,16 @@ namespace SorentoLib.Render
 		{
 			string result = string.Empty;
 
+
+
 			result = ExpParseString.Replace
 				(
 					statement, match =>
 				{
 					if (match.Groups["method"].Success)
 					{
+						Console.WriteLine (match.Groups["method"].Value);
+
 						Resolver r = new Resolver (this._session);
 						r.Parse (match.Groups["method"].Value);
 
@@ -410,7 +415,6 @@ namespace SorentoLib.Render
 				);
 
 			return Evaluator.Evaluate (result +";");
-
 		}
 
 		#region Public Methods

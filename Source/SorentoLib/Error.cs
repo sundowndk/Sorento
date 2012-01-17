@@ -34,6 +34,9 @@ namespace SorentoLib
 	{
 		#region Static Definitions
 		public static string[] ErrorTexts = new string[3000];
+
+		public string _title;
+		public string _text;
 		#endregion
 		
 		#region Defintions
@@ -50,10 +53,26 @@ namespace SorentoLib
 			set { this._id = value; }
 		}			
 		
+//		public string Text
+//		{
+//			get { return Error.ErrorTexts[this._id]; }
+//		}
+
+		public string Title
+		{
+			get
+			{
+				return this._title;
+			}
+		}
+
 		public string Text
 		{
-			get { return Error.ErrorTexts[this._id]; }
-		}			
+			get
+			{
+				return this._text;
+			}
+		}
 		
 		public bool Exception
 		{
@@ -75,6 +94,12 @@ namespace SorentoLib
 		#region Constructor
 		public Error()
 		{						
+		}
+
+		public Error (Exception Exception)
+		{
+			this._title = Exception.Message;
+			this._text = Exception.StackTrace.Replace ("\n", "<br>");
 		}
 		#endregion
 		

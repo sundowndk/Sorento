@@ -189,14 +189,20 @@ namespace SorentoLib.FastCgi
 //							query.Value = "/administration/bootstrap/"+ SorentoLib.Services.Config.Get<bool> ("core", "bootstraplevel");
 //
 //						}
-
+						bool servered = false;
 
 						foreach (SorentoLib.Addins.IPageResponder pageresponder in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IPageResponder)))
 						{
 							if (pageresponder.Process (session))
 							{
+								servered = true;
 								break;
 							}
+						}
+
+						if (!servered)
+						{
+							throw new Exception (Strings.Exception.MediaSave);
 						}
 						break;
 					#endregion
@@ -234,7 +240,16 @@ namespace SorentoLib.FastCgi
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.ToString());
+				session.Error = new Error (e);
+
+
+				SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/exception.stpl"));
+				session.Page.Clear ();
+				template.Render ();
+				template = null;
+				session.Responder.Request.SendOutputText (session.Page.Write (session));
+
+//				Console.WriteLine(e.ToString());
 //				#region Error Handling
 //				if (session.Error.Exception)
 //				{
