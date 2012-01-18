@@ -218,6 +218,7 @@ namespace SorentoLib.Render
 
 //			Console.WriteLine (Token);
 
+
 			Match statement = Template.ExpStatement.Match (Token);
 			if (statement.Success)
 			{
@@ -368,17 +369,17 @@ namespace SorentoLib.Render
 					#region Write
 					case "write":
 						// TODO: This probally needs to be done differently.
-						try
-						{
+//						try
+//						{
 							if ((!this.CurrentBlock.InLoop) && (this.CurrentBlock.Render))
 							{
 								SorentoLib.Render.Resolver resolver = new SorentoLib.Render.Resolver (this._session);
 								resolver.Parse (statement.Groups["body"].Value);
 								result = resolver.Result.ToString ();
 							}
-						}
-						catch
-						{}
+//						}
+//						catch
+//						{}
 						break;
 					#endregion
 
@@ -474,8 +475,8 @@ namespace SorentoLib.Render
 							{
 								SorentoLib.Render.Resolver resolver = new SorentoLib.Render.Resolver (this._session);
 
-
 								resolver.Parse(Token);
+
 
 
 								resolver = null;

@@ -52,12 +52,23 @@ namespace SorentoLib.Render
 		//(10 + 10)
 
 		// ISVARIABLE:
-		// ((^\$[A-z|0-9|.]*)(( )*\(.*\))*$)
+		// ((^\$[A-z|0-9|.]*)(( )*\(.*\))*$)((^\$[A-z|0-9|.]*)(( )*\(.*\))*$)
 
 		// ISMETHOD:
 		// ^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?
 
 		// ^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$
+
+
+//		^([A-z|0-9])+ *(\((.)*\))$|(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$
+
+
+
+		// ISMETHOD
+//		^([A-z|0-9])+ *(\((.)*\))$|(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))$
+
+		// ISFIELD
+//		^(([A-z|0-9])+\.)+([A-z|0-9])+$
 
 
 
@@ -87,7 +98,10 @@ namespace SorentoLib.Render
 		private static Regex ExpParseString = new Regex (@"(?<method>[A-z0-9\.]+? *?\(.*?\))|(?<variable>\$[A-z0-9\.]*( *\(.*?\))?)|(?<string>\"".*?\"")|(?<native>[A-z]+)|(?<condition>\(.*?\))", RegexOptions.Compiled);
 
 		private static Regex ExpIsVariable = new Regex (@"((^\$[A-z|0-9|.]*)$)");
-		private static Regex ExpIsMethod = new Regex (@"^(([A-z|0-9])+\.+)+([A-z|0-9])+ *(\((.)*\))?$");
+		private static Regex ExpIsMethod = new Regex (@"^([A-z|0-9])+ *(\((.)*\))$|(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$");
+		private static Regex ExpIsField = new Regex (@"^(([A-z|0-9])+\.)+([A-z|0-9])+$");
+
+
 
 
 //		private static Regex ExpIsString = new Regex(@"^\""|\+", RegexOptions.Compiled);
@@ -249,6 +263,11 @@ namespace SorentoLib.Render
 					}
 				}
 
+				if (result == null)
+				{
+					throw new Exception ("Object $"+ this._fullname +" does not have method '"+ this._method +"'");
+				}
+
 				// Cleanup
 				split = null;
 
@@ -315,9 +334,17 @@ namespace SorentoLib.Render
 					{
 						result = irender.Process (this._session, this._session.Page.Variables[this._variablename].Value, this._method, this._parameters);
 //							this._result = iclass.Dynamic (this._session, this._method, this._parameters, this._session.Page.Variables[this._variablename].Value);
+
+
+
 						break;
 					}
 				}
+			}
+
+			if (result == null)
+			{
+				throw new Exception ("Object $"+ this._variablename +" does not have field '"+ this._method +"'");
 			}
 
 			match = null;
@@ -327,7 +354,7 @@ namespace SorentoLib.Render
 
 		private object ParseString2 (string statement)
 		{
-			string result = string.Empty;
+			object result = null;
 
 
 
@@ -414,7 +441,16 @@ namespace SorentoLib.Render
 				}
 				);
 
-			return Evaluator.Evaluate (result +";");
+			try
+			{
+				result = Evaluator.Evaluate (result +";");
+			}
+			catch (Exception e)
+			{
+				throw new Exception ("Error in code near: "+ statement);
+			}
+
+			return result;
 		}
 
 		#region Public Methods
@@ -422,14 +458,22 @@ namespace SorentoLib.Render
 		{
 			if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
 			{
+				Console.WriteLine ("PARSING-VARIABLE: "+ statement);
 				this._result = ParseVariable (statement);
 			}
 			else if (SorentoLib.Render.Resolver.ExpIsMethod.IsMatch (statement))
 			{
+				Console.WriteLine ("PARSING-METHOD: "+ statement);
+				this._result = ParseMethod (statement);
+			}
+			else if (SorentoLib.Render.Resolver.ExpIsField.IsMatch (statement))
+			{
+				Console.WriteLine ("PARSING-FIELD: "+ statement);
 				this._result = ParseMethod (statement);
 			}
 			else
 			{
+				Console.WriteLine ("PARSING-STRING: "+ statement);
 				this._result = ParseString2 (statement);
 			}
 		}

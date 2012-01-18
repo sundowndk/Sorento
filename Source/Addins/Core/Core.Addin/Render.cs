@@ -79,7 +79,6 @@ namespace Core.Addin
 		#region Private Methods
 		private object Process (SorentoLib.Session Session, string Fullname, string Method, object Variable, SorentoLib.Render.Resolver.Parameters Parameters)
 		{
-			Console.WriteLine (Fullname);
 			switch (Fullname)
 			{
 				#region SorentoLib.Session

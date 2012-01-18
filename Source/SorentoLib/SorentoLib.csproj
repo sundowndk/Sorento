@@ -58,7 +58,7 @@
     <Reference Include="Mono.Addins.Setup, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins-setup</Package>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4371.38234, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SNDK, Version=1.0.4380.18491, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
@@ -143,6 +143,7 @@
     <Compile Include="SorentoLib.Addins\ISnapshot.cs" />
     <Compile Include="SorentoLib.Addins\IRenderBaseClass.cs" />
     <Compile Include="SorentoLib.Addins\IAjaxBaseClass.cs" />
+    <Compile Include="SorentoLib.Enums\ErrorType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SorentoLib.Render\" />

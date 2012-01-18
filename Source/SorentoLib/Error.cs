@@ -24,9 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#region Includes
 using System;
-#endregion
 
 namespace SorentoLib
 {		
@@ -94,6 +92,12 @@ namespace SorentoLib
 		#region Constructor
 		public Error()
 		{						
+		}
+
+		public Error (string Title, string Text)
+		{
+			this._title = Title;
+			this._text = Text;
 		}
 
 		public Error (Exception Exception)

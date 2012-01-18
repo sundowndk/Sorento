@@ -1,21 +1,21 @@
 //
-// PageResponder.cs
-//
+// ErrorType.cs
+//  
 // Author:
 //       Rasmus Pedersen <rasmus@akvaservice.dk>
-//
-// Copyright (c) 2010 Rasmus Pedersen
-//
+// 
+// Copyright (c) 2009 Rasmus Pedersen
+// 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,55 +26,10 @@
 
 using System;
 
-using SorentoLib;
-
-namespace Core.Addin
+namespace SorentoLib.Enums
 {
-	public class PageResponder : SorentoLib.Addins.IPageResponder
+	public enum ErrorType
 	{
-		#region Constructor
-		public PageResponder ()
-		{
-		}
-		#endregion
-
-		#region Public Methods
-		public bool Process (SorentoLib.Session Session)
-		{
-
-
-			
-
-//			Console.WriteLine(Session.Request.QueryJar.Get ("cmd.path").Value);
-			string path = string.Empty;
-			if (Session.Request.QueryJar.Exist("cmd.path"))
-			{
-				path = Session.Request.QueryJar.Get("cmd.path").Value + "/";
-			}
-
-
-			SorentoLib.Render.Template template = null;
-
-			// TODO: this responder needs to work correctly.
-			try
-			{
-				template = new SorentoLib.Render.Template (Session, path + Session.Request.QueryJar.Get ("cmd.page").Value);
-
-			}
-			catch (Exception e)
-			{
-
-				Console.WriteLine (e);
-				return false;
-			}
-
-			template.Render ();
-			template = null;
-			
-			Session.Responder.Request.SendOutputText (Session.Page.Write (Session));
-
-			return true;
-		}
-		#endregion
+		Render
 	}
 }
