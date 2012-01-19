@@ -30,6 +30,13 @@ namespace SorentoLib.Enums
 {
 	public enum ConfigKey
 	{
+		core_hostname,
+		core_sessiontimeout,
+		core_enablecache,
+		core_defaultencoding,
+		core_showexceptions,
+
+
 		core_pathhtmlroot,
 		core_pathtmp,
 		core_pathmedia,
@@ -38,10 +45,36 @@ namespace SorentoLib.Enums
 		core_pathscript,
 		core_defaultusergroup,
 		core_bootstrap,
-		core_defaultencoding,
 		snapshot_path,
-		core_showexceptions,
 		core_httperror500url,
 		core_httperror404url
 	}
 }
+
+
+
+//    <hostname>sorentotest.sundown.dk</hostname>
+//    <sessiontimeout>1800</sessiontimeout>
+//    <enablecache>false</enablecache>
+//    <defaultencoding>UTF-8</defaultencoding>
+//    <showexceptions>true</showexceptions>
+
+
+//	<pathscript>data/scripts/</pathscript>
+//    <enabled>true</enabled>
+//    <contentencoding>ISO-8859-15</contentencoding>
+//    <verificationtimeout>43200</verificationtimeout>
+//    <authenticationtype>plaintext</authenticationtype>
+//    <enablersalogin>false</enablersalogin>
+//    <pathcontent>../Content</pathcontent>
+//    <pathhtmlroot>../../html/</pathhtmlroot>
+//    <pathtmp>tmp/</pathtmp>
+//    <pathsnapshot>data/snapshots/</pathsnapshot>
+//    <pathmedia>../Media/</pathmedia>
+//    <pathpublicmedia>../../html/media/</pathpublicmedia>
+//    <defaultusergroup>09b2b48f-9686-4232-b699-b5cc013998d0</defaultusergroup>
+//    <cgiexec>Sorento.exe</cgiexec>
+//    <cgiurl>/cgi-bin/</cgiurl>
+//    <loglevel>info, warning, error, fatalerror, debug</loglevel>
+//    <offlineurl>info, warning, error, fatalerror</offlineurl>
+//    <encoding>UTF-8</encoding>

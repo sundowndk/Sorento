@@ -45,6 +45,7 @@ namespace SorentoLib.Services
 		//		.* '(.*)'.*xml (.*)
 		private static string _path = "../config.xml";
 		private static List<Key> _keys;
+		private static List<Key> _defaults;
 		private static System.Timers.Timer _writedelay;
 		private static object _lock;
 		private static FileSystemWatcher _watcher;
@@ -55,6 +56,10 @@ namespace SorentoLib.Services
 		{
 			_lock = new object ();
 			_keys = new List<Key> ();
+			_defaults = new List<Key> ();
+
+			// SetDefaults
+			SetDefaults ();
 
 			// Parse conf
 			SorentoLib.Services.Config.Read ();
@@ -73,6 +78,24 @@ namespace SorentoLib.Services
 			_writedelay.AutoReset = false;
 		}
 
+		private static void SetDefaults ()
+		{
+			// HOSTNAME
+			SetDefault (SorentoLib.Enums.ConfigKey.core_hostname, "CHANGEME");
+
+			// SESSIONTIMEOUT
+			SetDefault (SorentoLib.Enums.ConfigKey.core_sessiontimeout, 1800);
+
+			// ENABLECAHCE
+			SetDefault (SorentoLib.Enums.ConfigKey.core_enablecache, false);
+
+			// DEFAULTENCODING
+			SetDefault (SorentoLib.Enums.ConfigKey.core_defaultencoding, "UTF-8");
+
+			// SHOWEXCEPTIONS
+			SetDefault (SorentoLib.Enums.ConfigKey.core_showexceptions, true);
+		}
+
 		public static T Get<T> (object Key)
 		{
 			string module = Key.ToString ().Split ("_".ToCharArray ())[0];
@@ -81,13 +104,13 @@ namespace SorentoLib.Services
 			return (T)Get<T> (module, name);
 		}
 
-		public static T Get<T> (Enums.ConfigKey Key)
-		{
-			string module = Key.ToString ().Split ("_".ToCharArray ())[0];
-			string name = Key.ToString ().Split ("_".ToCharArray ())[1];
-
-			return (T)Get<T> (module, name);
-		}
+//		public static T Get<T> (Enums.ConfigKey Key)
+//		{
+//			string module = Key.ToString ().Split ("_".ToCharArray ())[0];
+//			string name = Key.ToString ().Split ("_".ToCharArray ())[1];
+//
+//			return (T)Get<T> (module, name);
+//		}
 
 		public static T Get<T> (string Key)
 		{
@@ -125,6 +148,26 @@ namespace SorentoLib.Services
 			}
 
 			return false;
+		}
+
+		public static void SetDefault (object Key, object Value)
+		{
+			string module = Key.ToString ().Split ("_".ToCharArray ())[0];
+			string name = Key.ToString ().Split ("_".ToCharArray ())[1];
+
+			Key key = _defaults.Find (delegate (Key k) { return k.Path == module + "_" + name; });
+			if (key != null)
+			{
+				key.Value = Value.ToString ();
+			}
+			else
+			{
+				key = new Key ();
+				key.Module = module;
+				key.Name = name;
+				key.Value = Value.ToString ();
+				_defaults.Add (key);
+			}
 		}
 
 		public static void Set (object Key, Object Value)
@@ -266,14 +309,18 @@ namespace SorentoLib.Services
 		private static string Get (string Module, string Name)
 		{
 			Key key = _keys.Find (delegate (Key k) { return k.Path == Module + "_" + Name; });
-			if (key != null)
+
+			if (key == null)
 			{
-				return key.Value;
+				key = _defaults.Find (delegate (Key k) { return k.Path == Module + "_" + Name; });
 			}
-			else
+
+			if (key == null)
 			{
 				throw new Exception (string.Format (Strings.Exception.ServicesConfigKeyNotFound, Module +"."+ Name));
 			}
+
+			return key.Value;
 		}
 		#endregion
 
