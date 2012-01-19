@@ -180,32 +180,48 @@ namespace SorentoLib.Render
 
 			this.AddBlock ();
 
-			foreach (string line in this._content)
+			int counter = 0;
+			try
 			{
-				string currentline = line;
+				foreach (string line in this._content)
+				{
+					counter++;
+					string currentline = line;
 
-				MatchCollection tokens = SorentoLib.Render.Template.ExpMatchToken.Matches (currentline);
-				for (int token = 0; token < tokens.Count; token++)
-				{
-					currentline = this.Parser (currentline, tokens[token].Groups[1].Value);
-				}
+					MatchCollection tokens = SorentoLib.Render.Template.ExpMatchToken.Matches (currentline);
+					for (int token = 0; token < tokens.Count; token++)
+					{
+						currentline = this.Parser (currentline, tokens[token].Groups[1].Value);
+					}
 
-				if (this._endrender)
-				{
-					break;
-				}
+					if (this._endrender)
+					{
+						break;
+					}
 				
-				// If Block is building loop, then we add the line to the current loop and continue to next line.
-				if (this.CurrentBlock.InLoop)
-				{
-					this.CurrentBlock.Loop.Content.Add (currentline);
-					continue;
-				}
+					// If Block is building loop, then we add the line to the current loop and continue to next line.
+					if (this.CurrentBlock.InLoop)
+					{
+						this.CurrentBlock.Loop.Content.Add (currentline);
+						continue;
+					}
 				
-				// Line has been rendered, so we add it to the Page.
-				if (this.CurrentBlock.Render)
+					// Line has been rendered, so we add it to the Page.
+					if (this.CurrentBlock.Render)
+					{
+						this._session.Page.Lines.Add (currentline);
+					}
+				}
+			}
+			catch (SorentoLib.Exceptions.RenderException exception)
+			{
+				if (exception.Line == 0)
 				{
-					this._session.Page.Lines.Add (currentline);
+					throw new SorentoLib.Exceptions.RenderException (exception.Message, counter, this._filename);
+				}
+				else
+				{
+					throw new SorentoLib.Exceptions.RenderException (exception.Message, exception.Line, exception.Filename);
 				}
 			}
 		}
@@ -541,10 +557,10 @@ namespace SorentoLib.Render
 				}
 
 				// Lines with zero length will be discared.
-				if (readline.Length < 1)
-				{
-					continue;
-				}
+//				if (readline.Length < 1)
+//				{
+//					continue;
+//				}
 
 				// Lex tokens.
 				MatchCollection tokens = SorentoLib.Render.Template.ExpMatchCleaner.Matches (readline);
@@ -560,18 +576,18 @@ namespace SorentoLib.Render
 
 					foreach (string line in readline.Split ("\n".ToCharArray()))
 					{
-						if (line != string.Empty)
-						{
+//						if (line != string.Empty)
+//						{
 							content.Add (line);
-						}
+//						}
 					}
 				}
 				else
 				{
-					if (readline != string.Empty)
-					{
+//					if (readline != string.Empty)
+//					{
 						content.Add (readline);
-					}
+//					}
 				}
 			}
 			template.Close ();

@@ -63,6 +63,18 @@ namespace Core.Addin
 			return false;
 		}
 
+		public bool IsProvided (object variable)
+		{
+			foreach (string _namespace in this._namespaces)
+			{
+				if (_namespace ==  variable.GetType ().Namespace.ToLower ())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public object Process (SorentoLib.Session Session, object Variable, string Method, SorentoLib.Render.Resolver.Parameters Parameters)
 		{
 			//Console.WriteLine ("123:"+Variable.GetType ().Namespace.ToLower ()+"."+Variable.GetType ().Name.ToLower ());

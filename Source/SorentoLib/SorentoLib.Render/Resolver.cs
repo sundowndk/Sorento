@@ -278,10 +278,8 @@ namespace SorentoLib.Render
 			return result;
 		}
 
-		private object ParseVariable (string statement)
+		private object ParseVariable2 (string statement)
 		{
-			Console.WriteLine ("VARIABLE" + statement);
-
 			object result = null;
 
 			Match match = SorentoLib.Render.Resolver.ExpVariable.Match (statement);
@@ -300,9 +298,7 @@ namespace SorentoLib.Render
 					this._variablename = split[0];
 				}
 
-
-
-
+				// TODO: FIX!
 				Match indexer = SorentoLib.Render.Resolver.ExpIndexer.Match (statement);
 				if (indexer.Success)
 				{
@@ -313,41 +309,88 @@ namespace SorentoLib.Render
 					this._parameters.Add (this._indexer);
 				}
 
-
-				this._namespace = this._session.Page.Variables[this._variablename].Value.GetType ().Namespace;
-
-//					Console.WriteLine (this._variablename +" "+ this._namespace);
-
-
+				// TODO: FIX
 				if (match.Groups["parameters"].Success)
 				{
 					this.ParseParameters (match.Groups["parameters"].ToString ());
 				}
 
-
-
-
-
-				foreach (SorentoLib.Addins.IRender irender in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IRender)))
+				foreach (SorentoLib.Addins.IRender irender in AddinManager.GetExtensionObjects (typeof (SorentoLib.Addins.IRender)))
 				{
-					if (irender.IsProvided(this._namespace))
+					if (irender.IsProvided (this._session.Page.Variables[this._variablename].Value))
 					{
 						result = irender.Process (this._session, this._session.Page.Variables[this._variablename].Value, this._method, this._parameters);
-//							this._result = iclass.Dynamic (this._session, this._method, this._parameters, this._session.Page.Variables[this._variablename].Value);
-
-
-
 						break;
 					}
 				}
 			}
 
+			match = null;
+
+			// Throw RenderException if variable could not be resolved successfully.
 			if (result == null)
 			{
-				throw new Exception ("Object $"+ this._variablename +" does not have field '"+ this._method +"'");
+				throw new SorentoLib.Exceptions.RenderException (string.Format (Strings.Exception.RenderVariableField, this._variablename, this._method));
+			}
+
+			return result;
+		}
+
+
+		private object ParseVariable (string statement)
+		{
+			object result = null;
+
+			Match match = SorentoLib.Render.Resolver.ExpVariable.Match (statement);
+			if (match.Success)
+			{
+				string[] split = match.Groups["fullname"].Value.Split (".".ToCharArray ());
+				this._name = split[split.Length - 1];
+
+				if (split.Length > 1)
+				{
+					this._variablename = split[0];
+					this._method = split[1];
+				}
+				else
+				{
+					this._variablename = split[0];
+				}
+
+				// TODO: FIX!
+				Match indexer = SorentoLib.Render.Resolver.ExpIndexer.Match (statement);
+				if (indexer.Success)
+				{
+					this._indexer = int.Parse (indexer.Groups["indexer"].Value);
+					string bla = "["+ this._indexer.ToString () +"]";
+					this._variablename = this._variablename.TrimEnd (bla.ToCharArray ());
+					Console.WriteLine ("indexer "+ this._indexer +" "+ this._variablename);
+					this._parameters.Add (this._indexer);
+				}
+
+				// TODO: FIX
+				if (match.Groups["parameters"].Success)
+				{
+					this.ParseParameters (match.Groups["parameters"].ToString ());
+				}
+
+				foreach (SorentoLib.Addins.IRender irender in AddinManager.GetExtensionObjects (typeof (SorentoLib.Addins.IRender)))
+				{
+					if (irender.IsProvided (this._session.Page.Variables[this._variablename].Value))
+					{
+						result = irender.Process (this._session, this._session.Page.Variables[this._variablename].Value, this._method, this._parameters);
+						break;
+					}
+				}
 			}
 
 			match = null;
+
+			// Throw RenderException if variable could not be resolved successfully.
+			if (result == null)
+			{
+				throw new SorentoLib.Exceptions.RenderException (string.Format (Strings.Exception.RenderVariableField, this._variablename, this._method));
+			}
 
 			return result;
 		}
@@ -459,7 +502,7 @@ namespace SorentoLib.Render
 			if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
 			{
 				Console.WriteLine ("PARSING-VARIABLE: "+ statement);
-				this._result = ParseVariable (statement);
+				this._result = ParseVariable2 (statement);
 			}
 			else if (SorentoLib.Render.Resolver.ExpIsMethod.IsMatch (statement))
 			{

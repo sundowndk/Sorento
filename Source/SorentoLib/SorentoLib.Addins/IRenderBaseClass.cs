@@ -54,6 +54,11 @@ namespace SorentoLib.Addins
 		#endregion
 
 		#region Public Methods
+		public bool IsProvided (object variable)
+		{
+			return this._namespaces.Exists (delegate (string o) {return (o == variable.GetType ().Namespace.ToLower ());});
+		}
+
 		public bool IsProvided (string Namespace)
 		{
 			return this._namespaces.Exists (delegate (string o) {return (o == Namespace.ToLower ());});

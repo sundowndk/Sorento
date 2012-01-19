@@ -29,6 +29,10 @@ namespace SorentoLib.Strings
 {
 	public class Exception
 	{
+		#region RENDER
+		public static string RenderVariableField = "Variable ${0} does not have a field named '{1}'";
+		#endregion
+
 		#region SESSION
 		public static string SessionLoad = "Session with id: {0} was not found.";
 		public static string SessionSave = "Could not save session with id: {0}";

@@ -1,10 +1,10 @@
 // 
-// IRender.cs
+// RenderException.cs
 //  
 // Author:
-//       Rasmus Pedersen <rasmus@akvaservice.dk>
+//       sundown <${AuthorEmail}>
 // 
-// Copyright (c) 2009 Rasmus Pedersen
+// Copyright (c) 2012 rvp
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,20 +23,43 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 using System;
-using System.Collections.Generic;
 
-namespace SorentoLib.Addins
+namespace SorentoLib.Exceptions
 {
-	#region Public Interfaces
-	public interface IRender
+	public class RenderException: System.Exception
 	{
-		bool IsProvided(object variable);
-		bool IsProvided(string Namespace);
+		public RenderException (string message): base (message)
+		{
+			this._line = 0;
+			this._filename = string.Empty;
+		}
 
-		object Process (SorentoLib.Session Session, object Variable, string Method, SorentoLib.Render.Resolver.Parameters Parameters);
-		object Process (SorentoLib.Session Session, string Fullname, string Method, SorentoLib.Render.Resolver.Parameters Parameters);
+		public RenderException (string message, int line, string filename): base (message)
+		{
+			this._line = line;
+			this._filename = filename;
+		}
+
+		public int Line
+		{
+			get
+			{
+				return this._line;
+			}
+		}
+
+		public string Filename
+		{
+			get
+			{
+				return this._filename;
+			}
+
+		}
+
+		private int _line;
+		private string _filename;
 	}
-	#endregion
 }
+

@@ -238,6 +238,17 @@ namespace SorentoLib.FastCgi
 						break;
 				}
 			}
+			catch (SorentoLib.Exceptions.RenderException exception)
+			{
+				session.Error = new Error (exception.Message, "in "+ exception.Filename +" line "+ exception.Line);
+
+				SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/exception.stpl"));
+				session.Page.Clear ();
+				template.Render ();
+				template = null;
+				session.Responder.Request.SendOutputText (session.Page.Write (session));
+
+			}
 			catch (Exception e)
 			{
 				session.Error = new Error (e);
