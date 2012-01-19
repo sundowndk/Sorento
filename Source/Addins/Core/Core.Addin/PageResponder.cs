@@ -59,12 +59,9 @@ namespace Core.Addin
 			try
 			{
 				template = new SorentoLib.Render.Template (Session, path + Session.Request.QueryJar.Get ("cmd.page").Value);
-
 			}
-			catch (Exception e)
+			catch
 			{
-
-				Console.WriteLine (e);
 				return false;
 			}
 

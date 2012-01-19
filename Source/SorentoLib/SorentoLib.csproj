@@ -58,7 +58,7 @@
     <Reference Include="Mono.Addins.Setup, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins-setup</Package>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4394.40158, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SNDK, Version=1.0.4380.18491, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
@@ -145,6 +145,9 @@
     <Compile Include="SorentoLib.Addins\IAjaxBaseClass.cs" />
     <Compile Include="SorentoLib.Enums\ErrorType.cs" />
     <Compile Include="SorentoLib.Exceptions\RenderException.cs" />
+    <Compile Include="SorentoLib.Exceptions\ResponderExceptionPageNotFound.cs" />
+    <Compile Include="SorentoLib.Exceptions\RenderExceptionMemberNotFound.cs" />
+    <Compile Include="SorentoLib.Exceptions\RenderExceptionTypeNotFound.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SorentoLib.Render\" />
@@ -160,7 +163,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="SorentoLib.Render\Token.cs" />
     <None Include="Tools.cs" />
     <None Include="SorentoLib.Tools\Install.cs" />
     <None Include="Scraps.txt" />

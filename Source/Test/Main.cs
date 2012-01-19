@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 using System;
+using Mono.CSharp;
 using System.Threading;
 using System.Text;
 using System.Collections.Generic;
@@ -34,8 +35,8 @@ using SNDK.Enums;
 using System.Reflection;
 
 using SorentoLib;
-using sCMS;
-using sBlog;
+//using sCMS;
+//using sBlog;
 //using Akvabase;
 
 namespace Test
@@ -44,6 +45,9 @@ namespace Test
 	{
 		public static void Main (string[] args)
 		{
+			Evaluator.Compile ("using SorentoLib; Test (object lala) {};");
+
+
 //			SorentoLib.Services.Database.Connection = new Connection (Toolbox.Enums.DatabaseConnector.Mysql,
 //			                                                            "10.0.0.40",
 //			                                                            "sorentotest.sundown.dk",
@@ -51,9 +55,9 @@ namespace Test
 //			                                                            "scumbukket",
 //			                                                            true);
 
-			SorentoLib.Services.Addins.Initialize ();
-			SorentoLib.Services.Config.Initialize ();
-			SorentoLib.Services.Database.Initalize ();
+//			SorentoLib.Services.Addins.Initialize ();
+//			SorentoLib.Services.Config.Initialize ();
+//			SorentoLib.Services.Database.Initalize ();
 
 //			SorentoLib.Services.Snapshot.Take ();
 
@@ -62,23 +66,23 @@ namespace Test
 //				Console.WriteLine (entry.Title);
 //			}
 
-			sBlog.Blog blog1 = new sBlog.Blog ();
-			blog1.Name = "Test Blog";
-			blog1.Save ();
-
-			sBlog.Entry entry1 = new sBlog.Entry (blog1);
-			entry1.Title = "Test entry #1";
-			entry1.Save ();
-
-			sBlog.Comment comment1 = new sBlog.Comment (entry1);
-			comment1.Name = "Rasmus Pedersen";
-			comment1.Content = "Bla bla bla bla bla";
-			comment1.Save ();
-
-			sBlog.Comment comment2 = new sBlog.Comment (entry1);
-			comment2.Name = "Ina Kristiansen";
-			comment2.Content = "blu blu blu blu blu";
-			comment2.Save ();
+//			sBlog.Blog blog1 = new sBlog.Blog ();
+//			blog1.Name = "Test Blog";
+//			blog1.Save ();
+//
+//			sBlog.Entry entry1 = new sBlog.Entry (blog1);
+//			entry1.Title = "Test entry #1";
+//			entry1.Save ();
+//
+//			sBlog.Comment comment1 = new sBlog.Comment (entry1);
+//			comment1.Name = "Rasmus Pedersen";
+//			comment1.Content = "Bla bla bla bla bla";
+//			comment1.Save ();
+//
+//			sBlog.Comment comment2 = new sBlog.Comment (entry1);
+//			comment2.Name = "Ina Kristiansen";
+//			comment2.Content = "blu blu blu blu blu";
+//			comment2.Save ();
 
 //			foreach (sBlog.Entry entry in blog1.Entries)
 //			{
@@ -322,10 +326,10 @@ namespace Test
 //			Console.WriteLine (css.Title);
 //			css.Save ();
 
-			foreach (Stylesheet css in sCMS.Stylesheet.List ())
-			{
-				Console.WriteLine (css.Title);
-			}
+//			foreach (Stylesheet css in sCMS.Stylesheet.List ())
+//			{
+//				Console.WriteLine (css.Title);
+//			}
 
 
 //			User user = new User ();
@@ -412,10 +416,10 @@ namespace Test
 //			Guid id = new Guid ("185f0e7f-2f65-425f-a956-b97540b408c2"); // PrislisteTemplate
 //			Guid id = new Guid ("945da3aa-1ae8-43b0-a9ce-67fc7c0aa0aa"); // ForsideTemplate
 //			Guid id = new Guid ("44491850-35b0-4f20-83ad-ec651485de06"); // KontaktTemplate
-			Guid id = new Guid ("1b0b84a5-aa75-4048-aa16-e92179f948f0"); // BehandlingsFormTemplate
+//			Guid id = new Guid ("1b0b84a5-aa75-4048-aa16-e92179f948f0"); // BehandlingsFormTemplate
 //			Guid id = new Guid ("4cd22a5f-6e6c-498a-8668-3b7dc521c285"); // BehandlingsFormerTemplate
 
-			Template template = Template.Load (id);
+//			Template template = Template.Load (id);
 
 //			Template template = new Template ();
 //			template.Title = "BehandlingsFormerTemplate";
@@ -440,7 +444,7 @@ namespace Test
 //SEPERATORCSS 100
 //CSS 101
 
-		Console.WriteLine (template.Title);
+//		Console.WriteLine (template.Title);
 
 //			template.Content = string.Empty;
 //			foreach (string line in Toolbox.IO.ReadTextFile ("/home/sundown/Skrivebord/rsport-kontakt-template", Encoding.UTF8))
@@ -457,17 +461,17 @@ namespace Test
 //			template.RemoveField ("telefon");
 //			template.RemoveField ("email");
 
-			template.GetField ("headline").Sort = 10;
-			template.GetField ("headlinetext").Sort = 11;
+//			template.GetField ("headline").Sort = 10;
+//			template.GetField ("headlinetext").Sort = 11;
 //
-			template.GetField ("seperator1").Sort = 19;
-			template.GetField ("maintext").Sort = 20;
+//			template.GetField ("seperator1").Sort = 19;
+//			template.GetField ("maintext").Sort = 20;
 //			template.GetField ("phone").Sort = 21;
 //
-			template.GetField ("seperator2").Sort = 29;
+//			template.GetField ("seperator2").Sort = 29;
 //
-			template.GetField ("mainpicture").Sort = 30;
-			template.GetField ("pictures").Sort = 31;
+//			template.GetField ("mainpicture").Sort = 30;
+//			template.GetField ("pictures").Sort = 31;
 //			template.GetField ("pictures").Sort = 32;
 
 
@@ -478,12 +482,12 @@ namespace Test
 //			template.AddField (new Field (sCMS.Enums.FieldType.Text, "email"));
 
 
-			foreach (Field testfield in template.Fields)
-			{
-				Console.WriteLine (testfield.Name +" "+ testfield.Sort);
-			}
-
-			template.Save ();
+//			foreach (Field testfield in template.Fields)
+//			{
+//				Console.WriteLine (testfield.Name +" "+ testfield.Sort);
+//			}
+//
+//			template.Save ();
 
 
 //

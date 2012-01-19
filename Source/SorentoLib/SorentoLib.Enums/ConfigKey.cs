@@ -39,6 +39,9 @@ namespace SorentoLib.Enums
 		core_defaultusergroup,
 		core_bootstrap,
 		core_defaultencoding,
-		snapshot_path
+		snapshot_path,
+		core_showexceptions,
+		core_httperror500url,
+		core_httperror404url
 	}
 }

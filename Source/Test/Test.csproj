@@ -39,10 +39,11 @@
     <Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins</Package>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4371.38234, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SNDK, Version=1.0.4380.18491, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -52,14 +53,6 @@
     <ProjectReference Include="..\SorentoLib\SorentoLib.csproj">
       <Project>{2E1A7376-FCCD-469A-9968-99828257DF27}</Project>
       <Name>SorentoLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Addins\sCMS\sCMS.csproj">
-      <Project>{F33C25BF-942F-4365-9CFB-D2628D4704BA}</Project>
-      <Name>sCMS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Addins\sBlog\sBlog.csproj">
-      <Project>{838C5FC3-9296-48D5-AA27-B6DAE2198E4F}</Project>
-      <Name>sBlog</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

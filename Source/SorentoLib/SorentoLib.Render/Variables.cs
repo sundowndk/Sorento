@@ -65,6 +65,10 @@ namespace SorentoLib.Render
 			this._variables.Clear();
 		}
 
+		public bool Contains (string variablename)
+		{
+			return this._variables.Contains (variablename);
+		}
 
 
 		public void Add (string variablename, object value)

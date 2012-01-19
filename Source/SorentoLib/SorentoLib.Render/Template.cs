@@ -152,6 +152,7 @@ namespace SorentoLib.Render
 //				SorentoLib.Services.Events.InvokeTemplateRenderFailed(this._session, this);
 //				SorentoLib.Services.Logging.LogWarning("Template was not found : "+ this._filename);
 
+//				throw new Exceptions.RenderException (string.Format ())
 				throw new Exception (string.Format (Strings.Exception.RenderTemplateLoad, this._filename));
 			}
 		}
@@ -553,7 +554,7 @@ namespace SorentoLib.Render
 				// Lines starting with '#!' will be discared as comments.
 				if (SorentoLib.Render.Template.ExpCommentLine.Match (readline).Success)
 				{
-					continue;
+					readline = string.Empty;
 				}
 
 				// Lines with zero length will be discared.

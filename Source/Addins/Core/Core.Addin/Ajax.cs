@@ -48,7 +48,7 @@ namespace Core.Addin
 		#endregion
 
 		#region Public Methods
-		new public SorentoLib.Ajax.Respons Process (SorentoLib.Session Session, string Fullname, string Method)
+		override public SorentoLib.Ajax.Respons Process (SorentoLib.Session Session, string Fullname, string Method)
 		{
 			SorentoLib.Ajax.Respons result = new SorentoLib.Ajax.Respons ();
 			SorentoLib.Ajax.Request request = new SorentoLib.Ajax.Request (Session.Request.QueryJar.Get ("data").Value);

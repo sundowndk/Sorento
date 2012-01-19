@@ -32,8 +32,8 @@ namespace SorentoLib.Addins
 	#region Public Interfaces
 	public interface IRender
 	{
-		bool IsProvided(object variable);
-		bool IsProvided(string Namespace);
+		bool IsProvided (object variable);
+		bool IsProvided (string Namespace);
 
 		object Process (SorentoLib.Session Session, object Variable, string Method, SorentoLib.Render.Resolver.Parameters Parameters);
 		object Process (SorentoLib.Session Session, string Fullname, string Method, SorentoLib.Render.Resolver.Parameters Parameters);

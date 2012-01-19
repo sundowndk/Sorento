@@ -30,7 +30,19 @@ namespace SorentoLib.Strings
 	public class Exception
 	{
 		#region RENDER
-		public static string RenderVariableField = "Variable ${0} does not have a field named '{1}'";
+		public static string RenderVariableTypeNotFound = "${0} is an unknown type";
+		public static string RenderVariableVariableNotFound = "${0} is not defined";
+		public static string RenderVariableVariableIsNull = "${0} is null";
+		public static string RenderVariableMemberNotFound = "${0} does not have '{1}'";
+		public static string RenderMethodMemberNotFound = "{0} does not have '{1}'";
+		public static string RenderMethodTypeNotFound = "{0} is an unknown type";
+		public static string RenderParseTypeName = "Malformed method call '{0}'";
+		public static string RenderTemplateNotFound = "";
+
+		#endregion
+
+		#region RESPONDER
+		public static string ResponderPageNotFound = "Page '{0}' was not found.";
 		#endregion
 
 		#region SESSION
@@ -38,6 +50,8 @@ namespace SorentoLib.Strings
 		public static string SessionSave = "Could not save session with id: {0}";
 		public static string SessionDelete = "Could not delete session with id: {0}";
 		#endregion
+
+
 
 		#region SERVICES.CONFIG
 		public static string ServicesConfigKeyNotFound = "Config key: {0} was not found.";

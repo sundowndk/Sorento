@@ -64,18 +64,16 @@ namespace SorentoLib.Addins
 			return this._namespaces.Exists (delegate (string o) {return (o == Namespace.ToLower ());});
 		}
 
-		public object Process (SorentoLib.Session Session, object Variable, string Method, SorentoLib.Render.Resolver.Parameters Parameters)
+		virtual public object Process (SorentoLib.Session Session, object Variable, string Method, SorentoLib.Render.Resolver.Parameters Parameters)
 		{
-			return Process (Session, Variable.GetType ().FullName.ToLower (), Method.ToLower (), Variable, Parameters);
+			return Process (Session, Variable.GetType ().Namespace.ToLower ()+"."+Variable.GetType ().Name.ToLower (), Method.ToLower (), Variable, Parameters);
 		}
 
-		public object Process (SorentoLib.Session Session, string Fullname, string Method, SorentoLib.Render.Resolver.Parameters Parameters)
+		virtual public object Process (SorentoLib.Session Session, string Fullname, string Method, SorentoLib.Render.Resolver.Parameters Parameters)
 		{
 			return Process (Session, Fullname.ToLower (), Method.ToLower (), null, Parameters);
 		}
-		#endregion
 
-		#region Private Methods
 		virtual public object Process (SorentoLib.Session Session, string Fullname, string Method, object Variable, SorentoLib.Render.Resolver.Parameters Parameters)
 		{
 			return null;

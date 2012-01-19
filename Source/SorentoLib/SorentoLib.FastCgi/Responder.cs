@@ -40,13 +40,9 @@ namespace SorentoLib.FastCgi
 {
 	public class Responder : MarshalByRefObject, IResponder
 	{
-		static int test = 0;
-		private static Regex ExpMatchIsAdministrationUrl = new Regex (@"^\/administration/", RegexOptions.Compiled);
-
 		#region Private Fields
 		private ResponderRequest _request;
-
-
+		private bool _served;
 		#endregion
 
 		#region Public Fields
@@ -144,6 +140,29 @@ namespace SorentoLib.FastCgi
 		public Responder (ResponderRequest request)
 		{
 			this._request = request;
+			this._served = false;
+		}
+		#endregion
+
+		#region Private Methods
+		private void HTTP404 (Session session)
+		{
+			SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/404.stpl"));
+			session.Page.Clear ();
+			template.Render ();
+			template = null;
+
+			session.Responder.Request.SendOutputText (session.Page.Write (session));
+		}
+
+		private void HTTP500 (Session session)
+		{
+			SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/500.stpl"));
+			session.Page.Clear ();
+			template.Render ();
+			template = null;
+
+			session.Responder.Request.SendOutputText (session.Page.Write (session));
 		}
 		#endregion
 
@@ -156,55 +175,29 @@ namespace SorentoLib.FastCgi
 			Session session = new Session (this._request.GetParameters (), this._request.InputData);
 			session.Responder = this;
 
-//			SorentoLib.Session session = new SorentoLib.Session (this._request.GetParameters (), this._request.InputData);
-//			session.Update ();
-//			session.Responder = this;
-
-
-
 			try
 			{
-
 				switch (session.Request.QueryJar.Get ("cmd").Value.ToLower ())
 				{
 					#region Page
 					case "page":
-						// If site is offline, show offline page.
-						if (!SorentoLib.Services.Config.Get<bool> ("core", "enabled"))
-						{
-							if (!ExpMatchIsAdministrationUrl.Match (session.Request.QueryJar.Get ("cmd.page").Value).Success)
-							{
-								Query query = new Query ();
-								query.Name = "cmd.page";
-								query.Value = SorentoLib.Services.Config.Get<string> ("core", "offlineurl");
-
-								session.Request.QueryJar.Add (query);
-							}
-						}
-
-//						if (SorentoLib.Services.Config.Get<bool> ("core", "bootstrap"))
-//						{
-//							Query query = new Query ();
-//							query.Name = "cmd.page";
-//							query.Value = "/administration/bootstrap/"+ SorentoLib.Services.Config.Get<bool> ("core", "bootstraplevel");
-//
-//						}
-						bool servered = false;
-
+					{
 						foreach (SorentoLib.Addins.IPageResponder pageresponder in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IPageResponder)))
 						{
 							if (pageresponder.Process (session))
 							{
-								servered = true;
+								this._served = true;
 								break;
 							}
 						}
 
-						if (!servered)
+						if (!this._served)
 						{
-							throw new Exception (Strings.Exception.MediaSave);
+							throw new SorentoLib.Exceptions.ResponderExceptionPageNotFound (string.Format (Strings.Exception.ResponderPageNotFound, session.Request.QueryJar.Get ("cmd.page").Value));
 						}
+
 						break;
+					}
 					#endregion
 
 					#region Media
@@ -233,56 +226,65 @@ namespace SorentoLib.FastCgi
 						}
 						break;
 					#endregion
+				}
+			}
+			catch (SorentoLib.Exceptions.ResponderExceptionPageNotFound exception)
+			{
+				session.Error = new Error (exception.Message, string.Empty);
 
-					default:
-						break;
+				if (Services.Config.Get<bool> (Enums.ConfigKey.core_showexceptions))
+				{
+					SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/exception.stpl"));
+					session.Page.Clear ();
+					template.Render ();
+					template = null;
+
+					session.Responder.Request.SendOutputText (session.Page.Write (session));
+				}
+				else
+				{
+					HTTP404 (session);
 				}
 			}
 			catch (SorentoLib.Exceptions.RenderException exception)
 			{
-				session.Error = new Error (exception.Message, "in "+ exception.Filename +" line "+ exception.Line);
+				if (Services.Config.Get<bool> (Enums.ConfigKey.core_showexceptions))
+				{
+					session.Error = new Error (exception.Message, "in "+ exception.Filename +" line "+ exception.Line);
 
-				SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/exception.stpl"));
-				session.Page.Clear ();
-				template.Render ();
-				template = null;
-				session.Responder.Request.SendOutputText (session.Page.Write (session));
+					SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/exception.stpl"));
+					session.Page.Clear ();
+					template.Render ();
+					template = null;
 
+					session.Responder.Request.SendOutputText (session.Page.Write (session));
+				}
+				else
+				{
+					HTTP500 (session);
+				}
 			}
-			catch (Exception e)
+			catch (Exception exception)
 			{
-				session.Error = new Error (e);
+				if (Services.Config.Get<bool> (Enums.ConfigKey.core_showexceptions))
+				{
+					session.Error = new Error (exception);
 
+					SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/exception.stpl"));
+					session.Page.Clear ();
+					template.Render ();
+					template = null;
 
-				SorentoLib.Render.Template template = new SorentoLib.Render.Template (session, SNDK.IO.ReadTextFile ("data/exception.stpl"));
-				session.Page.Clear ();
-				template.Render ();
-				template = null;
-				session.Responder.Request.SendOutputText (session.Page.Write (session));
-
-//				Console.WriteLine(e.ToString());
-//				#region Error Handling
-//				if (session.Error.Exception)
-//				{
-//					this._request.SendOutputText ("Content-type: text/html; charset=UTF-8\n\n");
-//					this._request.SendOutputText ("ErrorCode: " + session.Error.Id + "<br>");
-//					this._request.SendOutputText ("ErrorText: " + session.Error.Text + "<br>");
-					
-//					Log.Write (Log.Type.Warn, "ErrorCode: " + session.Error.Id + " - " + session.Error.Text);
-//				}
-//				else
-//				{
-//					this._request.SendOutputText ("Content-type: text/html; charset=UTF-8\n\n");
-//					this._request.SendOutputText (e.StackTrace.ToString ().Replace ("\n", "<br>"));
-//
-////					Log.Write (Log.Type.Warn, "Exception" + e.StackTrace.ToString ().Replace ("\n", " "));
-//				}
-//				#endregion
+					session.Responder.Request.SendOutputText (session.Page.Write (session));
+				}
+				else
+				{
+					HTTP500 (session);
+				}
 			}
 
 			timer.Stop ();
 			SorentoLib.Services.Logging.LogDebug("Request served in: "+ timer.Duration.TotalSeconds +" seconds.");
-//			SorentoLib.Services.Logging.LogDebug("Files open: "+ SorentoLib.Runtime.CurrentlyOpenFiles);
 			timer = null;
 
 			return 0;
@@ -290,3 +292,21 @@ namespace SorentoLib.FastCgi
 		#endregion
 	}
 }
+
+//		private static Regex ExpMatchIsAdministrationUrl = new Regex (@"^\/administration/", RegexOptions.Compiled);
+
+#region OLD
+						// If site is offline, show offline page.
+//						if (!SorentoLib.Services.Config.Get<bool> ("core", "enabled"))
+//						{
+//							if (!ExpMatchIsAdministrationUrl.Match (session.Request.QueryJar.Get ("cmd.page").Value).Success)
+//							{
+//								Query query = new Query ();
+//								query.Name = "cmd.page";
+//								query.Value = SorentoLib.Services.Config.Get<string> ("core", "offlineurl");
+//
+//								session.Request.QueryJar.Add (query);
+//							}
+//						}
+
+#endregion

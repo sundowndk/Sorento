@@ -38,15 +38,21 @@ namespace SorentoLib.Render
 		{
 			bool result = false;
 
-			try
-			{
+//			try
+//			{
+				Resolver resolver = new Resolver (session);
+				resolver.Parse (condition);
+				result = (bool)resolver.Result;
+//				Console.WriteLine (condition);
 //				result = (bool)Evaluator.Evaluate (Test (session, condition) +";");
-				result = (bool)Resolver.ParseString (session, condition);
-			}
-			catch (Exception e)
-			{
-				SorentoLib.Services.Logging.LogDebug ("Condition evaluation failed: "+ e);
-			}
+//				result = (bool)Resolver.ParseString (session, condition);
+//				result = (bool)Resolver.
+//			}
+//			catch
+//			{
+//				throw new SorentoLib.Exceptions.RenderException ("EVALUATION FAILED");
+//				SorentoLib.Services.Logging.LogDebug ("Condition evaluation failed: "+ e);
+//			}
 
 			return result;
 		}

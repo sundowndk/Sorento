@@ -32,64 +32,22 @@ using SorentoLib;
 
 namespace Core.Addin
 {
-	public class Render : SorentoLib.Addins.IRender
+	public class Render : SorentoLib.Addins.IRenderBaseClass, SorentoLib.Addins.IRender
 	{
-		#region Private Fields
-		private List<string> _namespaces = new List<string> ();
-		#endregion
-
 		#region Constructor
 		public Render ()
 		{
-			this._namespaces.Add ("system");
-			this._namespaces.Add ("system.collections");
-			this._namespaces.Add ("system.collections.generic");
-			this._namespaces.Add ("sorentolib");
-			this._namespaces.Add ("sorentolib.fastcgi");
-			this._namespaces.Add ("sorentolib.services");
+			base.NameSpaces.Add ("system");
+			base.NameSpaces.Add ("system.collections");
+			base.NameSpaces.Add ("system.collections.generic");
+			base.NameSpaces.Add ("sorentolib");
+			base.NameSpaces.Add ("sorentolib.fastcgi");
+			base.NameSpaces.Add ("sorentolib.services");
 		}
 		#endregion
 
 		#region Public Methods
-		public bool IsProvided (string Namespace)
-		{
-			foreach (string _namespace in this._namespaces)
-			{
-				if (_namespace == Namespace.ToLower ())
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-		public bool IsProvided (object variable)
-		{
-			foreach (string _namespace in this._namespaces)
-			{
-				if (_namespace ==  variable.GetType ().Namespace.ToLower ())
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-		public object Process (SorentoLib.Session Session, object Variable, string Method, SorentoLib.Render.Resolver.Parameters Parameters)
-		{
-			//Console.WriteLine ("123:"+Variable.GetType ().Namespace.ToLower ()+"."+Variable.GetType ().Name.ToLower ());
-//			return Process (Session, Variable.GetType ().FullName.ToLower (), Method.ToLower (), Variable, Parameters);
-			return Process (Session, Variable.GetType ().Namespace.ToLower ()+"."+Variable.GetType ().Name.ToLower (), Method.ToLower (), Variable, Parameters);
-		}
-
-		public object Process (SorentoLib.Session Session, string Fullname, string Method, SorentoLib.Render.Resolver.Parameters Parameters)
-		{
-			return Process (Session, Fullname.ToLower (), Method.ToLower (), null, Parameters);
-		}
-		#endregion
-
-		#region Private Methods
-		private object Process (SorentoLib.Session Session, string Fullname, string Method, object Variable, SorentoLib.Render.Resolver.Parameters Parameters)
+		override public object Process (SorentoLib.Session Session, string Fullname, string Method, object Variable, SorentoLib.Render.Resolver.Parameters Parameters)
 		{
 			switch (Fullname)
 			{
@@ -141,9 +99,6 @@ namespace Core.Addin
 
 						case "error":
 							return Session.Error;
-
-						default:
-							return null;
 					}
 					break;
 				#endregion
@@ -163,35 +118,22 @@ namespace Core.Addin
 
 						case "text":
 							return ((SorentoLib.Error)Variable).Text;
-
-						default:
-							return null;
 					}
 					break;
 				#endregion
-
 
 				#region SorentoLib.FastCgi.CookieJar
 				case "sorentolib.fastcgi.cookiejar":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((SorentoLib.FastCgi.CookieJar)Variable);
-						#endregion
 
-						#region Static Methods
 						case "get":
 							return ((SorentoLib.FastCgi.CookieJar)Variable).Get (Parameters.Get<string> (0));
 
 						case "exist":
 							return ((SorentoLib.FastCgi.CookieJar)Variable).Exist (Parameters.Get<string> (0));
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -200,12 +142,9 @@ namespace Core.Addin
 				case "sorentolib.fastcgi.cookie":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((SorentoLib.FastCgi.Cookie)Variable);
-						#endregion
 
-						#region Fields
 						case "name":
 							return ((SorentoLib.FastCgi.Cookie)Variable).Name;
 
@@ -223,12 +162,6 @@ namespace Core.Addin
 
 						case "secure":
 							return ((SorentoLib.FastCgi.Cookie)Variable).Secure;
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -237,23 +170,14 @@ namespace Core.Addin
 				case "sorentolib.fastcgi.queryjar":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((SorentoLib.FastCgi.QueryJar)Variable);
-						#endregion
 
-						#region Static Methods
 						case "get":
 							return ((SorentoLib.FastCgi.QueryJar)Variable).Get (Parameters.Get<string>(0));
 
 						case "exist":
 							return ((SorentoLib.FastCgi.QueryJar)Variable).Exist (Parameters.Get<string>(0));
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -262,23 +186,14 @@ namespace Core.Addin
 				case "sorentolib.fastcgi.query":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((SorentoLib.FastCgi.Query)Variable);
-						#endregion
 
-						#region Fields
 						case "name":
 							return ((SorentoLib.FastCgi.Query)Variable).Name;
 
 						case "value":
 							return ((SorentoLib.FastCgi.Query)Variable).Value;
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -287,12 +202,9 @@ namespace Core.Addin
 				case "sorentolib.user":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 						      return ((SorentoLib.User)Variable);
-						#endregion
 
-					      #region Fields
 						case "id":
 							return ((SorentoLib.User)Variable).Id;
 
@@ -325,9 +237,7 @@ namespace Core.Addin
 
 						case "status":
 							return ((SorentoLib.User)Variable).Status;
-						#endregion
 
-						#region Static Methods
 						case "load":
 							switch (Parameters.Type (0).Name.ToLower())
 							{
@@ -351,12 +261,6 @@ namespace Core.Addin
 								default:
 									return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.User> (SorentoLib.User.List());
 							}
-						#endregion
-
-						#region Default
-						default:
-					            return null;
-						#endregion
 				      }
 					break;
 				#endregion
@@ -365,12 +269,9 @@ namespace Core.Addin
 				case "sorentolib.usergroup":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((SorentoLib.Usergroup)Variable);
-						#endregion
 
-						#region Fields
 						case "id":
 							return ((SorentoLib.Usergroup)Variable).Id;
 
@@ -388,9 +289,7 @@ namespace Core.Addin
 
 						case "status":
 							return ((SorentoLib.Usergroup)Variable).Status;
-						#endregion
 
-						#region Static Methods
 						case "load":
 							return Usergroup.Load (Parameters.Get<Guid>(0));
 
@@ -404,12 +303,6 @@ namespace Core.Addin
 								default:
 									return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.Usergroup> (SorentoLib.Usergroup.List());
 							}
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -418,12 +311,9 @@ namespace Core.Addin
 				case "sorentolib.media":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((SorentoLib.Media)Variable);
-						#endregion
 
-						#region Fields
 						case "id":
 							return ((SorentoLib.Media)Variable).Id;
 
@@ -456,17 +346,9 @@ namespace Core.Addin
 
 						case "usergroups":
 							return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.Usergroup> (((SorentoLib.Media)Variable).Usergroups);
-						#endregion
 
-						#region Static Methods
 						case "load":
 							return SorentoLib.Media.Load (Parameters.Get<Guid>(0));
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -475,7 +357,6 @@ namespace Core.Addin
 				case "sorentolib.services.config":
 					switch (Method)
 					{
-						#region Static Methods
 						case "getstring":
 							return SorentoLib.Services.Config.Get<string> (Parameters.Get<string> (0), Parameters.Get<string> (1));
 
@@ -493,12 +374,6 @@ namespace Core.Addin
 
 						case "exist":
 							return SorentoLib.Services.Config.Exist (Parameters.Get<string> (0), Parameters.Get<string> (1));
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -507,7 +382,6 @@ namespace Core.Addin
 				case "sorentolib.services.stats":
 					switch (Method)
 					{
-						#region Static Methods
 						case "getstring":
 							return SorentoLib.Services.Stats.Get<string> (Parameters.Get<string> (0));
 
@@ -519,39 +393,27 @@ namespace Core.Addin
 
 						case "exist":
 							return SorentoLib.Services.Stats.Exist (Parameters.Get<string> (0));
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
+					break;
 				#endregion
 
 				#region SorentoLib.Services.Crypto
 				case "sorentolib.services.crypto":
 					switch (Method)
 					{
-						#region Static Methods
 						case "encryptexponent":
 							return SorentoLib.Services.Crypto.EncryptExponent;
 
 						case "modulus":
 							return SorentoLib.Services.Crypto.Modulus;
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
+					break;
 				#endregion
 
 				#region SorentoLib.Env
 				case "sorentolib.env":
 					switch (Method)
 					{
-						#region Static Fields
 						case "authtype":
 							return Session.Request.Environment.AuthType;
 
@@ -662,12 +524,6 @@ namespace Core.Addin
 
 						case "compiledate":
 							return SorentoLib.Runtime.GetCompileDate ();
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -676,17 +532,12 @@ namespace Core.Addin
 				case "system.guid":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((Guid)Variable);
-						#endregion
 
-						#region Methods
 						case "tostring":
 							return ((Guid)Variable).ToString();
-						#endregion
 
-						#region Static Methods
 						case "new":
 							switch (Parameters.Count)
 							{
@@ -696,12 +547,6 @@ namespace Core.Addin
 								default:
 									return Guid.NewGuid();
 							}
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -710,17 +555,12 @@ namespace Core.Addin
 				case "system.string":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((string)Variable);
-						#endregion
 
-						#region Fields
 						case "length":
 							return ((string)Variable).Length;
-						#endregion
 
-						#region Methods
 						case "substring":
 							return ((string)Variable).Substring (Parameters.Get<int> (0), Parameters.Get<int> (1));
 
@@ -762,12 +602,6 @@ namespace Core.Addin
 										return (string)Variable;
 									}
 							}
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -776,7 +610,6 @@ namespace Core.Addin
 				case "system.string[]":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							if (Parameters.Count > 0)
 							{
@@ -786,20 +619,9 @@ namespace Core.Addin
 							{
 								return ((string[])Variable);
 							}
-						#endregion
 
-						#region Fields
 						case "length":
 							return ((string[])Variable).Length;
-						#endregion
-
-						#region Methods
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -808,15 +630,8 @@ namespace Core.Addin
 				case "system.int32":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((int)Variable);
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -829,11 +644,6 @@ namespace Core.Addin
 						{
 							return ((bool)Variable);
 						}
-
-						default:
-						{
-							return null;
-						}
 					}
 					break;
 				#endregion
@@ -842,12 +652,9 @@ namespace Core.Addin
 				case "system.datetime":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((DateTime)Variable);
-						#endregion
 
-						#region Fields
 						case "day":
 							return ((DateTime)Variable).Day;
 
@@ -874,17 +681,9 @@ namespace Core.Addin
 
 						case "dayofyear":
 							return ((DateTime)Variable).DayOfYear;
-						#endregion
 
-						#region Static Methods
 						case "now":
 							return DateTime.Now;
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -893,21 +692,8 @@ namespace Core.Addin
 				case "system.collections.generic.list`1":
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return (object)Variable;
-						#endregion
-
-						#region Fields
-						#endregion
-
-						#region Static Methods
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
@@ -917,20 +703,12 @@ namespace Core.Addin
 					Console.WriteLine ("11");
 					switch (Method)
 					{
-						#region Variable
 						case "":
 							return ((Hashtable)Variable);
-						#endregion
 
-						#region Fields
-						#endregion
-
-						#region Methods
 						case "get":
 							return ((Hashtable)Variable)[Parameters.Get<string> (0)];
-						#endregion
 
-						#region Static Methods
 						case "keys":
 							List<string> result = new List<string> ();
 							foreach (string key in ((Hashtable)Variable).Keys)
@@ -938,18 +716,12 @@ namespace Core.Addin
 								result.Add (key);
 							}
 							return SorentoLib.Render.Variables.ConvertToListObject<string> (result);
-						#endregion
-
-						#region Default
-						default:
-							return null;
-						#endregion
 					}
 					break;
 				#endregion
 			}
 
-			return null;
+			throw new SorentoLib.Exceptions.RenderExceptionMemberNotFound ();
 		}
 		#endregion
 	}

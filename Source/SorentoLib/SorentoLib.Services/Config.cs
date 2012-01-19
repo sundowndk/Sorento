@@ -81,6 +81,14 @@ namespace SorentoLib.Services
 			return (T)Get<T> (module, name);
 		}
 
+		public static T Get<T> (Enums.ConfigKey Key)
+		{
+			string module = Key.ToString ().Split ("_".ToCharArray ())[0];
+			string name = Key.ToString ().Split ("_".ToCharArray ())[1];
+
+			return (T)Get<T> (module, name);
+		}
+
 		public static T Get<T> (string Key)
 		{
 			string module = Key.Split ("_".ToCharArray ())[0];

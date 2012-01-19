@@ -57,7 +57,7 @@ namespace SorentoLib.Addins
 			return this._namespaces.Exists (delegate (string s) {return (s == Namespace.ToLower ());});
 		}
 
-		public SorentoLib.Ajax.Respons Process (SorentoLib.Session Session, string Fullname, string Method)
+		virtual public SorentoLib.Ajax.Respons Process (SorentoLib.Session Session, string Fullname, string Method)
 		{
 			return null;
 		}
