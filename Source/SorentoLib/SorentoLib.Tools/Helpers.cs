@@ -62,7 +62,7 @@ namespace SorentoLib.Tools
 			message.To = To;
 			message.Subject = Subject;
 			message.Body = Body;
-			message.BodyEncoding = Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> ("email", "encoding"));
+			message.BodyEncoding = Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.smtp_encoding));
 			
 			if (BodyIsHtml)
 			{
@@ -74,7 +74,7 @@ namespace SorentoLib.Tools
 				message.BodyFormat = System.Web.Mail.MailFormat.Text;
 			}
 			
-			System.Web.Mail.SmtpMail.SmtpServer = SorentoLib.Services.Config.Get<string> ("email", "smtpserver");
+			System.Web.Mail.SmtpMail.SmtpServer = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.smtp_server);
 			System.Web.Mail.SmtpMail.Send (message);
 		}
 
@@ -102,7 +102,7 @@ namespace SorentoLib.Tools
 
 		public static Hashtable FileToItem (string Path)
 		{
-			return FileToItem (Path, Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_defaultencoding)));
+			return FileToItem (Path, Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_encoding)));
 		}
 
 		public static Hashtable FileToItem (string Path, Encoding Encoding2)
@@ -177,7 +177,7 @@ namespace SorentoLib.Tools
 
 		public static void ItemToFile (Hashtable Item, string Path)
 		{
-			ItemToFile (Item, Path, Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_defaultencoding)));
+			ItemToFile (Item, Path, Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_encoding)));
 		}
 
 		public static void ItemToFile (Hashtable Item, string Path, Encoding Encoding2)

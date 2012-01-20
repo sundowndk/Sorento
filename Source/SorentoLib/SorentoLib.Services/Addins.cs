@@ -39,6 +39,8 @@ namespace SorentoLib.Services
 	{
 		#region Private Static Fields
 		private static bool Refreshing = false;
+
+		private static object Lock = new object ();
 		#endregion
 
 		#region Public Static Methods
@@ -64,6 +66,8 @@ namespace SorentoLib.Services
 			applicationwatcher2.Deleted += new FileSystemEventHandler (SorentoLib.Services.Addins.OnDeleted);
 			applicationwatcher2.EnableRaisingEvents = true;
 			applicationwatcher2.Filter = "*.dll";
+
+			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Addins"));
 		}
 
 		public static void DisableAddin (string id)
@@ -92,22 +96,27 @@ namespace SorentoLib.Services
 		#region Private Static Methods
 		private static void OnCreated (object sender, FileSystemEventArgs e)
 		{
-			if (!SorentoLib.Services.Addins.Refreshing)
+			lock (Lock)
 			{
+//			if (!SorentoLib.Services.Addins.Refreshing)
+//			{
 				SorentoLib.Services.Addins.Refreshing = true;
-				SorentoLib.Services.Logging.LogInfo ("New addin(s) discovered.");
+				SorentoLib.Services.Logging.LogInfo (Strings.LogInfo.ServicesAddinsAddinDiscovered);
 				Thread.Sleep (3000);
 				AddinManager.Registry.Update (null);
 				SorentoLib.Services.Addins.Refreshing = false;
+				SorentoLib.Services.Logging.LogInfo (Strings.LogInfo.ServicesAddinsAddinCacheRefreshed);
 			}
 		}
 
 		private static void OnDeleted (object sender, FileSystemEventArgs e)
 		{
-			if (!SorentoLib.Services.Addins.Refreshing)
+			lock (Lock)
 			{
+//			if (!SorentoLib.Services.Addins.Refreshing)
+//			{
 				SorentoLib.Services.Addins.Refreshing = true;
-				SorentoLib.Services.Logging.LogInfo ("Addin was deleted/changed, reloading application.");
+				SorentoLib.Services.Logging.LogInfo (Strings.LogInfo.ServicesAddinsAddinChanged);
 				
 				SorentoLib.Runtime.Shutdown ();
 			}
@@ -123,7 +132,7 @@ namespace SorentoLib.Services
 
 		private static void OnLoad (object s, AddinEventArgs args)
 		{
-			SorentoLib.Services.Logging.LogInfo ("Addin initalized: " + args.AddinId);
+			SorentoLib.Services.Logging.LogInfo (string.Format (Strings.LogInfo.ServicesAddinsAddinInitialized, args.AddinId));
 		}
 		#endregion
 	}

@@ -122,7 +122,7 @@ namespace SorentoLib.Services
 		{
 			Snapshot result = null;
 
-			if (File.Exists (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path) + Id +".zip"))
+			if (File.Exists (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot) + Id +".zip"))
 			{
 				result = new Snapshot ();
 				result._id = Id;
@@ -134,14 +134,14 @@ namespace SorentoLib.Services
 						System.Diagnostics.Process proc = new System.Diagnostics.Process();
 						proc.EnableRaisingEvents=false;
 						proc.StartInfo.FileName="unzip";
-						proc.StartInfo.WorkingDirectory = Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathtmp);
-						proc.StartInfo.Arguments = "-qq " + Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path) + Id +".zip " + Id + "/manifest.xml -d "+ Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathtmp);
+						proc.StartInfo.WorkingDirectory = Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_temp);
+						proc.StartInfo.Arguments = "-qq " + Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot) + Id +".zip " + Id + "/manifest.xml -d "+ Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_temp);
 						proc.Start ();
 						proc.WaitForExit ();
 
-						result._manifest = SorentoLib.Tools.Helpers.FileToItem (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathtmp) + Id + "/manifest.xml");
+						result._manifest = SorentoLib.Tools.Helpers.FileToItem (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_temp) + Id + "/manifest.xml");
 
-						Directory.Delete (Path.GetDirectoryName (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathtmp) + Id +"/"), true);
+						Directory.Delete (Path.GetDirectoryName (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_temp) + Id +"/"), true);
 					}
 					catch (Exception exception)
 					{
@@ -161,9 +161,9 @@ namespace SorentoLib.Services
 
 		public static void Delete (string Id)
 		{
-			if (File.Exists (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path) + Id +".zip"))
+			if (File.Exists (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot) + Id +".zip"))
 			{
-				File.Delete (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path) + Id +".zip");
+				File.Delete (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot) + Id +".zip");
 			}
 			else
 			{
@@ -175,7 +175,7 @@ namespace SorentoLib.Services
 		{
 			List<Snapshot> result = new List<Snapshot> ();
 
-			foreach (string file in System.IO.Directory.GetFiles (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path)))
+			foreach (string file in System.IO.Directory.GetFiles (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot)))
 			{
 				try
 				{
@@ -194,7 +194,7 @@ namespace SorentoLib.Services
 		{
 			List<string> errors = new List<string> ();
 
-			string workingdirectory = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path);
+			string workingdirectory = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot);
 			string snapshotroot = workingdirectory + Snapshot.Id +"/";
 
 			#region UNZIP ARCHIVE
@@ -238,7 +238,7 @@ namespace SorentoLib.Services
 
 			List<string> errors = new List<string> ();
 
-			string workingdirectory = Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathtmp);
+			string workingdirectory = Environment.CurrentDirectory +"/"+ SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_temp);
 			string snapshotroot = workingdirectory + result._id +"/";
 
 			#region CREATE SNAPSHOTROOT
@@ -270,7 +270,7 @@ namespace SorentoLib.Services
 					process.WaitForExit ();
 
 					string source = workingdirectory + result.FileName;
-					string destination = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path) + result.FileName;
+					string destination = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot) + result.FileName;
 					SNDK.IO.CopyFile (source, destination);
 				}
 				catch (Exception exception)

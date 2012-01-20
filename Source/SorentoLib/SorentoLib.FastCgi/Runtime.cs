@@ -4,7 +4,7 @@
 // Author:
 //   Rasmus Pedersen (rasmus@akvaservice.dk)
 //
-// Copyright (C) 2009 Rasmus Pedersen
+// Copyright (C) 2009 - 2012 Rasmus Pedersen
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,7 +27,6 @@
 //
 
 using System;
-using System.IO;
 using System.Net;
 
 using Mono.FastCgi;
@@ -36,9 +35,9 @@ namespace SorentoLib.FastCgi
 {
 	public static class Runtime
 	{
-		#region Private Static Fields
-		private static Mono.FastCgi.Server Server;
-		private static Socket Socket;
+		#region Public Static Fields
+		public static Mono.FastCgi.Server Server;
+		public static Socket Socket;
 		#endregion
 		
 		#region Public Static Methods
@@ -49,42 +48,45 @@ namespace SorentoLib.FastCgi
 				// Create socket, and start listing for FastCGI connections.
 				Socket socket;
 				socket = SocketFactory.CreatePipeSocket (IntPtr.Zero);
+//				Socket = SocketFactory.CreatePipeSocket (IntPtr.Zero);
 
 				// Create server
-				SorentoLib.FastCgi.Runtime.Server = new Mono.FastCgi.Server (socket);
-				SorentoLib.FastCgi.Runtime.Server.SetResponder (typeof(SorentoLib.FastCgi.Responder));
+				Server = new Mono.FastCgi.Server (socket);
+//				Server = new Mono.FastCgi.Server (Socket);
+				Server.SetResponder (typeof (SorentoLib.FastCgi.Responder));
 
 				// Configure server
-				SorentoLib.FastCgi.Runtime.Server.MaxConnections = SorentoLib.Services.Config.Get<int> ("fastcgi", "maxconnections");
-				SorentoLib.FastCgi.Runtime.Server.MaxRequests = SorentoLib.Services.Config.Get<int> ("fastcgi", "maxrequests");
-				SorentoLib.FastCgi.Runtime.Server.MultiplexConnections = true;
+				Server.MaxConnections = Services.Config.Get<int> (Enums.ConfigKey.fastcgi_maxconnections);
+				Server.MaxRequests = Services.Config.Get<int> (Enums.ConfigKey.fastcgi_maxrequests);
+				Server.MultiplexConnections = Services.Config.Get<bool> (Enums.ConfigKey.fastcgi_multiplexconnections);
 				
 				// Start listing.
-				SorentoLib.FastCgi.Runtime.Server.Start (false);
+				Server.Start (false);
 			}
 			catch
 			{
-				SorentoLib.Services.Logging.LogFatalError("Failed to start FastCgi server.");
-				SorentoLib.Runtime.Shutdown();
+				Services.Logging.LogFatalError (Strings.LogErrorFatal.FastCGIFailedToStartServer);
+				Shutdown ();
 			}
 							
-			SorentoLib.Services.Logging.LogInfo("FastCgi server started.");			
+			Services.Logging.LogInfo (Strings.LogInfo.FastCGIServerStarted);
 		}					
 				
 		public static void Shutdown ()
 		{
-			if (SorentoLib.FastCgi.Runtime.Server != null)
+			if (Server != null)
 			{
 				try
 				{
 					Socket.Close ();
-					SorentoLib.FastCgi.Runtime.Server.Stop ();
-
-				} catch (Exception e)
+					Server.Stop ();
+				}
+				catch (Exception exception)
 				{
+//					Services.Logging.LogDebug (exception.ToString ());
 				}
 
-				SorentoLib.Services.Logging.LogInfo("FastCgi server stopped.");
+				Services.Logging.LogInfo (Strings.LogInfo.FastCGIServerStopped);
 			}
 		}
 		#endregion

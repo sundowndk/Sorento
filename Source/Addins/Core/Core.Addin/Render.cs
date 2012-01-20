@@ -358,22 +358,22 @@ namespace Core.Addin
 					switch (Method)
 					{
 						case "getstring":
-							return SorentoLib.Services.Config.Get<string> (Parameters.Get<string> (0), Parameters.Get<string> (1));
-
+							return SorentoLib.Services.Config.Get<string> (Parameters.Get<string> (0) +"_"+ Parameters.Get<string> (1));
+//
 						case "getbool":
-							return SorentoLib.Services.Config.Get<bool> (Parameters.Get<string> (0), Parameters.Get<string> (1));
-
+							return SorentoLib.Services.Config.Get<bool> (Parameters.Get<string> (0) +"_"+ Parameters.Get<string> (1));
+//
 						case "getint":
-							return SorentoLib.Services.Config.Get<int> (Parameters.Get<string> (0), Parameters.Get<string> (1));
-
+							return SorentoLib.Services.Config.Get<int> (Parameters.Get<string> (0) +"_"+ Parameters.Get<string> (1));
+//
 						case "getdecimal":
-							return SorentoLib.Services.Config.Get<decimal> (Parameters.Get<string> (0), Parameters.Get<string> (1));
-
+							return SorentoLib.Services.Config.Get<decimal> (Parameters.Get<string> (0) +"_"+ Parameters.Get<string> (1));
+//
 						case "getguid":
-							return SorentoLib.Services.Config.Get<Guid> (Parameters.Get<string> (0), Parameters.Get<string> (1));
-
-						case "exist":
-							return SorentoLib.Services.Config.Exist (Parameters.Get<string> (0), Parameters.Get<string> (1));
+							return SorentoLib.Services.Config.Get<Guid> (Parameters.Get<string> (0) +"_"+ Parameters.Get<string> (1));
+//
+//						case "exist":
+//							return SorentoLib.Services.Config.Exist (Parameters.Get<string> (0) +"_"+ Parameters.Get<string> (1));
 					}
 					break;
 				#endregion

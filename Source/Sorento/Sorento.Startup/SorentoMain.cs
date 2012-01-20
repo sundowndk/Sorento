@@ -48,16 +48,8 @@ namespace Sorento.Startup
 			// Initalize logging.
 			SorentoLib.Services.Logging.Initialize ();
 
-//			// Initialize boostrap.
-//			if (SorentoLib.Services.Config.Get<bool> (SorentoLib.Enums.ConfigKey.core_bootstrap))
-//			{
-//				SorentoLib.Services.Logging.LogInfo ("Entering bootstrap mode.");
-//			}
-//			else
-//			{
-				// Initialize database.
-				SorentoLib.Services.Database.Initalize ();
-//			}
+			// Initialize database.
+			SorentoLib.Services.Database.Initalize ();
 
 			// Initialize crypto.
 			SorentoLib.Services.Crypto.Initalize ();

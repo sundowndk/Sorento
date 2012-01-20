@@ -66,7 +66,7 @@ namespace SorentoLib.Services
 			variables.Add ("destinationfilenamewithoutextension", System.IO.Path.GetFileNameWithoutExtension (PathSource));
 			variables.Add ("destinationextension", System.IO.Path.GetExtension (PathSource));
 
-			variables.Add ("htmlroot", SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.core_pathhtmlroot));
+			variables.Add ("htmlroot", SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_html));
 
 
 			Hashtable graphicsobjects = new Hashtable ();

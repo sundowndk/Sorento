@@ -33,19 +33,42 @@ namespace SorentoLib.Enums
 		core_hostname,
 		core_sessiontimeout,
 		core_enablecache,
-		core_defaultencoding,
+		core_encoding,
 		core_showexceptions,
+		core_loglevel,
+		core_authenticationtype,
+
+		path_content,
+		path_html,
+		path_media,
+		path_publicmedia,
+		path_snapshot,
+		path_script,
+		path_temp,
+
+		database_driver,
+		database_hostname,
+		database_username,
+		database_password,
+		database_database,
+		database_prefix,
+
+		smtp_server,
+		smtp_encoding,
+
+		fastcgi_maxconnections,
+		fastcgi_maxrequests,
+		fastcgi_multiplexconnections,
 
 
-		core_pathhtmlroot,
-		core_pathtmp,
-		core_pathmedia,
-		core_pathpublicmedia,
+
+
+
 		media_tempmaxage,
-		core_pathscript,
+
 		core_defaultusergroup,
 		core_bootstrap,
-		snapshot_path,
+
 		core_httperror500url,
 		core_httperror404url
 	}

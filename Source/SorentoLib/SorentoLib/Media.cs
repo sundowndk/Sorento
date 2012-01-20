@@ -102,13 +102,13 @@ namespace SorentoLib
 				switch (this._currentstatus)
 				{
 					case SorentoLib.Enums.MediaStatus.Temporary:
-						return Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id;
+						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
 
 					case SorentoLib.Enums.MediaStatus.PublicTemporary:
-						return Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id;
+						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
 
 					default:
-						return Services.Config.Get<string> (Enums.ConfigKey.core_pathmedia) + this._id;
+						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
 				}
 			}
 		}
@@ -276,7 +276,7 @@ namespace SorentoLib
 		{
 			this.Initalize ();
 
-			FileStream filestream = File.Create (Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+			FileStream filestream = File.Create (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 			BinaryWriter binarywriter = new BinaryWriter(filestream);
 			binarywriter.Write(Data);
 			binarywriter.Close();
@@ -284,7 +284,7 @@ namespace SorentoLib
 
 			this._path = Media.FixPath (Path);
 			this._size = Data.LongLength;
-			this._mimetype = IO.GetMimeType (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+			this._mimetype = IO.GetMimeType (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 		}
 
 		public Media (string Path, string SourcePath, bool MoveFile)
@@ -294,29 +294,29 @@ namespace SorentoLib
 			FileInfo fileinfo = new FileInfo (SourcePath);
 			if (MoveFile)
 			{
-				fileinfo.MoveTo (Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+				fileinfo.MoveTo (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 			}
 			else
 			{
-				fileinfo.CopyTo (Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+				fileinfo.CopyTo (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 			}
 
 			this._path = Media.FixPath (Path);
 			this._size = fileinfo.Length;
-			this._mimetype = IO.GetMimeType (Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+			this._mimetype = IO.GetMimeType (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 		}
 
 		public Media (string Path, string Url)
 		{
 			this.Initalize ();
 
-			IO.DownloadToFile (Url, Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+			IO.DownloadToFile (Url, Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 
-			FileInfo fileinfo = new FileInfo (Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+			FileInfo fileinfo = new FileInfo (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 
 			this._path = Media.FixPath (Path);
 			this._size = fileinfo.Length;
-			this._mimetype = IO.GetMimeType (Services.Config.Get<string> (Enums.ConfigKey.core_pathtmp) + this._id);
+			this._mimetype = IO.GetMimeType (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 		}
 		#endregion
 
@@ -365,7 +365,7 @@ namespace SorentoLib
 			{
 				if (this._currentpath != string.Empty)
 				{
-					File.Delete (Services.Config.Get<string> (Enums.ConfigKey.core_pathpublicmedia) + this._currentpath);
+					File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + this._currentpath);
 				}
 			}
 
@@ -373,14 +373,14 @@ namespace SorentoLib
 			if (this._status == SorentoLib.Enums.MediaStatus.Public || this._status == SorentoLib.Enums.MediaStatus.PublicTemporary)
 			{
 				// Check if path exists, if not create it.
-				if (!Directory.Exists (Services.Config.Get<string> (Enums.ConfigKey.core_pathpublicmedia) + System.IO.Path.GetDirectoryName (this._path)))
+				if (!Directory.Exists (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + System.IO.Path.GetDirectoryName (this._path)))
 				{
-					Directory.CreateDirectory (Services.Config.Get<string> (Enums.ConfigKey.core_pathpublicmedia) + System.IO.Path.GetDirectoryName (this._path));
+					Directory.CreateDirectory (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + System.IO.Path.GetDirectoryName (this._path));
 				}
 
 				// Create a new symlink.
 				UnixFileInfo unixfileinfo = new UnixFileInfo (this.DataPath);
-				unixfileinfo.CreateSymbolicLink (Services.Config.Get<string> (Enums.ConfigKey.core_pathpublicmedia) + this._path);
+				unixfileinfo.CreateSymbolicLink (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + this._path);
 			}
 
 			// Check if size changed.

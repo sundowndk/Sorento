@@ -4,7 +4,7 @@
 // Author:
 //       Rasmus Pedersen <rasmus@akvaservice.dk>
 // 
-// Copyright (c) 2011 Rasmus Pedersen
+// Copyright (c) 2011 - 2012 Rasmus Pedersen
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,12 +28,30 @@ namespace SorentoLib.Strings
 {
 	public class LogInfo
 	{
+		#region RUNTIME
+		public static string RuntimeServiceInitialized = "Service initalized: '{0}'";
+		public static string RuntimeShutdown = "Shutting down in 3 sec";
+		public static string RuntimeApplicationFilesChanged = "Application files has changed";
+		#endregion
+
+		#region FASTCGI
+		public static string FastCGIServerStarted = "FastCGI server started";
+		public static string FastCGIServerStopped = "FastCGI server stopped";
+		#endregion
+
 		#region SERVICES.CONFIG
-		public static string ServicesConfigChanged = "[SORENTOLIB.SERVICES.STATS]: Config file has changed. Refreshing.";
+		public static string ServicesConfigChanged = "Config file has changed. Refreshing.";
 		#endregion
 
 		#region SERVICES.STATS
-		public static string ServicesStatsInitialized = "[SORENTOLIB.SERVICES.STATS]: Initalized!";
+		public static string ServicesStatsInitialized = "Statistics initalized!";
+		#endregion
+
+		#region SERVICES.ADDINS
+		public static string ServicesAddinsAddinDiscovered = "New addin(s) discovered";
+		public static string ServicesAddinsAddinChanged = "Addin was deleted/changed, application reload needed.";
+		public static string ServicesAddinsAddinCacheRefreshed = "Addin cache refreshed";
+		public static string ServicesAddinsAddinInitialized = "Addin initialized: '{0}'";
 		#endregion
 	}
 }

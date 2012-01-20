@@ -89,7 +89,7 @@ namespace SorentoLib.Services
 		#region Public Static Methods
 		public static void Initialize ()
 		{
-			if (SorentoLib.Services.Config.Get<bool> ("core", "enablecache"))
+			if (SorentoLib.Services.Config.Get<bool> (Enums.ConfigKey.core_enablecache))
 			{
 				// Initialize cache engine.
 				SorentoLib.Services.Cache.Store = new List<SorentoLib.Services.Cache> ();

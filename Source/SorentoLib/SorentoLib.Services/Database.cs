@@ -44,14 +44,14 @@ namespace SorentoLib.Services
 		{
 			try
 			{
-				SorentoLib.Services.Database.Prefix = SorentoLib.Services.Config.Get<string> ("database", "prefix");
-				SorentoLib.Services.Database.Name = SorentoLib.Services.Config.Get<string> ("database", "database");
+				SorentoLib.Services.Database.Prefix = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.database_prefix);
+				SorentoLib.Services.Database.Name = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.database_database);
 
 				SorentoLib.Services.Database.Connection = new SNDK.DBI.Connection (SNDK.Enums.DatabaseConnector.Mysql,
-				                                                                      SorentoLib.Services.Config.Get<string> ("database", "hostname"),
-				                                                                      SorentoLib.Services.Config.Get<string> ("database", "database"),
-				                                                                      SorentoLib.Services.Config.Get<string> ("database", "username"),
-				                                                                      SorentoLib.Services.Config.Get<string> ("database", "password"),
+				                                                                      SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.database_hostname),
+				                                                                      SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.database_database),
+				                                                                      SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.database_username),
+				                                                                      SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.database_password),
 				                                                                      true);
 				SorentoLib.Services.Database.Connection.Connect();
 			}

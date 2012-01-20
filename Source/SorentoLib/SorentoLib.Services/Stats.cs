@@ -49,9 +49,12 @@ namespace SorentoLib.Services
 			SorentoLib.Services.Logging.LogInfo (Strings.LogInfo.ServicesStatsInitialized);
 		}
 
+		public static T Get<T> (object Key)
+		{
+			return Get<T> (Key.ToString ());
+		}
 
-
-		public static T Get<T> (string Key)
+		private static T Get<T> (string Key)
 		{
 			try
 			{
@@ -67,7 +70,12 @@ namespace SorentoLib.Services
 			}
 		}
 
-		public static void Set (string Key, object Value)
+		public static void Set (object Key, object Value)
+		{
+			Set (Key.ToString (), Value);
+		}
+
+		private static void Set (string Key, object Value)
 		{
 			if (SorentoLib.Services.Stats._data.ContainsKey (Key.ToLower ()))
 			{

@@ -139,7 +139,7 @@ namespace Core.Addin
 					string root = SnapshotRoot + "sorentolib.media.data/";
 					Directory.CreateDirectory (root);
 
-					foreach (string path in SNDK.IO.GetFilesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathmedia)))
+					foreach (string path in SNDK.IO.GetFilesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_media)))
 					{
 						try
 						{
@@ -196,13 +196,13 @@ namespace Core.Addin
 					string root = SnapshotRoot +"sorentolib.htmlroot/";
 					Directory.CreateDirectory (root);
 
-					foreach (string directory in SNDK.IO.GetDirectoriesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot)))
+					foreach (string directory in SNDK.IO.GetDirectoriesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html)))
 					{
-						if (!directory.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot) + "administration"))
+						if (!directory.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html) + "administration"))
 						{
 							try
 							{
-								Directory.CreateDirectory (root + directory.Replace (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot), string.Empty));
+								Directory.CreateDirectory (root + directory.Replace (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html), string.Empty));
 							}
 							catch (Exception exception)
 							{
@@ -211,14 +211,14 @@ namespace Core.Addin
 						}
 					}
 
-					foreach (string file in SNDK.IO.GetFilesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot)))
+					foreach (string file in SNDK.IO.GetFilesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html)))
 					{
-						if (!file.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot) + "administration/"))
+						if (!file.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html) + "administration/"))
 						{
 							try
 							{
 								string source = Path.GetDirectoryName (file) +"/" + Path.GetFileName (file);
-								string destination = (root + Path.GetDirectoryName (file) +"/"+ Path.GetFileName (file)).Replace (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot), string.Empty);
+								string destination = (root + Path.GetDirectoryName (file) +"/"+ Path.GetFileName (file)).Replace (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html), string.Empty);
 
 								SNDK.IO.CopyFile (source, destination);
 							}
@@ -249,9 +249,9 @@ namespace Core.Addin
 
 				try
 				{
-					foreach (string directory in System.IO.Directory.GetDirectories (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot)))
+					foreach (string directory in System.IO.Directory.GetDirectories (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html)))
 					{
-						if (!directory.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot) + "administration"))
+						if (!directory.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html) + "administration"))
 						{
 							try
 							{
@@ -264,9 +264,9 @@ namespace Core.Addin
 						}
 					}
 
-					foreach (string file in System.IO.Directory.GetFiles (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot)))
+					foreach (string file in System.IO.Directory.GetFiles (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html)))
 					{
-						if (!file.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot) + "administration"))
+						if (!file.Contains (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html) + "administration"))
 						{
 							try
 							{
@@ -283,7 +283,7 @@ namespace Core.Addin
 					{
 						try
 						{
-							Directory.CreateDirectory (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot) + directory.Replace (root, string.Empty));
+							Directory.CreateDirectory (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html) + directory.Replace (root, string.Empty));
 						}
 						catch (Exception exception)
 						{
@@ -296,7 +296,7 @@ namespace Core.Addin
 						try
 						{
 							string source = Path.GetDirectoryName (filepath) +"/"+ Path.GetFileName (filepath);
-							string destination = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathhtmlroot) + source.Replace (root, string.Empty);
+							string destination = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_html) + source.Replace (root, string.Empty);
 
 							SNDK.IO.CopyFile (source, destination);
 						}
@@ -447,7 +447,7 @@ namespace Core.Addin
 
 				try
 				{
-					foreach (string filepath in SNDK.IO.GetFilesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathmedia)))
+					foreach (string filepath in SNDK.IO.GetFilesRecursive (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_media)))
 					{
 						try
 						{
@@ -464,7 +464,7 @@ namespace Core.Addin
 						try
 						{
 							string source = Path.GetDirectoryName (filepath) +"/"+ Path.GetFileName (filepath);
-							string destination = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathmedia) +"/"+ Path.GetFileName (filepath);
+							string destination = SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_media) +"/"+ Path.GetFileName (filepath);
 
 							SNDK.IO.CopyFile (source, destination);
 						}

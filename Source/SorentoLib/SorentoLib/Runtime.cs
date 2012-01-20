@@ -88,7 +88,7 @@ namespace SorentoLib
 
 		public static void Shutdown ()
 		{
-			SorentoLib.Services.Logging.LogInfo ("Shutting down in 3 sec.");
+			SorentoLib.Services.Logging.LogInfo (Strings.LogInfo.RuntimeShutdown);
 			SorentoLib.FastCgi.Runtime.Shutdown ();
 			Thread.Sleep (3000);
 
@@ -151,7 +151,7 @@ namespace SorentoLib
 			if (!SorentoLib.Runtime.ApplicationFilesChanged)
 			{
 				SorentoLib.Runtime.ApplicationFilesChanged = true;
-				SorentoLib.Services.Logging.LogInfo ("Application files has changed.");
+				SorentoLib.Services.Logging.LogInfo (Strings.LogInfo.RuntimeApplicationFilesChanged);
 				SorentoLib.Runtime.Shutdown ();
 			}
 		}
@@ -167,7 +167,6 @@ namespace SorentoLib
 
 		#region EventHandlers
 		static void EventhandlerServiceConfigChanged (object Sender, EventArgs E)
-//		static void HandleSorentoLibServicesEventsServiceConfigChanged (object Sender, EventArgs E)
 		{
 			Services.Database.ServiceConfigChanged ();
 			Services.Datastore.ServiceConfigChanged ();
@@ -180,14 +179,12 @@ namespace SorentoLib
 		}
 
 		static void EventhandlerServiceGarbageCollector (object Sender, EventArgs E)
-//		static void HandleSorentoLibServicesEventsServiceGarbageCollector(object Sender, EventArgs E)
 		{
 			SorentoLib.Session.ServiceGarbageCollector ();
 			SorentoLib.Media.ServiceGarbageCollector ();
 		}
 
 		static void EventhandlerServiceStatsUpdate (object Sender, EventArgs E)
-//		static void HandleSorentoLibServicesEventsServiceStatsUpdate (object Sender, EventArgs E)
 		{
 			SorentoLib.Session.ServiceStatsUpdate ();
 			SorentoLib.User.ServiceStatsUpdate ();

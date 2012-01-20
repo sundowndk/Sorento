@@ -112,7 +112,7 @@ namespace Core.Addin
 
 									if (postuploadscript != string.Empty)
 									{
-										SorentoLib.MediaTransformation.Transform (media.DataPath, SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.core_pathscript) + postuploadscript);
+										SorentoLib.MediaTransformation.Transform (media.DataPath, SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_script) + postuploadscript);
 									}
 
 									if (mediatransformations != string.Empty)
@@ -173,7 +173,7 @@ namespace Core.Addin
 						{
 							if (Session.Request.QueryJar.Get ("upload").BinaryContentType == "application/zip")
 							{
-								FileStream filestream = File.Create (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.snapshot_path) + Session.Request.QueryJar.Get ("upload").Value);
+								FileStream filestream = File.Create (SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_snapshot) + Session.Request.QueryJar.Get ("upload").Value);
 								BinaryWriter binarywriter = new BinaryWriter(filestream);
 								binarywriter.Write(Session.Request.QueryJar.Get ("upload").BinaryData);
 								binarywriter.Close();

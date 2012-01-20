@@ -148,6 +148,7 @@
     <Compile Include="SorentoLib.Exceptions\ResponderExceptionPageNotFound.cs" />
     <Compile Include="SorentoLib.Exceptions\RenderExceptionMemberNotFound.cs" />
     <Compile Include="SorentoLib.Exceptions\RenderExceptionTypeNotFound.cs" />
+    <Compile Include="SorentoLib.Enums\StatKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SorentoLib.Render\" />

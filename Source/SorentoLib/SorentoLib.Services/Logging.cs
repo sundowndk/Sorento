@@ -70,7 +70,7 @@ namespace SorentoLib.Services
 		public static void Initialize ()
 		{
 			// Set loglevel
-			Level = (Enums.LogLevel)Enum.Parse (typeof (Enums.LogLevel), Services.Config.Get<string> ("core", "loglevel"), true);
+			Level = (Enums.LogLevel)Enum.Parse (typeof (Enums.LogLevel), Services.Config.Get<string> (Enums.ConfigKey.core_loglevel), true);
 
 			// Initalize all Addins
 			foreach (SorentoLib.Addins.ILogger logger in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.ILogger)))
@@ -125,7 +125,7 @@ namespace SorentoLib.Services
 		#region Internal Static Methods
 		internal static void ServiceConfigChanged ()
 		{
-			Level = (Enums.LogLevel)Enum.Parse (typeof (Enums.LogLevel), Services.Config.Get<string> ("core", "loglevel"), true);
+			Level = (Enums.LogLevel)Enum.Parse (typeof (Enums.LogLevel), Services.Config.Get<string> (Enums.ConfigKey.core_loglevel), true);
 		}
 		#endregion
 	}

@@ -104,16 +104,16 @@ namespace SorentoLib.Render
 
 			if (SorentoLib.Render.Template.ExpIsRoot.Match (this._filename).Success)
 			{
-				this._path = SorentoLib.Services.Config.Get<string> ("core", "pathcontent");
+				this._path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_content);
 			}
 			else
 			{
-				this._path = SorentoLib.Services.Config.Get<string> ("core", "pathcontent") + "/" + System.IO.Path.GetDirectoryName (Session.Request.Environment.RequestUri) + "/";
+				this._path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_content) + "/" + System.IO.Path.GetDirectoryName (Session.Request.Environment.RequestUri) + "/";
 			}
 
 			if (this._filename == string.Empty)
 			{
-				this._path = SorentoLib.Services.Config.Get<string> ("core", "pathcontent") + System.IO.Path.GetDirectoryName (Session.Request.Environment.RequestUri) +"/";
+				this._path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_content) + System.IO.Path.GetDirectoryName (Session.Request.Environment.RequestUri) +"/";
 				this._filename = System.IO.Path.GetFileName (Session.Request.Environment.RequestUri);
 
 				if (this._filename == string.Empty)
@@ -547,7 +547,7 @@ namespace SorentoLib.Render
 		{
 			List<string> content = new List<string> ();
 
-			StreamReader template = new StreamReader (filename, Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> ("core", "contentencoding")));
+			StreamReader template = new StreamReader (filename, Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.core_encoding)));
 			string readline = string.Empty;
 			while ((readline = template.ReadLine ()) != null)
 			{

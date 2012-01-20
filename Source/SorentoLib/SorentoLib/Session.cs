@@ -243,7 +243,7 @@ namespace SorentoLib
 					this._createtimestamp = session._createtimestamp;
 					this._user = session._user;
 
-					if ((Date.DateTimeToTimestamp (DateTime.Now) - session._updatetimestamp) > Services.Config.Get<int> ("core", "sessiontimeout") || session._remoteaddress != this._request.Environment.RemoteAddress)
+					if ((Date.DateTimeToTimestamp (DateTime.Now) - session._updatetimestamp) > Services.Config.Get<int> (Enums.ConfigKey.core_sessiontimeout) || session._remoteaddress != this._request.Environment.RemoteAddress)
 					{
 						expired = true;
 					}
@@ -285,7 +285,7 @@ namespace SorentoLib
 				this._languages.Add (language);
 			}
 
-			this._timeout = Services.Config.Get<int> ("core", "sessiontimeout");
+			this._timeout = Services.Config.Get<int> (Enums.ConfigKey.core_sessiontimeout);
 			this._page = new Page (this._request.Environment.HttpHost);
 			this._error = new Error ();
 
@@ -351,16 +351,21 @@ namespace SorentoLib
 				this._user = User.Load (Username);
 
 				string password = string.Empty;
-				if (Services.Config.Get<bool> ("core", "enablersalogin"))
+				switch (Services.Config.Get<string> (Enums.ConfigKey.core_authenticationtype))
 				{
-					Console.WriteLine ("RSA DECODE");
-					password = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (Password)));
-				}
-				else
-				{
-					password = SNDK.Crypto.SHAHash (SHAHashAlgorithm.SHA1, Password + Password);
-				}
+					case "rsa":
+					{
+						Console.WriteLine ("RSA DECODE");
+						password = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (Password)));
+						break;
+					}
 
+					default:
+					{
+						password = SNDK.Crypto.SHAHash (SHAHashAlgorithm.SHA1, Password + Password);
+						break;
+					}
+				}
 
 				if (this._user.Authenticate (password))
 				{
@@ -564,7 +569,7 @@ namespace SorentoLib
 				{
 					int updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
 
-					if ((Date.DateTimeToTimestamp (DateTime.Now) - updatetimestamp) >  Services.Config.Get<int> ("core", "sessiontimeout"))
+					if ((Date.DateTimeToTimestamp (DateTime.Now) - updatetimestamp) >  Services.Config.Get<int> (Enums.ConfigKey.core_sessiontimeout))
 					{
 						try
 						{
@@ -611,9 +616,9 @@ namespace SorentoLib
 					activesessions++;
 				}
 
-				Services.Stats.Set ("sorentolib.session.activesessions", activesessions);
-				Services.Stats.Set ("sorentolib.session.usersessions", usersessions);
-				Services.Stats.Set ("sorentolib.session.guestsessions", activesessions - usersessions);
+				Services.Stats.Set (Enums.StatKey.sorentolib_session_activesessions, activesessions);
+				Services.Stats.Set (Enums.StatKey.sorentolib_session_usersessions, usersessions);
+				Services.Stats.Set (Enums.StatKey.sorentolib_session_guestsessions, activesessions - usersessions);
 			}
 
 			query.Dispose ();

@@ -80,20 +80,45 @@ namespace SorentoLib.Services
 
 		private static void SetDefaults ()
 		{
-			// HOSTNAME
-			SetDefault (SorentoLib.Enums.ConfigKey.core_hostname, "CHANGEME");
+			#region CORE
+			SetDefault (Enums.ConfigKey.core_hostname, "localhost");
+			SetDefault (Enums.ConfigKey.core_sessiontimeout, 1800);
+			SetDefault (Enums.ConfigKey.core_enablecache, false);
+			SetDefault (Enums.ConfigKey.core_encoding, "UTF-8");
+			SetDefault (Enums.ConfigKey.core_showexceptions, true);
+			SetDefault (Enums.ConfigKey.core_loglevel, "info, warning, error, fatalerror, debug");
+			SetDefault (Enums.ConfigKey.core_authenticationtype, "plaintext");
+			#endregion
 
-			// SESSIONTIMEOUT
-			SetDefault (SorentoLib.Enums.ConfigKey.core_sessiontimeout, 1800);
+			#region DATABASE
+			SetDefault (Enums.ConfigKey.database_driver, string.Empty);
+			SetDefault (Enums.ConfigKey.database_hostname, "localhost");
+			SetDefault (Enums.ConfigKey.database_username, string.Empty);
+			SetDefault (Enums.ConfigKey.database_password, string.Empty);
+			SetDefault (Enums.ConfigKey.database_database, string.Empty);
+			SetDefault (Enums.ConfigKey.database_prefix, string.Empty);
+			#endregion
 
-			// ENABLECAHCE
-			SetDefault (SorentoLib.Enums.ConfigKey.core_enablecache, false);
+			#region SMTP
+			SetDefault (Enums.ConfigKey.smtp_server, "localhost");
+			SetDefault (Enums.ConfigKey.smtp_encoding, "UTF-8");
+			#endregion
 
-			// DEFAULTENCODING
-			SetDefault (SorentoLib.Enums.ConfigKey.core_defaultencoding, "UTF-8");
+			#region FASTCGI
+			SetDefault (Enums.ConfigKey.fastcgi_maxconnections, 500);
+			SetDefault (Enums.ConfigKey.fastcgi_maxrequests, 500);
+			SetDefault (Enums.ConfigKey.fastcgi_multiplexconnections, true);
+			#endregion
 
-			// SHOWEXCEPTIONS
-			SetDefault (SorentoLib.Enums.ConfigKey.core_showexceptions, true);
+			#region PATH
+			SetDefault (Enums.ConfigKey.path_content, "../Content");
+			SetDefault (Enums.ConfigKey.path_html, "../../html/");
+			SetDefault (Enums.ConfigKey.path_media, "../Media/");
+			SetDefault (Enums.ConfigKey.path_publicmedia, "../../html/");
+			SetDefault (Enums.ConfigKey.path_snapshot, "data/snapshots/");
+			SetDefault (Enums.ConfigKey.path_script, "data/scripts/");
+			SetDefault (Enums.ConfigKey.path_temp, "tmp/");
+			#endregion
 		}
 
 		public static T Get<T> (object Key)
@@ -112,7 +137,7 @@ namespace SorentoLib.Services
 //			return (T)Get<T> (module, name);
 //		}
 
-		public static T Get<T> (string Key)
+		private static T Get<T> (string Key)
 		{
 			string module = Key.Split ("_".ToCharArray ())[0];
 			string name = Key.Split ("_".ToCharArray ())[1];
@@ -120,7 +145,7 @@ namespace SorentoLib.Services
 			return (T)Get<T> (module, name);
 		}
 
-		public static T Get<T> (string Module, string Name)
+		private static T Get<T> (string Module, string Name)
 		{
 			try
 			{
@@ -139,7 +164,15 @@ namespace SorentoLib.Services
 			}
 		}
 
-		public static bool Exist (string Module, String Name)
+		public static bool Exists (object Key)
+		{
+			string module = Key.ToString ().Split ("_".ToCharArray ())[0];
+			string name = Key.ToString ().Split ("_".ToCharArray ())[1];
+
+			return Exist (module, name);
+		}
+
+		private static bool Exist (string Module, String Name)
 		{
 			Key key = _keys.Find (delegate (Key k) { return k.Path == Module + "_" + Name; });
 			if (key != null)
@@ -178,7 +211,7 @@ namespace SorentoLib.Services
 			Set (module, name, Value);
 		}
 
-		public static void Set (string Key, Object Value)
+		private static void Set (string Key, Object Value)
 		{
 			string module = Key.Split ("_".ToCharArray ())[0];
 			string name = Key.Split ("_".ToCharArray ())[1];
@@ -186,7 +219,7 @@ namespace SorentoLib.Services
 			Set (module, name, Value);
 		}
 
-		public static void Set (string Module, string Name, Object Value)
+		private static void Set (string Module, string Name, Object Value)
 		{
 			Key key = _keys.Find (delegate (Key k) { return k.Path == Module + "_" + Name; });
 			if (key != null)
