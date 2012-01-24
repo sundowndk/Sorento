@@ -45,15 +45,29 @@ namespace Test
 	{
 		public static void Main (string[] args)
 		{
-			Evaluator.Compile ("using SorentoLib; Test (object lala) {};");
+//			Evaluator.Compile ("using SorentoLib; Test (object lala) {};");
 
 
-//			SorentoLib.Services.Database.Connection = new Connection (Toolbox.Enums.DatabaseConnector.Mysql,
-//			                                                            "10.0.0.40",
-//			                                                            "sorentotest.sundown.dk",
-//			                                                            "sorentotest",
-//			                                                            "scumbukket",
-//			                                                            true);
+			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
+			                                                            "localhost",
+			                                                            "sorentotest.sundown.dk",
+			                                                            "sorentotest",
+			                                                            "scumbukket",
+			                                                            true);
+
+			SorentoLib.Services.Database.Prefix = "sorento_";
+			SorentoLib.Services.Database.Connection.Connect ();
+
+			User user = new User ("Test", "test@test.dk");
+			user.Save ();
+
+//			SorentoLib.Services.Datastore.Set ("test", "test", user);
+
+//			User user2 = SorentoLib.Services.Datastore.Get<SorentoLib.User> ("test", "test");
+
+//			Console.WriteLine (user2.Username);
+
+//			SorentoLib.Services.Datastore.Set ()
 
 //			SorentoLib.Services.Addins.Initialize ();
 //			SorentoLib.Services.Config.Initialize ();

@@ -25,6 +25,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
+using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -47,29 +49,6 @@ namespace SorentoLib.Services
 		private string _shelf;
 		private string _data;
 		private Hashtable _meta;
-
-		private string _metaasstring
-		{
-			get
-			{
-				string result = string.Empty;
-				foreach (string key in this._meta.Keys)
-				{
-					result += key.ToUpper ().Replace (":", "_").Replace ("|","_") +":"+ this._meta[key].ToString ().Replace (":", "_").Replace ("|","_");
-				}
-				return result;
-			}
-
-			set
-			{
-				this._meta.Clear ();
-				foreach (string meta in value.Split ("|".ToCharArray (), StringSplitOptions.RemoveEmptyEntries))
-				{
-					string[] data = meta.Split (":".ToCharArray ());
-					this._meta.Add (data[0], data[1]);
-				}
-			}
-		}
 		#endregion
 
 		#region Public Fields
@@ -93,6 +72,12 @@ namespace SorentoLib.Services
 		{
 			bool success = false;
 			this._updatetimestamp = SNDK.Date.CurrentDateTimeToTimestamp ();
+
+			string meta = string.Empty;
+			foreach (string key in this._meta.Keys)
+			{
+				meta += "|"+ key.ToUpper ().Replace (":", "_").Replace ("|","_") +":"+ this._meta[key].ToString ().Replace (":", "_").Replace ("|","_") +"|";
+			}
 
 			QueryBuilder qb = null;
 			if (!SNDK.DBI.Helpers.GuidExists (Services.Database.Connection, DatabaseTableName, this._id))
@@ -123,7 +108,7 @@ namespace SorentoLib.Services
 					this._aisle,
 					this._shelf,
 					this._data,
-					this._metaasstring
+					meta
 				);
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
@@ -168,8 +153,7 @@ namespace SorentoLib.Services
 			            "updatetimestamp",
 			            "aisle",
 			            "shelf",
-			            "data",
-				"meta");
+			            "data");
 
 			if (Id != Guid.Empty)
 			{
@@ -192,7 +176,6 @@ namespace SorentoLib.Services
 					result._aisle = query.GetString (qb.ColumnPos ("aisle"));
 					result._shelf = query.GetString (qb.ColumnPos ("shelf"));
 					result._data = query.GetString (qb.ColumnPos ("data"));
-					result._metaasstring = query.GetString (qb.ColumnPos ("meta"));
 
 					success = true;
 				}
@@ -283,18 +266,25 @@ namespace SorentoLib.Services
 			{
 				switch (typeof (T).Name.ToLower ())
 				{
-					case "guid":
-						return (T)System.Convert.ChangeType (new Guid (Get (Aisle, Shelf)), typeof(T));
-
-					case "list`1":
-						return (T)System.Convert.ChangeType (Serializer.DeSerializeObjectFromString<T> (Get (Aisle, Shelf)), typeof(T));
-
+//					case "guid":
+//						return (T)System.Convert.ChangeType (new Guid (Get (Aisle, Shelf)), typeof(T));
+//
+//					case "list`1":
+//						return (T)System.Convert.ChangeType (Serializer.DeSerializeObjectFromString<T> (Get (Aisle, Shelf)), typeof(T));
+//
 					default:
-						return (T)System.Convert.ChangeType (Get (Aisle, Shelf), typeof(T));
+						XmlDocument xml = new XmlDocument ();
+						xml.Load (new StringReader (Get (Aisle, Shelf)));
+
+						return (T)typeof (T).GetMethod ("FromXmlDocument").Invoke (null, new Object[] { xml });
+
+//						return (T)System.Console
+//						return (T)System.Convert.ChangeType (Get (Aisle, Shelf), typeof(T));
 				}
 			}
-			catch
+			catch (Exception e)
 			{
+				Console.WriteLine (e);
 				throw new Exception (string.Format (Strings.Exception.ServicesDatastoreLocationNotValidType, Aisle +"."+ Shelf, typeof (T).Name));
 			}
 		}
@@ -325,24 +315,28 @@ namespace SorentoLib.Services
 			{
 				switch (Data.GetType ().Name.ToLower ())
 				{
-					case "boolean":
-						datastore._data = Data.ToString ().ToLower ();
-						break;
-
-					case "enum":
-						datastore._data = ((int)Data).ToString ();
-						break;
-
-					case "decimal":
-						datastore._data = Data.ToString ().Replace (",", ".");
-						break;
-
-					case "list`1":
-						datastore._data = Serializer.SerializeObjectToString (Data);
-						break;
+//					case "boolean":
+//						datastore._data = SNDK.Convert.BoolToString (Data);
+//						break;
+//
+//					case "enum":
+//						datastore._data = SNDK.Convert.EnumToString (Data);
+//						break;
+//
+//					case "int":
+//						datastore._data = Data.ToString ();
+//
+//					case "decimal":
+//						datastore._data = Data.ToString ().Replace (",", ".");
+//						break;
+//
+//					case "list`1":
+//						datastore._data = Serializer.SerializeObjectToString (Data);
+//						break;
 
 					default:
-						datastore._data = Data.ToString ();
+						datastore._data = SNDK.Convert.ToXmlDocument (Data).InnerXml;
+//						datastore._data = Data.ToString ();
 						break;
 				}
 			}
@@ -360,6 +354,11 @@ namespace SorentoLib.Services
 			Delete (Id, string.Empty, string.Empty);
 		}
 
+		public static void Find (string Aisle, Hashtable Meta)
+		{
+
+		}
+
 		public static List<string> ListOfShelfs (string Aisle)
 		{
 			return ListOfShelfs (Aisle, new Hashtable ());
@@ -367,7 +366,6 @@ namespace SorentoLib.Services
 
 		public static List<string> ListOfShelfs (string Aisle, Hashtable Meta)
 		{
-
 			List<string> result = new List<string>();
 
 			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
