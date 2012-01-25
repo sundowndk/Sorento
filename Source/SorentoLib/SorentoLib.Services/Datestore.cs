@@ -48,10 +48,7 @@ namespace SorentoLib.Services
 		private string _aisle;
 		private string _shelf;
 		private string _data;
-		private Hashtable _meta;
-		#endregion
-
-		#region Public Fields
+		private Meta _meta;
 		#endregion
 
 		#region Constructor
@@ -63,7 +60,6 @@ namespace SorentoLib.Services
 			this._aisle = string.Empty;
 			this._shelf = string.Empty;
 			this._data = string.Empty;
-			this._meta = new Hashtable ();
 		}
 		#endregion
 
@@ -72,12 +68,6 @@ namespace SorentoLib.Services
 		{
 			bool success = false;
 			this._updatetimestamp = SNDK.Date.CurrentDateTimeToTimestamp ();
-
-			string meta = string.Empty;
-			foreach (string key in this._meta.Keys)
-			{
-				meta += "|"+ key.ToUpper ().Replace (":", "_").Replace ("|","_") +":"+ this._meta[key].ToString ().Replace (":", "_").Replace ("|","_") +"|";
-			}
 
 			QueryBuilder qb = null;
 			if (!SNDK.DBI.Helpers.GuidExists (Services.Database.Connection, DatabaseTableName, this._id))
@@ -108,7 +98,7 @@ namespace SorentoLib.Services
 					this._aisle,
 					this._shelf,
 					this._data,
-					meta
+					this._meta.ToString ()
 				);
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
@@ -260,6 +250,47 @@ namespace SorentoLib.Services
 		#endregion
 
 		#region Public Static Methods
+//		public static T Get<T> (string Aisle, Hashtable Meta)
+//		{
+//			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
+//			qb.Table (DatabaseTableName);
+//			qb.Columns ("shelf");
+//			qb.AddWhere ("aisle", "=", Aisle);
+//
+//			foreach (string key in Meta.Keys)
+//			{
+//				string metakey = ((string)key.Split ("|".ToCharArray ())[0]).ToUpper ().Replace (":", "_");
+//				string metacondition = key.Split ("|".ToCharArray ())[1];
+//				string metadata = Meta[key].ToString ().Replace (":","_").Replace ("|","_");
+//
+//				qb.AddWhereAND ();
+//
+//				switch (metacondition)
+//				{
+//					case "=":
+//						qb.AddWhere ("meta", "like", "%"+metakey +":"+ metadata +"%");
+//						break;
+//
+//					case "!=":
+//						qb.AddWhere ("meta", "not like", "%"+metakey +":"+ metadata +"%");
+//						break;
+//				}
+//			}
+//
+//			Query query = Services.Database.Connection.Query (qb.QueryString);
+//			if (query.Success)
+//			{
+//				while (query.NextRow ())
+//				{
+////					result.Add (query.GetString (qb.ColumnPos ("shelf")));
+//				}
+//			}
+//
+//			query.Dispose ();
+//			query = null;
+//			qb = null;
+//		}
+
 		public static T Get<T> (string Aisle, string Shelf)
 		{
 			try
@@ -291,10 +322,10 @@ namespace SorentoLib.Services
 
 		public static void Set (string Aisle, string Shelf, Object Data)
 		{
-			Set (Aisle, Shelf, Data, new Hashtable ());
+			Set (Aisle, Shelf, Data, new Meta ());
 		}
 
-		public static void Set (string Aisle, string Shelf, Object Data, Hashtable Meta)
+		public static void Set (string Aisle, string Shelf, Object Data, Meta Meta)
 		{
 			Datastore datastore = null;
 
@@ -334,9 +365,14 @@ namespace SorentoLib.Services
 //						datastore._data = Serializer.SerializeObjectToString (Data);
 //						break;
 
+					case "xmldocument":
+					{
+						datastore._data = ((XmlDocument)Data).InnerXml;
+						break;
+					}
+
 					default:
 						datastore._data = SNDK.Convert.ToXmlDocument (Data).InnerXml;
-//						datastore._data = Data.ToString ();
 						break;
 				}
 			}
@@ -416,5 +452,47 @@ namespace SorentoLib.Services
 			DatabaseTableName = SorentoLib.Services.Database.Prefix + "datastore";
 		}
 		#endregion
+
+		public class Meta
+		{
+			private Hashtable _meta;
+
+			public Meta ()
+			{
+				this._meta = new Hashtable ();
+			}
+
+			public void Remove (string Key)
+			{
+				if (this._meta.ContainsKey (Key))
+				{
+					this._meta.Remove (Key);
+				}
+			}
+
+			public void Add (string Key, string Value)
+			{
+				if (this._meta.ContainsKey (Key))
+				{
+					this._meta[Key] = Value;
+				}
+				else
+				{
+					this._meta.Add (Key, Value);
+				}
+			}
+
+			override public string ToString ()
+			{
+				string result = string.Empty;
+
+				foreach (string key in this._meta.Keys)
+				{
+					result += "|"+ key.ToUpper ().Replace (":", "_").Replace ("|","_") +":"+ this._meta[key].ToString ().Replace (":", "_").Replace ("|","_") +"|";
+				}
+
+				return result;
+			}
+		}
 	}
 }

@@ -357,70 +357,19 @@ namespace SorentoLib
 		#region Public Methods
 		public void Save ()
 		{
-			Hashtable meta = new Hashtable ();
-			meta.Add ("username", this._username);
-			Services.Datastore.Set (DatastoreAisle, this._id.ToString (), this, meta);
+			try
+			{
+				Services.Datastore.Meta meta = new Services.Datastore.Meta ();
+				meta.Add ("username", this._username);
+				meta.Add ("email", this._email);
 
-//			bool success = false;
-//			QueryBuilder qb = null;
-//
-//			if (!SNDK.DBI.Helpers.GuidExists (Services.Database.Connection, DatabaseTableName, this._id))
-//			{
-//				qb = new QueryBuilder (QueryBuilderType.Insert);
-//				ServiceStatsUpdate ();
-//			}
-//			else
-//			{
-//				qb = new QueryBuilder (QueryBuilderType.Update);
-//				qb.AddWhere ("id", "=", this._id);
-//			}
-//
-//			this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
-//
-//			qb.Table (DatabaseTableName);
-//			qb.Columns
-//				(
-//					"id",
-//			            "createtimestamp",
-//			            "updatetimestamp",
-//			            "usergroupids",
-//			            "username",
-//			            "password",
-//			            "realname",
-//			            "email",
-//			            "avatar",
-//			            "status"
-//				);
-//
-//			qb.Values
-//				(
-//					this._id,
-//					this._createtimestamp,
-//					this._updatetimestamp,
-//					this.__usergroups_as_string,
-//					this._username,
-//					this._password,
-//					this._realname,
-//					this._email,
-//					this._avatarid,
-//					this._status
-//				);
-//
-//			Query query = Services.Database.Connection.Query (qb.QueryString);
-//
-//			if (query.AffectedRows > 0)
-//			{
-//				success = true;
-//			}
-//
-//			query.Dispose ();
-//			query = null;
-//			qb = null;
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), this.ToXmlDocument (), meta);
 
-//			if (!success)
-//			{
-//				throw new Exception (string.Format (Strings.Exception.UserSave, this._id));
-//			}
+			}
+			catch
+			{
+				throw new Exception (string.Format (Strings.Exception.UserSave, this._id));
+			}
 		}
 
 
@@ -434,7 +383,7 @@ namespace SorentoLib
 //			result.Add ("usergroupids", this._usergroups);
 			result.Add ("usergroups", this._usergroups);
 			result.Add ("username", this._username);
-//			result.Add ("password", this._password);
+			result.Add ("password", this._password);
 			result.Add ("realname", this._realname);
 			result.Add ("email", this._email);
 			result.Add ("avatarid", this._avatarid);
@@ -458,76 +407,87 @@ namespace SorentoLib
 
 		private static User Load (Guid id, string username)
 		{
-			bool success = false;
-			User result = new User ();
-
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table (SorentoLib.User.DatabaseTableName);
-			qb.Columns
-				(
-					"id",
-					"createtimestamp",
-					"updatetimestamp",
-			            "usergroupids",
-			            "username",
-			            "password",
-			            "realname",
-			            "email",
-			            "avatar",
-			            "status"
-				);
-
 			if (id != Guid.Empty)
 			{
-				qb.AddWhere ("id", "=", id);
-			}
-			else if (username != string.Empty)
-			{
-				qb.AddWhere ("username", "=", username);
+				return Services.Datastore.Get<SorentoLib.User> (DatastoreAisle, id.ToString ());
 			}
 			else
 			{
-				throw new Exception (Strings.Exception.UserLoad);
+				return Services.Datastore.Get<SorentoLib.User> (DatastoreAisle, id.ToString ());
+//				return Services.Datastore.Get<SorentoLib.User> (DatastoreAisle, )
 			}
 
-			Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
 
-			if (query.Success)
-			{
-				if (query.NextRow ())
-				{
-					result._id = query.GetGuid (qb.ColumnPos ("id"));
-					result._createtimestamp = query.GetInt (qb.ColumnPos ("createtimestamp"));
-					result._updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
-					result.__usergroups_as_string = query.GetString (qb.ColumnPos ("usergroupids"));
-					result._username = query.GetString (qb.ColumnPos ("username"));
-					result._password = query.GetString (qb.ColumnPos ("password"));
-					result._realname = query.GetString (qb.ColumnPos ("realname"));
-					result._email = query.GetString (qb.ColumnPos ("email"));
-					result._avatarid = query.GetGuid (qb.ColumnPos ("avatar"));
-					result._status = query.GetEnum<SorentoLib.Enums.UserStatus> (qb.ColumnPos ("status"));
+//			bool success = false;
+//			User result = new User ();
 
-					success = true;
-				}
-			}
+//			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
+//			qb.Table (SorentoLib.User.DatabaseTableName);
+//			qb.Columns
+//				(
+//					"id",
+//					"createtimestamp",
+//					"updatetimestamp",
+//			            "usergroupids",
+//			            "username",
+//			            "password",
+//			            "realname",
+//			            "email",
+//			            "avatar",
+//			            "status"
+//				);
+//
+//			if (id != Guid.Empty)
+//			{
+//				qb.AddWhere ("id", "=", id);
+//			}
+//			else if (username != string.Empty)
+//			{
+//				qb.AddWhere ("username", "=", username);
+//			}
+//			else
+//			{
+//				throw new Exception (Strings.Exception.UserLoad);
+//			}
+//
+//			Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
+//
+//			if (query.Success)
+//			{
+//				if (query.NextRow ())
+//				{
+//					result._id = query.GetGuid (qb.ColumnPos ("id"));
+//					result._createtimestamp = query.GetInt (qb.ColumnPos ("createtimestamp"));
+//					result._updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
+//					result.__usergroups_as_string = query.GetString (qb.ColumnPos ("usergroupids"));
+//					result._username = query.GetString (qb.ColumnPos ("username"));
+//					result._password = query.GetString (qb.ColumnPos ("password"));
+//					result._realname = query.GetString (qb.ColumnPos ("realname"));
+//					result._email = query.GetString (qb.ColumnPos ("email"));
+//					result._avatarid = query.GetGuid (qb.ColumnPos ("avatar"));
+//					result._status = query.GetEnum<SorentoLib.Enums.UserStatus> (qb.ColumnPos ("status"));
+//
+//					success = true;
+//				}
+//			}
+//
+//			query.Dispose ();
+//			query = null;
+//			qb = null;
+//
+//			if (!success)
+//			{
+//				if (id != Guid.Empty)
+//				{
+//					throw new Exception (string.Format (Strings.Exception.UserLoadGuid, id));
+//				}
+//				else
+//				{
+//					throw new Exception (string.Format (Strings.Exception.UserLoadUsername, username));
+//				}
+//			}
 
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
-			{
-				if (id != Guid.Empty)
-				{
-					throw new Exception (string.Format (Strings.Exception.UserLoadGuid, id));
-				}
-				else
-				{
-					throw new Exception (string.Format (Strings.Exception.UserLoadUsername, username));
-				}
-			}
-
-			return result;
+//			return result;
 		}
 
 		public static void Delete (string username)
@@ -696,6 +656,8 @@ namespace SorentoLib
 			return result;
 		}
 
+
+
 		public static User FromXmlDocument (XmlDocument xmlDocument)
 		{
 			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.user)[1]")));
@@ -712,6 +674,16 @@ namespace SorentoLib
 			else
 			{
 				throw new Exception ("USER1");
+			}
+
+			if (item.ContainsKey ("createtimestamp"))
+			{
+				result._createtimestamp = (int)item["createtimestamp"];
+			}
+
+			if (item.ContainsKey ("updatetimestamp"))
+			{
+				result._updatetimestamp = (int)item["updatetimestamp"];
 			}
 
 			if (item.ContainsKey ("usergroups"))

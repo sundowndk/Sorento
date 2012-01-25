@@ -59,6 +59,7 @@ namespace Test
 			SorentoLib.Services.Database.Connection.Connect ();
 
 			User user = new User ("Test", "test@test.dk");
+			user.Password = "TestTest";
 			user.Save ();
 
 //			SorentoLib.Services.Datastore.Set ("test", "test", user);
