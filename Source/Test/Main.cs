@@ -49,7 +49,7 @@ namespace Test
 
 
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-			                                                            "localhost",
+			                                                            "nas",
 			                                                            "sorentotest.sundown.dk",
 			                                                            "sorentotest",
 			                                                            "scumbukket",
@@ -58,9 +58,14 @@ namespace Test
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
-			User user = new User ("Test", "test@test.dk");
-			user.Password = "TestTest";
-			user.Save ();
+			User user1 = new User ("Test", "test@test.dk");
+			user1.Password = "TestTest";
+			user1.Realname = "Rasmus Pedersen";
+			user1.Save ();
+
+			User user2 = User.Load (user1.Id);
+			Console.WriteLine (user2.Username);
+			Console.WriteLine (user2.FirstName +" "+ user2.LastName);
 
 //			SorentoLib.Services.Datastore.Set ("test", "test", user);
 

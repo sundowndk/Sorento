@@ -196,7 +196,6 @@ namespace SorentoLib.Services
 
 			try
 			{
-
 				Datastore datastore = Datastore.Load (Aisle, Shelf);
 				result = datastore._data;
 			}
@@ -303,11 +302,16 @@ namespace SorentoLib.Services
 //					case "list`1":
 //						return (T)System.Convert.ChangeType (Serializer.DeSerializeObjectFromString<T> (Get (Aisle, Shelf)), typeof(T));
 //
-					default:
-						XmlDocument xml = new XmlDocument ();
-						xml.Load (new StringReader (Get (Aisle, Shelf)));
+					case "xmldocument":
+					{
+						return (T)System.Convert.ChangeType (SNDK.Convert.StringToXmlDocument (Get (Aisle, Shelf)), typeof(T));
+					}
 
-						return (T)typeof (T).GetMethod ("FromXmlDocument").Invoke (null, new Object[] { xml });
+//					default:
+//						XmlDocument xml = new XmlDocument ();
+//						xml.Load (new StringReader (Get (Aisle, Shelf)));
+//
+//						return (T)typeof (T).GetMethod ("FromXmlDocument").Invoke (null, new Object[] { xml });
 
 //						return (T)System.Console
 //						return (T)System.Convert.ChangeType (Get (Aisle, Shelf), typeof(T));

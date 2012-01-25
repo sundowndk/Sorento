@@ -364,7 +364,6 @@ namespace SorentoLib
 				meta.Add ("email", this._email);
 
 				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), this.ToXmlDocument (), meta);
-
 			}
 			catch
 			{
@@ -409,7 +408,7 @@ namespace SorentoLib
 		{
 			if (id != Guid.Empty)
 			{
-				return Services.Datastore.Get<SorentoLib.User> (DatastoreAisle, id.ToString ());
+				return FromXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()));
 			}
 			else
 			{
@@ -656,8 +655,6 @@ namespace SorentoLib
 			return result;
 		}
 
-
-
 		public static User FromXmlDocument (XmlDocument xmlDocument)
 		{
 			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.user)[1]")));
@@ -678,12 +675,12 @@ namespace SorentoLib
 
 			if (item.ContainsKey ("createtimestamp"))
 			{
-				result._createtimestamp = (int)item["createtimestamp"];
+				result._createtimestamp = int.Parse ((string)item["createtimestamp"]);
 			}
 
 			if (item.ContainsKey ("updatetimestamp"))
 			{
-				result._updatetimestamp = (int)item["updatetimestamp"];
+				result._updatetimestamp = int.Parse ((string)item["updatetimestamp"]);
 			}
 
 			if (item.ContainsKey ("usergroups"))
