@@ -37,6 +37,7 @@ namespace SorentoLib.Enums
 		core_showexceptions,
 		core_loglevel,
 		core_authenticationtype,
+		core_defaultusergroupid,
 
 		path_content,
 		path_html,
@@ -66,7 +67,6 @@ namespace SorentoLib.Enums
 
 		media_tempmaxage,
 
-		core_defaultusergroup,
 		core_bootstrap,
 
 		core_httperror500url,

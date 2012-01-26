@@ -49,8 +49,9 @@ namespace Test
 //			Evaluator.Compile ("using SorentoLib; Test (object lala) {};");
 
 
+
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-			                                                            "localhost",
+			                                                            "nas",
 			                                                            "sorentotest.sundown.dk",
 			                                                            "sorentotest",
 			                                                            "scumbukket",
@@ -64,10 +65,16 @@ namespace Test
 			user1.Realname = "Rasmus Pedersen";
 			user1.Save ();
 
-			User user2 = new User ("test", "test@test.com");
-			user2.Password = "TestTest";
-			user2.Realname = "Test Testesen";
-			user2.Save ();
+			Console.WriteLine (User.IsUsernameInUse ("Test", user1.Id));
+			Console.WriteLine (User.IsEmailInUse ("test@test.dk", user1.Id));
+
+			Console.WriteLine (User.IsUsernameInUse ("Test"));
+			Console.WriteLine (User.IsEmailInUse ("test@test.dk"));
+
+//			User user2 = new User ("test", "test@test.com");
+//			user2.Password = "TestTest";
+//			user2.Realname = "Test Testesen";
+//			user2.Save ();
 
 //			SorentoLib.Services.Datastore.Set ("test", "test", user);
 //			User user2 = User.Load (user1.Id);
@@ -92,6 +99,7 @@ namespace Test
 //			};
 
 			User.Delete ("Test");
+			User.Delete ("test");
 
 			foreach (User user in User.List ())
 			{

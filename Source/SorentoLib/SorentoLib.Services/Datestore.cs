@@ -290,6 +290,21 @@ namespace SorentoLib.Services
 //			qb = null;
 //		}
 
+		public static string FindShelf (string Aisle, params MetaSearch[] MetaSearch)
+		{
+			string result = string.Empty;
+
+			List<string> shelfs = ListOfShelfs (Aisle, MetaSearch);
+			string shelf = string.Empty;
+
+			if (shelfs.Count > 0)
+			{
+				result = shelfs[0];
+			}
+
+			return result;
+		}
+
 		public static T Get<T> (string Aisle, params MetaSearch[] MetaSearch)
 		{
 			List<string> shelfs = ListOfShelfs (Aisle, MetaSearch);
@@ -417,20 +432,6 @@ namespace SorentoLib.Services
 		{
 			Delete (Id, string.Empty, string.Empty);
 		}
-
-//		public static string Find (string Aisle, params MetaSearch[] MetaSearch)
-//		{
-//			List<string> shelfs = ListOfShelfs (Aisle, MetaSearch);
-//
-//			if (shelfs.Count > 0)
-//			{
-//
-//			}
-//
-//			return result;
-//		}
-
-
 
 		public static List<string> ListOfShelfs (string Aisle)
 		{
@@ -575,11 +576,11 @@ namespace SorentoLib.Services
 			#endregion
 
 			#region Constructor
-			public MetaSearch (string Key, Enums.DatastoreMetaSearchCondition Condition, string Value)
+			public MetaSearch (string Key, Enums.DatastoreMetaSearchCondition Condition, object Value)
 			{
 				this._key = Key;
 				this._condition = Condition;
-				this._value = Value;
+				this._value = Value.ToString ();
 			}
 			#endregion
 		}
@@ -606,15 +607,15 @@ namespace SorentoLib.Services
 				}
 			}
 
-			public void Add (string Key, string Value)
+			public void Add (string Key, object Value)
 			{
 				if (this._meta.ContainsKey (Key))
 				{
-					this._meta[Key] = Value;
+					this._meta[Key] = Value.ToString ();
 				}
 				else
 				{
-					this._meta.Add (Key, Value);
+					this._meta.Add (Key, Value.ToString ());
 				}
 			}
 
