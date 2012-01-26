@@ -290,6 +290,22 @@ namespace SorentoLib.Services
 //			qb = null;
 //		}
 
+		public static T Get<T> (string Aisle, params MetaSearch[] MetaSearch)
+		{
+			List<string> shelfs = ListOfShelfs (Aisle, MetaSearch);
+			string shelf = string.Empty;
+
+			if (shelfs.Count > 0)
+			{
+				shelf = shelfs[0];
+				return Get<T> (Aisle, shelf);
+			}
+			else
+			{
+				return default(T);
+			}
+		}
+
 		public static T Get<T> (string Aisle, string Shelf)
 		{
 			try
@@ -307,11 +323,11 @@ namespace SorentoLib.Services
 						return (T)System.Convert.ChangeType (SNDK.Convert.StringToXmlDocument (Get (Aisle, Shelf)), typeof(T));
 					}
 
-//					default:
-//						XmlDocument xml = new XmlDocument ();
-//						xml.Load (new StringReader (Get (Aisle, Shelf)));
+					default:
+						XmlDocument xml = new XmlDocument ();
+						xml.Load (new StringReader (Get (Aisle, Shelf)));
 //
-//						return (T)typeof (T).GetMethod ("FromXmlDocument").Invoke (null, new Object[] { xml });
+						return (T)typeof (T).GetMethod ("FromXmlDocument").Invoke (null, new Object[] { xml });
 
 //						return (T)System.Console
 //						return (T)System.Convert.ChangeType (Get (Aisle, Shelf), typeof(T));
@@ -384,6 +400,14 @@ namespace SorentoLib.Services
 			datastore.Save ();
 		}
 
+		public static void Delete (string Aisle, params MetaSearch[] MetaSearch)
+		{
+			foreach (string shelf in ListOfShelfs (Aisle, MetaSearch))
+			{
+				Delete (Aisle, shelf);
+			}
+		}
+
 		public static void Delete (string Aisle, string Shelf)
 		{
 			Delete (Guid.Empty, Aisle, Shelf);
@@ -394,17 +418,26 @@ namespace SorentoLib.Services
 			Delete (Id, string.Empty, string.Empty);
 		}
 
-		public static void Find (string Aisle, Hashtable Meta)
-		{
+//		public static string Find (string Aisle, params MetaSearch[] MetaSearch)
+//		{
+//			List<string> shelfs = ListOfShelfs (Aisle, MetaSearch);
+//
+//			if (shelfs.Count > 0)
+//			{
+//
+//			}
+//
+//			return result;
+//		}
 
-		}
+
 
 		public static List<string> ListOfShelfs (string Aisle)
 		{
-			return ListOfShelfs (Aisle, new Hashtable ());
+			return ListOfShelfs (Aisle, null);
 		}
 
-		public static List<string> ListOfShelfs (string Aisle, Hashtable Meta)
+		public static List<string> ListOfShelfs (string Aisle, params MetaSearch[] Search)
 		{
 			List<string> result = new List<string>();
 
@@ -413,24 +446,28 @@ namespace SorentoLib.Services
 			qb.Columns ("shelf");
 			qb.AddWhere ("aisle", "=", Aisle);
 
-			foreach (string key in Meta.Keys)
+			if (Search != null)
 			{
-				string metakey = ((string)key.Split ("|".ToCharArray ())[0]).ToUpper ().Replace (":", "_");
-				string metacondition = key.Split ("|".ToCharArray ())[1];
-				string metadata = Meta[key].ToString ().Replace (":","_").Replace ("|","_");
-
+			foreach (MetaSearch search in Search)
+			{
 				qb.AddWhereAND ();
 
-				switch (metacondition)
+				switch (search.Condition)
 				{
-					case "=":
-						qb.AddWhere ("meta", "like", "%"+metakey +":"+ metadata +"%");
+					case Enums.DatastoreMetaSearchCondition.Equal:
+					{
+						qb.AddWhere ("meta", "like binary", "%|"+ search.Key +":"+ search.Value +"|%");
 						break;
+					}
 
-					case "!=":
-						qb.AddWhere ("meta", "not like", "%"+metakey +":"+ metadata +"%");
+					case Enums.DatastoreMetaSearchCondition.NotEqual:
+					{
+						qb.AddWhere ("meta", "not like binary", "%|"+ search.Key +":"+ search.Value +"|%");
 						break;
+					}
+
 				}
+			}
 			}
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);
@@ -448,6 +485,51 @@ namespace SorentoLib.Services
 
 			return result;
 		}
+
+//		public static List<string> ListOfShelfs (string Aisle, Hashtable Meta)
+//		{
+//			List<string> result = new List<string>();
+//
+//			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
+//			qb.Table (DatabaseTableName);
+//			qb.Columns ("shelf");
+//			qb.AddWhere ("aisle", "=", Aisle);
+//
+//			foreach (string key in Meta.Keys)
+//			{
+//				string metakey = ((string)key.Split ("|".ToCharArray ())[0]).ToUpper ().Replace (":", "_");
+//				string metacondition = key.Split ("|".ToCharArray ())[1];
+//				string metadata = Meta[key].ToString ().Replace (":","_").Replace ("|","_");
+//
+//				qb.AddWhereAND ();
+//
+//				switch (metacondition)
+//				{
+//					case "=":
+//						qb.AddWhere ("meta", "like", "%"+metakey +":"+ metadata +"%");
+//						break;
+//
+//					case "!=":
+//						qb.AddWhere ("meta", "not like", "%"+metakey +":"+ metadata +"%");
+//						break;
+//				}
+//			}
+//
+//			Query query = Services.Database.Connection.Query (qb.QueryString);
+//			if (query.Success)
+//			{
+//				while (query.NextRow ())
+//				{
+//					result.Add (query.GetString (qb.ColumnPos ("shelf")));
+//				}
+//			}
+//
+//			query.Dispose ();
+//			query = null;
+//			qb = null;
+//
+//			return result;
+//		}
 		#endregion
 
 		#region Internal Static Methods
@@ -457,15 +539,65 @@ namespace SorentoLib.Services
 		}
 		#endregion
 
+		#region Nested Classes
+		public class MetaSearch
+		{
+			#region Private Fields
+			private string _key;
+			private Enums.DatastoreMetaSearchCondition _condition;
+			private string _value;
+			#endregion
+
+			#region Public Fields
+			public string Key
+			{
+				get
+				{
+					return this._key;
+				}
+			}
+
+			public Enums.DatastoreMetaSearchCondition Condition
+			{
+				get
+				{
+					return this._condition;
+				}
+			}
+
+			public string Value
+			{
+				get
+				{
+					return this._value;
+				}
+			}
+			#endregion
+
+			#region Constructor
+			public MetaSearch (string Key, Enums.DatastoreMetaSearchCondition Condition, string Value)
+			{
+				this._key = Key;
+				this._condition = Condition;
+				this._value = Value;
+			}
+			#endregion
+		}
+
 		public class Meta
 		{
+			#region Private Fields
 			private Hashtable _meta;
+			#endregion
 
+			#region Constructor
 			public Meta ()
 			{
 				this._meta = new Hashtable ();
 			}
+			#endregion
 
+			#region Public Methods
 			public void Remove (string Key)
 			{
 				if (this._meta.ContainsKey (Key))
@@ -492,11 +624,13 @@ namespace SorentoLib.Services
 
 				foreach (string key in this._meta.Keys)
 				{
-					result += "|"+ key.ToUpper ().Replace (":", "_").Replace ("|","_") +":"+ this._meta[key].ToString ().Replace (":", "_").Replace ("|","_") +"|";
+					result += "|"+ key.ToLower () +":"+ this._meta[key] +"|";
 				}
 
 				return result;
 			}
+			#endregion
 		}
+		#endregion
 	}
 }

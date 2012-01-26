@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Collections;
 using SNDK.DBI;
 using SNDK.Enums;
+using System.Xml;
 
 using System.Reflection;
 
@@ -49,7 +50,7 @@ namespace Test
 
 
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-			                                                            "nas",
+			                                                            "localhost",
 			                                                            "sorentotest.sundown.dk",
 			                                                            "sorentotest",
 			                                                            "scumbukket",
@@ -63,11 +64,40 @@ namespace Test
 			user1.Realname = "Rasmus Pedersen";
 			user1.Save ();
 
-			User user2 = User.Load (user1.Id);
-			Console.WriteLine (user2.Username);
-			Console.WriteLine (user2.FirstName +" "+ user2.LastName);
+			User user2 = new User ("test", "test@test.com");
+			user2.Password = "TestTest";
+			user2.Realname = "Test Testesen";
+			user2.Save ();
 
 //			SorentoLib.Services.Datastore.Set ("test", "test", user);
+//			User user2 = User.Load (user1.Id);
+//			Console.WriteLine (user2.Username);
+//			Console.WriteLine (user2.FirstName +" "+ user2.LastName);
+
+//			SorentoLib.Services.Datastore.MetaSearch search = new SorentoLib.Services.Datastore.MetaSearch ();
+//			search.Add ("username", SorentoLib.Enums.DatastoreMetaSearchCondition.Equal, "test");
+//			SorentoLib.Services.Datastore.Find ("users", search);
+
+//			User user2 = User.Load ("test");
+//			Console.WriteLine (user2.Email);
+
+//			XmlDocument xml =  SorentoLib.Services.Datastore.Get<XmlDocument> (SorentoLib.User.DatastoreAisle, new SorentoLib.Services.Datastore.MetaSearch ("username", SorentoLib.Enums.DatastoreMetaSearchCondition.Equal, "test"));
+
+//			User user1 = User.FromXmlDocument (xml);
+//			Console.WriteLine (user1.Email);
+
+//			foreach (string shelf in SorentoLib.Services.Datastore.ListOfShelfs (SorentoLib.User.DatastoreAisle, new SorentoLib.Services.Datastore.MetaSearch ("username", SorentoLib.Enums.DatastoreMetaSearchCondition.Equal, "test"), new SorentoLib.Services.Datastore.MetaSearch ("email", SorentoLib.Enums.DatastoreMetaSearchCondition.NotEqual, "test@test.dk")))
+//			{
+//				Console.WriteLine (shelf);
+//			};
+
+			User.Delete ("Test");
+
+			foreach (User user in User.List ())
+			{
+				Console.WriteLine (user.Realname);
+			}
+
 
 //			User user2 = SorentoLib.Services.Datastore.Get<SorentoLib.User> ("test", "test");
 

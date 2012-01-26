@@ -59,7 +59,7 @@
     <Reference Include="Mono.Addins.Setup, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins-setup</Package>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4406.20744, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SNDK, Version=1.0.4408.18384, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
@@ -150,6 +150,7 @@
     <Compile Include="SorentoLib.Exceptions\RenderExceptionMemberNotFound.cs" />
     <Compile Include="SorentoLib.Exceptions\RenderExceptionTypeNotFound.cs" />
     <Compile Include="SorentoLib.Enums\StatKey.cs" />
+    <Compile Include="SorentoLib.Enums\DatastoreMetaSearchCondition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SorentoLib.Render\" />

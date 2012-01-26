@@ -396,6 +396,7 @@ namespace SorentoLib
 		#region Public Static Methods
 		public static User Load (string username)
 		{
+
 			return Load (Guid.Empty, username);
 		}
 
@@ -406,87 +407,37 @@ namespace SorentoLib
 
 		private static User Load (Guid id, string username)
 		{
-			if (id != Guid.Empty)
+			User result = default (User);
+			bool success = false;
+
+			try
 			{
-				return FromXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()));
+				if (id != Guid.Empty)
+				{
+					result = FromXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()));
+					success = true;
+				}
+				else
+				{
+					result = FromXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username)));
+					success = true;
+				}
 			}
-			else
+			catch {}
+
+			if (!success)
 			{
-				return Services.Datastore.Get<SorentoLib.User> (DatastoreAisle, id.ToString ());
-//				return Services.Datastore.Get<SorentoLib.User> (DatastoreAisle, )
+				if (id != Guid.Empty)
+				{
+					throw new Exception (string.Format (Strings.Exception.UserLoadGuid, id));
+				}
+				else
+				{
+					throw new Exception (string.Format (Strings.Exception.UserLoadUsername, username));
+				}
 			}
 
-
-//			bool success = false;
-//			User result = new User ();
-
-//			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-//			qb.Table (SorentoLib.User.DatabaseTableName);
-//			qb.Columns
-//				(
-//					"id",
-//					"createtimestamp",
-//					"updatetimestamp",
-//			            "usergroupids",
-//			            "username",
-//			            "password",
-//			            "realname",
-//			            "email",
-//			            "avatar",
-//			            "status"
-//				);
-//
-//			if (id != Guid.Empty)
-//			{
-//				qb.AddWhere ("id", "=", id);
-//			}
-//			else if (username != string.Empty)
-//			{
-//				qb.AddWhere ("username", "=", username);
-//			}
-//			else
-//			{
-//				throw new Exception (Strings.Exception.UserLoad);
-//			}
-//
-//			Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-//
-//			if (query.Success)
-//			{
-//				if (query.NextRow ())
-//				{
-//					result._id = query.GetGuid (qb.ColumnPos ("id"));
-//					result._createtimestamp = query.GetInt (qb.ColumnPos ("createtimestamp"));
-//					result._updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
-//					result.__usergroups_as_string = query.GetString (qb.ColumnPos ("usergroupids"));
-//					result._username = query.GetString (qb.ColumnPos ("username"));
-//					result._password = query.GetString (qb.ColumnPos ("password"));
-//					result._realname = query.GetString (qb.ColumnPos ("realname"));
-//					result._email = query.GetString (qb.ColumnPos ("email"));
-//					result._avatarid = query.GetGuid (qb.ColumnPos ("avatar"));
-//					result._status = query.GetEnum<SorentoLib.Enums.UserStatus> (qb.ColumnPos ("status"));
-//
-//					success = true;
-//				}
-//			}
-//
-//			query.Dispose ();
-//			query = null;
-//			qb = null;
-//
-//			if (!success)
-//			{
-//				if (id != Guid.Empty)
-//				{
-//					throw new Exception (string.Format (Strings.Exception.UserLoadGuid, id));
-//				}
-//				else
-//				{
-//					throw new Exception (string.Format (Strings.Exception.UserLoadUsername, username));
-//				}
-//			}
-
-//			return result;
+			return result;
 		}
 
 		public static void Delete (string username)
@@ -501,30 +452,23 @@ namespace SorentoLib
 
 		private static void Delete (Guid id, string username)
 		{
+			User result = default (User);
 			bool success = false;
 
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-			qb.Table (DatabaseTableName);
-
-			if (id != Guid.Empty)
+			try
 			{
-				qb.AddWhere ("id", "=", id);
+				if (id != Guid.Empty)
+				{
+					Services.Datastore.Delete (DatastoreAisle, id.ToString ());
+					success = true;
+				}
+				else
+				{
+					Services.Datastore.Delete (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username));
+					success = true;
+				}
 			}
-			else
-			{
-				qb.AddWhere ("username", "=", username);
-			}
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-
-			if (query.AffectedRows > 0)
-			{
-				success = true;
-			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
+			catch {}
 
 			if (success)
 			{
@@ -545,38 +489,46 @@ namespace SorentoLib
 
 		public static List<User> List ()
 		{
-			return List (Enums.UserListFilter.None, null);
+			List<User> result = new List<User> ();
+
+			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
+			{
+				result.Add (User.Load (new Guid (shelf)));
+			}
+
+			return result;
+//			return List (Enums.UserListFilter.None, null);
 		}
 
 		public static List<User> List (Enums.UserListFilter filter, object filterData)
 		{
 			List<User> result = new List<User>();
 
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table (DatabaseTableName);
-			qb.Columns ("id");
-
-			switch (filter) {
-				case SorentoLib.Enums.UserListFilter.OnlyUsersThatIsMemberOfUsergroupId:
-				{
-					qb.AddWhere ("usergroups", "like", "%"+ ((Guid)filterData).ToString () +"%");
-					break;
-				}
-			}
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
-			{
-				while (query.NextRow ())
-				{
-					User user = Load (query.GetGuid (qb.ColumnPos ("id")));
-					result.Add (user);
-				}
-			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
+//			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
+//			qb.Table (DatabaseTableName);
+//			qb.Columns ("id");
+//
+//			switch (filter) {
+//				case SorentoLib.Enums.UserListFilter.OnlyUsersThatIsMemberOfUsergroupId:
+//				{
+//					qb.AddWhere ("usergroups", "like", "%"+ ((Guid)filterData).ToString () +"%");
+//					break;
+//				}
+//			}
+//
+//			Query query = Services.Database.Connection.Query (qb.QueryString);
+//			if (query.Success)
+//			{
+//				while (query.NextRow ())
+//				{
+//					User user = Load (query.GetGuid (qb.ColumnPos ("id")));
+//					result.Add (user);
+//				}
+//			}
+//
+//			query.Dispose ();
+//			query = null;
+//			qb = null;
 
 			return result;
 		}
