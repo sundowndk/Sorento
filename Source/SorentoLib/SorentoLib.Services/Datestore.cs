@@ -290,6 +290,31 @@ namespace SorentoLib.Services
 //			qb = null;
 //		}
 
+		public static int NumberOfShelfsInAisle (string Aisle)
+		{
+			int result = 0;
+
+			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
+			qb.Table (DatabaseTableName);
+			qb.Columns("id");
+			qb.AddWhere ("aisle", "=", Aisle);
+
+			Query query = Services.Database.Connection.Query (qb.QueryString);
+			if (query.Success)
+			{
+				while (query.NextRow ())
+				{
+					result++;
+				}
+			}
+
+			query.Dispose ();
+			query = null;
+			qb = null;
+
+			return result;
+		}
+
 		public static string FindShelf (string Aisle, params MetaSearch[] MetaSearch)
 		{
 			string result = string.Empty;
