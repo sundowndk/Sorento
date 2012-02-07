@@ -51,8 +51,9 @@ namespace Test
 
 
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-			                                                            "nas",
-			                                                            "sorentotest.sundown.dk",
+			                                                            "localhost",
+			                                                            "sorento",
+				//				"sorentotest.sundown.dk",
 			                                                            "sorentotest",
 			                                                            "scumbukket",
 			                                                            true);

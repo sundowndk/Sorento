@@ -52,7 +52,7 @@ namespace SorentoLib
 		private string _email;
 		private Enums.UserStatus _status;
 
-		private string __usergroups_as_string
+		private string _usergroupsasstring
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace SorentoLib
 					result += usergroup.Id.ToString () + ";";
 				}
 
-				return  result.TrimEnd (";".ToCharArray ());
+				return result;
 			}
 
 			set
@@ -87,7 +87,6 @@ namespace SorentoLib
 						Services.Logging.LogError (string.Format (Strings.LogError.UserLoadUsergroup, id));
 					}
 				}
-
 			}
 		}
 		#endregion
@@ -318,15 +317,69 @@ namespace SorentoLib
 
 			try
 			{
+				Hashtable item;
+
 				if (id != Guid.Empty)
 				{
-					result = FromXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()));
+					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()).SelectSingleNode ("(//sorentolib.user)[1]")));
 					success = true;
 				}
 				else
 				{
-					result = FromXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username)));
+					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username))));
 					success = true;
+				}
+
+				if (item.ContainsKey ("id"))
+				{
+					result._id = new Guid ((string)item["id"]);
+				}
+				else
+				{
+					throw new Exception (string.Empty);
+				}
+
+				if (item.ContainsKey ("createtimestamp"))
+				{
+					result._createtimestamp = int.Parse ((string)item["createtimestamp"]);
+				}
+
+				if (item.ContainsKey ("updatetimestamp"))
+				{
+					result._updatetimestamp = int.Parse ((string)item["updatetimestamp"]);
+				}
+
+				if (item.ContainsKey ("usergroups"))
+				{
+					result._usergroupsasstring = item["usergroups"];
+				}
+
+				if (item.ContainsKey ("username"))
+				{
+					result._username = (string)item["username"];
+				}
+
+				if (item.ContainsKey ("password"))
+				{
+					if ((string)item["password"] != string.Empty)
+					{
+						result._password = (string)item["password"];
+					}
+				}
+
+				if (item.ContainsKey ("email"))
+				{
+					result._email = (string)item["email"];
+				}
+
+				if (item.ContainsKey ("realname"))
+				{
+					result._realname = (string)item["realname"];
+				}
+
+				if (item.ContainsKey ("status"))
+				{
+					result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UserStatus> ((string)item["status"]);
 				}
 			}
 			catch {}
@@ -348,7 +401,6 @@ namespace SorentoLib
 
 		private static void Delete (Guid id, string username)
 		{
-			User result = default (User);
 			bool success = false;
 
 			try
@@ -451,6 +503,11 @@ namespace SorentoLib
 			return result;
 		}
 
+		public static User FromXmlDocument ()
+		{
+
+		}
+
 		public static User FromXmlDocument (XmlDocument xmlDocument)
 		{
 			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.user)[1]")));
@@ -466,7 +523,7 @@ namespace SorentoLib
 			}
 			else
 			{
-				throw new Exception ("USER1");
+				throw new Exception (Strings.Exception.UserFromXMLDocument);
 			}
 
 			if (item.ContainsKey ("createtimestamp"))
@@ -561,7 +618,6 @@ namespace SorentoLib
 		}
 		#endregion
 
-
 		#region OLD
 		public static List<User> List (Enums.UserListFilter filter, object filterData)
 		{
@@ -629,6 +685,45 @@ namespace SorentoLib
 
 			return result;
 		}
+
+
+//		private string __usergroups_as_string
+//		{
+//			get
+//			{
+//				string result = string.Empty;
+//				foreach (Usergroup usergroup in this._usergroups)
+//				{
+//					// Remove duplicates
+//					if (result.Contains (usergroup.Id.ToString ()))
+//					{
+//						continue;
+//					}
+//
+//					result += usergroup.Id.ToString () + ";";
+//				}
+//
+//				return  result.TrimEnd (";".ToCharArray ());
+//			}
+//
+//			set
+//			{
+//				this._usergroups.Clear ();
+//
+//				foreach (string id in value.Split (";".ToCharArray (), StringSplitOptions.RemoveEmptyEntries))
+//				{
+//					try
+//					{
+//						this._usergroups.Add (Usergroup.Load (new Guid (id)));
+//					}
+//					catch
+//					{
+//						// LOG: LogErrorUserLoadUsergroup
+//						Services.Logging.LogError (string.Format (Strings.LogError.UserLoadUsergroup, id));
+//					}
+//				}
+//			}
+//		}
 
 		#endregion
 	}

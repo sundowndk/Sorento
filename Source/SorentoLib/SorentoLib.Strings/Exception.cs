@@ -90,7 +90,7 @@ namespace SorentoLib.Strings
 		public static string UserSave = "Could not save user, with id: {0}";
 		public static string UserDeleteGuid = "Could not delete user with id: {0}";
 		public static string UserDeleteUsername = "Could not delete user with username: {0}";
-		public static string UserFromAjaxItem = "Failed to create user from AjaxItem: {0}";
+		public static string UserFromXMLDocument = "Failed to create USER from XMLDocument.";
 		#endregion
 
 		#region USERGROUP
