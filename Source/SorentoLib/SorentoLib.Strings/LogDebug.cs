@@ -28,6 +28,10 @@ namespace SorentoLib.Strings
 {
 	public class LogDebug
 	{
+		#region EXCEPTIONS
+		public static string ExceptionUnknown = "[{0}] Exception:\n{1}";
+		#endregion
+
 		#region SESSION
 		public static string SessionStats = "[SORENTOLIB.SESSION]: Stats collected for sessions.";
 		public static string SessionGarbageCollector = "[SORENTOLIB.SESSION]: Garbage collected for sessions.";
@@ -36,6 +40,10 @@ namespace SorentoLib.Strings
 
 		#region USER
 		public static string UserStats = "[USER]: Stats collected for users.";
+		#endregion
+
+		#region USERGROUP
+		public static string UsergroupStats = "[SORENTOLIB.USERGROUP]: Stats collectd for usergroups.";
 		#endregion
 	}
 }

@@ -97,6 +97,7 @@ namespace SorentoLib.Strings
 		public static string UsergroupLoad = "Could not load usergroup with id: {0}";
 		public static string UsergroupSave =  "Could not save usergroup.";
 		public static string UsergroupDelete = "Could not delete usergroup with id: {0}";
+		public static string UsergroupFromXMLDocument = "Failed to create USERGROUP from XMLDocument.";
 		#endregion
 
 		#region MEDIA

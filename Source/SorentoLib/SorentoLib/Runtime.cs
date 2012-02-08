@@ -173,8 +173,6 @@ namespace SorentoLib
 			Services.Logging.ServiceConfigChanged ();
 
 			Session.ServiceConfigChanged ();
-			User.ServiceConfigChanged ();
-			Usergroup.ServiceConfigChanged ();
 			Media.ServiceConfigChanged ();
 		}
 
@@ -187,7 +185,8 @@ namespace SorentoLib
 		static void EventhandlerServiceStatsUpdate (object Sender, EventArgs E)
 		{
 			SorentoLib.Session.ServiceStatsUpdate ();
-			SorentoLib.User.ServiceStatsUpdate ();
+			SorentoLib.User.UpdateStats ();
+			SorentoLib.Usergroup.UpdateStats ();
 		}
 		#endregion
 	}

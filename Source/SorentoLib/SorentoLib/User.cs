@@ -83,7 +83,7 @@ namespace SorentoLib
 					}
 					catch
 					{
-						// LOG: LogErrorUserLoadUsergroup
+						// LOG: LogError.UserLoadUsergroup
 						Services.Logging.LogError (string.Format (Strings.LogError.UserLoadUsergroup, id));
 					}
 				}
@@ -136,6 +136,7 @@ namespace SorentoLib
 			{
 				if (User.IsUsernameInUse (value, this._id))
 				{
+					// EXCEPTION: Exception.UserSetUsername
 					throw new Exception (string.Format (Strings.Exception.UserSetUsername, value));
 				}
 
@@ -196,6 +197,7 @@ namespace SorentoLib
 			{
 				if (User.IsEmailInUse (value, this._id))
 				{
+					// EXCEPTION: Exception.UserSetEmail
 					throw new Exception (string.Format (Strings.Exception.UserSetEmail, value));
 				}
 				this._email = value;
@@ -235,14 +237,14 @@ namespace SorentoLib
 			// Check if specified username is available.
 			if (User.IsUsernameInUse (username))
 			{
-				// EXCEPTION: UserCreateUsername
+				// EXCEPTION: Exception.UserCreateUsername
 				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateUsername, username));
 			}
 
 			// Check if specified email is available.
 			if (User.IsEmailInUse (email))
 			{
-				// EXCEPTION: UserCreateEmail
+				// EXCEPTION: Exception.UserCreateEmail
 				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateEmail, email));
 			}
 
@@ -253,7 +255,7 @@ namespace SorentoLib
 			}
 			catch
 			{
-				// LOG: LogErrorUserCreateDefaultUsergroup
+				// LOG: LogError.UserCreateDefaultUsergroup
 //				Services.Logging.LogError (string.Format (Strings.LogError.UserCreateDefaultUsergroup, Services.Config.Get<Guid> (Enums.ConfigKey.core_defaultusergroupid)));
 				Services.Logging.LogError (Strings.LogError.UserCreateDefaultUsergroup);
 			}
@@ -278,15 +280,31 @@ namespace SorentoLib
 		{
 			try
 			{
+				Hashtable item = new Hashtable ();
+
+				item.Add ("id", this._id);
+				item.Add ("createtimestamp", this._createtimestamp);
+				item.Add ("updatetimestamp", this._updatetimestamp);
+				item.Add ("usergroupids", this._usergroupsasstring);
+				item.Add ("username", this._username);
+				item.Add ("password", this._password);
+				item.Add ("realname", this._realname);
+				item.Add ("email", this._email);
+				item.Add ("status", this._status);
+
 				Services.Datastore.Meta meta = new Services.Datastore.Meta ();
 				meta.Add ("id", this._id);
 				meta.Add ("username", this._username);
 				meta.Add ("email", this._email);
 
-				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), this.ToXmlDocument (), meta);
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()), meta);
 			}
-			catch
+			catch (Exception exception)
 			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USER", exception.Message));
+
+				// EXCEPTION: Exception.UserSave
 				throw new Exception (string.Format (Strings.Exception.UserSave, this._id));
 			}
 		}
@@ -300,7 +318,6 @@ namespace SorentoLib
 			result.Add ("updatetimestamp", this._updatetimestamp);
 			result.Add ("usergroups", this._usergroups);
 			result.Add ("username", this._username);
-			result.Add ("password", this._password);
 			result.Add ("realname", this._realname);
 			result.Add ("email", this._email);
 			result.Add ("status", this._status);
@@ -312,8 +329,7 @@ namespace SorentoLib
 		#region Private Static Methods
 		private static User Load (Guid id, string username)
 		{
-			User result = default (User);
-			bool success = false;
+			User result = new User ();
 
 			try
 			{
@@ -322,22 +338,13 @@ namespace SorentoLib
 				if (id != Guid.Empty)
 				{
 					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()).SelectSingleNode ("(//sorentolib.user)[1]")));
-					success = true;
 				}
 				else
 				{
 					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username))));
-					success = true;
 				}
 
-				if (item.ContainsKey ("id"))
-				{
-					result._id = new Guid ((string)item["id"]);
-				}
-				else
-				{
-					throw new Exception (string.Empty);
-				}
+				result._id = new Guid ((string)item["id"]);
 
 				if (item.ContainsKey ("createtimestamp"))
 				{
@@ -349,9 +356,9 @@ namespace SorentoLib
 					result._updatetimestamp = int.Parse ((string)item["updatetimestamp"]);
 				}
 
-				if (item.ContainsKey ("usergroups"))
+				if (item.ContainsKey ("usergroupids"))
 				{
-					result._usergroupsasstring = item["usergroups"];
+					result._usergroupsasstring = (string)item["usergroupids"];
 				}
 
 				if (item.ContainsKey ("username"))
@@ -361,10 +368,7 @@ namespace SorentoLib
 
 				if (item.ContainsKey ("password"))
 				{
-					if ((string)item["password"] != string.Empty)
-					{
-						result._password = (string)item["password"];
-					}
+					result._password = (string)item["password"];
 				}
 
 				if (item.ContainsKey ("email"))
@@ -382,16 +386,19 @@ namespace SorentoLib
 					result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UserStatus> ((string)item["status"]);
 				}
 			}
-			catch {}
-
-			if (!success)
+			catch (Exception exception)
 			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USER", exception.Message));
+
 				if (id != Guid.Empty)
 				{
+					// EXCEPTION: Exception.UserLoadGuid
 					throw new Exception (string.Format (Strings.Exception.UserLoadGuid, id));
 				}
 				else
 				{
+					// EXCEPTION: Exception.UserLoadUsername
 					throw new Exception (string.Format (Strings.Exception.UserLoadUsername, username));
 				}
 			}
@@ -401,35 +408,32 @@ namespace SorentoLib
 
 		private static void Delete (Guid id, string username)
 		{
-			bool success = false;
-
 			try
 			{
 				if (id != Guid.Empty)
 				{
 					Services.Datastore.Delete (DatastoreAisle, id.ToString ());
-					success = true;
 				}
 				else
 				{
 					Services.Datastore.Delete (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username));
-					success = true;
 				}
-			}
-			catch {}
 
-			if (success)
-			{
-				ServiceStatsUpdate ();
+				UpdateStats ();
 			}
-			else
+			catch (Exception exception)
 			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USER", exception.Message));
+
 				if (id != Guid.Empty)
 				{
+					// EXCEPTION: Exception.UserDeleteGuid
 					throw new Exception (string.Format (Strings.Exception.UserDeleteGuid, id));
 				}
 				else
 				{
+					// EXCEPTION: Exception.UserDeleteUsername
 					throw new Exception (string.Format (Strings.Exception.UserDeleteUsername, username));
 				}
 			}
@@ -463,7 +467,7 @@ namespace SorentoLib
 
 			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
 			{
-				result.Add (User.Load (new Guid (shelf)));
+				result.Add (Load (new Guid (shelf)));
 			}
 
 			return result;
@@ -503,11 +507,6 @@ namespace SorentoLib
 			return result;
 		}
 
-		public static User FromXmlDocument ()
-		{
-
-		}
-
 		public static User FromXmlDocument (XmlDocument xmlDocument)
 		{
 			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.user)[1]")));
@@ -516,10 +515,17 @@ namespace SorentoLib
 
 			if (item.ContainsKey ("id"))
 			{
-				result = new User ();
-				result._id = new Guid ((string)item["id"]);
-				result._username = (string)item["name"];
-				result._email = (string)item["email"];
+				try
+				{
+					result = Load (new Guid ((string)item["id"]));
+				}
+				catch
+				{
+					result = new User ();
+					result._id = new Guid ((string)item["id"]);
+					result._username = (string)item["name"];
+					result._email = (string)item["email"];
+				}
 			}
 			else
 			{
@@ -551,13 +557,13 @@ namespace SorentoLib
 				result.Username = (string)item["username"];
 			}
 
-			if (item.ContainsKey ("password"))
-			{
-				if ((string)item["password"] != string.Empty)
-				{
-					result._password = (string)item["password"];
-				}
-			}
+//			if (item.ContainsKey ("password"))
+//			{
+//				if ((string)item["password"] != string.Empty)
+//				{
+//					result._password = (string)item["password"];
+//				}
+//			}
 
 			if (item.ContainsKey ("email"))
 			{
@@ -587,33 +593,11 @@ namespace SorentoLib
 			}
 		}
 
-		internal static void ServiceConfigChanged ()
+		internal static void UpdateStats ()
 		{
-//			DatabaseTableName = SorentoLib.Services.Database.Prefix + "users";
-		}
+			Services.Stats.Set (Enums.StatKey.sorentolib_user_totalusers, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
 
-		internal static void ServiceStatsUpdate ()
-		{
-//			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-//			qb.Table (DatabaseTableName);
-//			qb.Columns("id");
-//
-//			Query query = Services.Database.Connection.Query (qb.QueryString);
-//			if (query.Success)
-//			{
-//				int totalusers = 0;
-//				while (query.NextRow())
-//				{
-//					totalusers++;
-//				}
-//
-//				Services.Stats.Set ("sorentolib.user.totalusers", totalusers);
-//			}
-//
-//			query.Dispose ();
-//			query = null;
-//			qb = null;
-
+			// LOG: LogDebug.UserStats
 			Services.Logging.LogDebug (Strings.LogDebug.UserStats);
 		}
 		#endregion

@@ -38,7 +38,7 @@ namespace SorentoLib
 	public class Usergroup
 	{
 		#region Static Fields
-		public static string DatabaseTableName = SorentoLib.Services.Database.Prefix + "usergroups";
+		public static string DatastoreAisle = "usergroups";
 		private static List<Usergroup> BuiltInUsergroups = new List<Usergroup> ();
 		#endregion
 
@@ -48,7 +48,6 @@ namespace SorentoLib
 		private int _updatetimestamp;
 		private SorentoLib.Enums.UsergroupType _type;
 		private string _name;
-//		private Enums.Accesslevel _accesslevel;
 		private Enums.UsergroupStatus _status;
 		#endregion
 
@@ -103,19 +102,6 @@ namespace SorentoLib
 			}
 		}
 
-//		public Enums.Accesslevel Accesslevel
-//		{
-//			get
-//			{
-//				return this._accesslevel;
-//			}
-//
-//			set
-//			{
-//				this._accesslevel = value;
-//			}
-//		}
-
 		public Enums.UsergroupStatus Status
 		{
 			get
@@ -131,14 +117,13 @@ namespace SorentoLib
 		#endregion
 
 		#region Constructors
-		public Usergroup()
+		public Usergroup ()
 		{
 			this._id = Guid.NewGuid();
 			this._createtimestamp = Date.CurrentDateTimeToTimestamp();
 			this._updatetimestamp = Date.CurrentDateTimeToTimestamp();
 			this._type = SorentoLib.Enums.UsergroupType.Custom;
 			this._name = string.Empty;
-//			this._accesslevel = Enums.Accesslevel.Guest;
 			this._status = Enums.UsergroupStatus.Enabled;
 		}
 		#endregion
@@ -146,56 +131,25 @@ namespace SorentoLib
 		#region Public Methods
 		public void Save ()
 		{
-			bool success = false;
-			this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
-
-			QueryBuilder qb = null;
-			if (!SNDK.DBI.Helpers.GuidExists (Services.Database.Connection, DatabaseTableName, this._id))
+			try
 			{
-				qb = new QueryBuilder (QueryBuilderType.Insert);
+				Hashtable item = new Hashtable ();
+
+				item.Add ("id", this._id);
+				item.Add ("createtimestamp", this._createtimestamp);
+				item.Add ("updatetimestamp", this._updatetimestamp);
+				item.Add ("type", this._type);
+				item.Add ("name", this._name);
+				item.Add ("status", this._status);
+
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()));
 			}
-			else
+			catch (Exception exception)
 			{
-				qb = new QueryBuilder (QueryBuilderType.Update);
-				qb.AddWhere("id", "=", this._id);
-			}
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USERGROUP", exception.Message));
 
-			qb.Table (DatabaseTableName);
-			qb.Columns
-				(
-					"id",
-			            "createtimestamp",
-			            "updatetimestamp",
-			            "type",
-			            "name",
-//			            "accesslevel",
-			            "status"
-				);
-
-			qb.Values
-				(
-					this._id,
-					this._createtimestamp,
-					this._updatetimestamp,
-					this._type,
-					this._name,
-//					this._accesslevel,
-					this._status
-				);
-				
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-			
-			if (query.AffectedRows > 0)
-			{
-				success = true;
-			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
-			{
+				// EXCEPTION: Exception.UsergroupSave
 				throw new Exception (string.Format (Strings.Exception.UsergroupSave, this._id));
 			}
 		}
@@ -209,7 +163,6 @@ namespace SorentoLib
 			result.Add ("updatetimestamp", this._updatetimestamp);
 			result.Add ("type", this._type);
 			result.Add ("name", this._name);
-//			result.Add ("accesslevel", this._accesslevel);
 			result.Add ("status", this._status);
 
 			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
@@ -219,59 +172,40 @@ namespace SorentoLib
 		#region Public Static Methods
 		public static Usergroup Load (Guid id)
 		{
-			bool success = false;
-
 			Usergroup result = Usergroup.BuiltInUsergroups.Find (delegate (Usergroup u) { return u.Id == id;});
 
 			if (result == null)
 			{
-				result = new Usergroup ();
-
-				QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-	
-				qb.Table (DatabaseTableName);
-				qb.Columns
-					(
-						"id",
-				            "createtimestamp",
-				            "updatetimestamp",
-				            "type",
-				            "name",
-//				            "accesslevel",
-				            "status"
-					);
-	
-				qb.AddWhere ("id", "=", id);
-	
-				Query query = Services.Database.Connection.Query (qb.QueryString);
-				if (query.Success)
+				try
 				{
-					if (query.NextRow ())
+					Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()).SelectSingleNode ("(//sorentolib.usergroup)[1]")));
+					result = new Usergroup ();
+
+					result._id = new Guid ((string)item["id"]);
+
+					if (item.ContainsKey ("type"))
 					{
-						result._id = query.GetGuid (qb.ColumnPos ("id"));
-						result._createtimestamp = query.GetInt(qb.ColumnPos("createtimestamp"));
-						result._updatetimestamp = query.GetInt(qb.ColumnPos("updatetimestamp"));
-						result._type = query.GetEnum<Enums.UsergroupType> (qb.ColumnPos ("type"));
-						result._name = query.GetString(qb.ColumnPos("name"));
-//						result._accesslevel = query.GetEnum<Enums.Accesslevel> (qb.ColumnPos ("accesslevel"));
-						result._status = query.GetEnum<Enums.UsergroupStatus> (qb.ColumnPos ("status"));
-	
-						success = true;
+						result._type = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupType> ((string)item["type"]);
+					}
+
+					if (item.ContainsKey ("name"))
+					{
+						result._name = (string)item["name"];
+					}
+
+					if (item.ContainsKey ("status"))
+					{
+						result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupStatus> ((string)item["status"]);
 					}
 				}
-	
-				query.Dispose ();
-				query = null;
-				qb = null;
-			}
-			else
-			{
-				success = true;
-			}
+				catch (Exception exception)
+				{
+					// LOG: LogDebug.ExceptionUnknown
+					Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USER", exception.Message));
 
-			if (!success)
-			{
-				throw new Exception (string.Format (Strings.Exception.UsergroupLoad, id));
+					// EXCEPTION: Excpetion.UsergroupLoad
+					throw new Exception (string.Format (Strings.Exception.UsergroupLoad, id));
+				}
 			}
 
 			return result;
@@ -279,98 +213,29 @@ namespace SorentoLib
 
 		public static void Delete (Guid id)
 		{
-			bool success = false;
-
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-
-			qb.Table (DatabaseTableName);
-			qb.AddWhere ("id", "=", id);
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-
-			if (query.AffectedRows > 0)
+			try
 			{
-				success = true;
+				Services.Datastore.Delete (DatastoreAisle, id.ToString ());
+
+				UpdateStats ();
 			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
+			catch (Exception exception)
 			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USER", exception.Message));
+
+				// EXCEPTION: Exception.UsergroupDelete
 				throw new Exception (string.Format (Strings.Exception.UsergroupDelete, id));
 			}
 		}
 		
 		public static List<Usergroup> List ()
 		{
-			return List (Enums.UsergroupListFilter.None, null);
-		}
-							
-		public static List<Usergroup> List(Enums.UsergroupListFilter filter , object filterData)
-		{
-			List<Usergroup> result = new List<Usergroup>();
+			List<Usergroup> result = new List<Usergroup> ();
 
-			QueryBuilder qb = new SNDK.DBI.QueryBuilder (QueryBuilderType.Select);
-
-			qb.Table (DatabaseTableName);
-			qb.Columns ("id");
-
-			switch (filter)
+			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
 			{
-				case SorentoLib.Enums.UsergroupListFilter.ExcludeUsergroupsThatUserIdIsMemberOf:
-				{
-					User user = User.Load ((Guid)filterData);
-
-					foreach (Usergroup usergroup in user.Usergroups)
-					{
-						qb.AddWhere ("id", "!=", usergroup.Id);
-					}
-
-					user = null;
-					break;
-				}
-
-				case SorentoLib.Enums.UsergroupListFilter.ExcludeUsergroupsThatUsernameIsMemberOf:
-				{
-					User user = User.Load ((string)filterData);
-
-					foreach (Usergroup usergroup in user.Usergroups)
-					{
-						qb.AddWhere ("id", "!=", usergroup.Id);
-					}
-
-					user = null;
-					break;
-				}
-			}
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success) 
-			{
-				while (query.NextRow ())
-				{
-					try
-					{
-						Usergroup usergroup = Usergroup.Load (query.GetGuid (qb.ColumnPos ("id")));
-						result.Add (usergroup);
-						usergroup = null;
-					}
-					catch
-					{
-						Services.Logging.LogError (string.Format (Strings.LogError.UsergroupListUsergroup, query.GetGuid (qb.ColumnPos ("id"))));
-					}
-				}
-			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			foreach (Usergroup usergroup in BuiltInUsergroups)
-			{
-				result.Add (usergroup);
+				result.Add (Load (new Guid (shelf)));
 			}
 
 			return result;
@@ -389,7 +254,7 @@ namespace SorentoLib
 
 		public static Usergroup FromXmlDocument (XmlDocument xmlDocument)
 		{
-			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (xmlDocument);
+			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.usergroup)[1]")));
 
 			Usergroup result;
 
@@ -407,7 +272,8 @@ namespace SorentoLib
 			}
 			else
 			{
-				throw new Exception ("USERGROUP1");
+				// EXCEPTION: Exception.UsergroupFromXMLDocument
+				throw new Exception (Strings.Exception.UsergroupFromXMLDocument);
 			}
 
 			if (item.ContainsKey ("type"))
@@ -419,11 +285,6 @@ namespace SorentoLib
 			{
 				result._name = (string)item["name"];
 			}
-
-//			if (item.ContainsKey ("accesslevel"))
-//			{
-//				result._accesslevel = SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel> ((string)item["accesslevel"]);
-//			}
 
 			if (item.ContainsKey ("status"))
 			{
@@ -437,22 +298,18 @@ namespace SorentoLib
 		#region Internal Static Methods
 		internal static void Purge ()
 		{
-			foreach (Usergroup usergroup in Usergroup.List ())
+			foreach (Usergroup usergroup in List ())
 			{
-				QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-				qb.Table (DatabaseTableName);
-				qb.AddWhere ("id", "=", usergroup.Id);
-
-				Query query = Services.Database.Connection.Query (qb.QueryString);
-				query.Dispose ();
-				query = null;
-				qb = null;
+				Delete (usergroup.Id);
 			}
 		}
 
-		internal static void ServiceConfigChanged ()
+		internal static void UpdateStats ()
 		{
-			DatabaseTableName = SorentoLib.Services.Database.Prefix + "usergroups";
+			Services.Stats.Set (Enums.StatKey.sorentolib_usergroup_totalusergroups, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
+
+			// LOG: LogDebug.UsergroupStats
+			Services.Logging.LogDebug (Strings.LogDebug.UsergroupStats);
 		}
 		#endregion
 	}
@@ -461,5 +318,73 @@ namespace SorentoLib
 #region OLD
 			// TODO: this should probally be done by the render.
 			//result.Sort(delegate(Usergroup o1, Usergroup o2) { return o1._name.CompareTo(o2._name); });
+
+//		public static List<Usergroup> List(Enums.UsergroupListFilter filter , object filterData)
+//		{
+//			List<Usergroup> result = new List<Usergroup>();
+
+//			QueryBuilder qb = new SNDK.DBI.QueryBuilder (QueryBuilderType.Select);
+//
+//			qb.Table (DatabaseTableName);
+//			qb.Columns ("id");
+//
+//			switch (filter)
+//			{
+//				case SorentoLib.Enums.UsergroupListFilter.ExcludeUsergroupsThatUserIdIsMemberOf:
+//				{
+//					User user = User.Load ((Guid)filterData);
+//
+//					foreach (Usergroup usergroup in user.Usergroups)
+//					{
+//						qb.AddWhere ("id", "!=", usergroup.Id);
+//					}
+//
+//					user = null;
+//					break;
+//				}
+//
+//				case SorentoLib.Enums.UsergroupListFilter.ExcludeUsergroupsThatUsernameIsMemberOf:
+//				{
+//					User user = User.Load ((string)filterData);
+//
+//					foreach (Usergroup usergroup in user.Usergroups)
+//					{
+//						qb.AddWhere ("id", "!=", usergroup.Id);
+//					}
+//
+//					user = null;
+//					break;
+//				}
+//			}
+//
+//			Query query = Services.Database.Connection.Query (qb.QueryString);
+//			if (query.Success)
+//			{
+//				while (query.NextRow ())
+//				{
+//					try
+//					{
+//						Usergroup usergroup = Usergroup.Load (query.GetGuid (qb.ColumnPos ("id")));
+//						result.Add (usergroup);
+//						usergroup = null;
+//					}
+//					catch
+//					{
+//						Services.Logging.LogError (string.Format (Strings.LogError.UsergroupListUsergroup, query.GetGuid (qb.ColumnPos ("id"))));
+//					}
+//				}
+//			}
+//
+//			query.Dispose ();
+//			query = null;
+//			qb = null;
+//
+//			foreach (Usergroup usergroup in BuiltInUsergroups)
+//			{
+//				result.Add (usergroup);
+//			}
+
+//			return result;
+//		}
 
 #endregion

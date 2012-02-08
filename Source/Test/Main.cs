@@ -61,17 +61,28 @@ namespace Test
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
-			User user1 = new User ("Test", "test@test.dk");
-			user1.Password = "TestTest";
-			user1.Realname = "Rasmus Pedersen";
-			user1.Save ();
+//			Usergroup usergroup1 = new Usergroup ();
+//			usergroup1.Name = "Usergroup #1";
+//			usergroup1.Status = SorentoLib.Enums.UsergroupStatus.Enabled;
+//			usergroup1.Save ();
 
-			Console.WriteLine (User.IsUsernameInUse ("Test", user1.Id));
-			Console.WriteLine (User.IsEmailInUse ("test@test.dk", user1.Id));
+//			foreach (Usergroup usergroup in Usergroup.List ())
+//			{
+//				Console.WriteLine (usergroup.Name);
+//			}
 
-			Console.WriteLine (User.IsUsernameInUse ("Test"));
-			Console.WriteLine (User.IsEmailInUse ("test@test.dk"));
 
+//			User user1 = new User ("Test", "test@test.dk");
+//			user1.Password = "TestTest";
+//			user1.Realname = "Rasmus Pedersen";
+//			user1.Save ();
+
+//			Console.WriteLine (User.IsUsernameInUse ("Test", user1.Id));
+//			Console.WriteLine (User.IsEmailInUse ("test@test.dk", user1.Id));
+//
+//			Console.WriteLine (User.IsUsernameInUse ("Test"));
+//			Console.WriteLine (User.IsEmailInUse ("test@test.dk"));
+//
 //			User user2 = new User ("test", "test@test.com");
 //			user2.Password = "TestTest";
 //			user2.Realname = "Test Testesen";
@@ -99,13 +110,13 @@ namespace Test
 //				Console.WriteLine (shelf);
 //			};
 
-			User.Delete ("Test");
-			User.Delete ("test");
+//			User.Delete ("Test");
+//			User.Delete ("test");
 
-			foreach (User user in User.List ())
-			{
-				Console.WriteLine (user.Realname);
-			}
+//			foreach (User user in User.List ())
+//			{
+//				Console.WriteLine (user.Realname);
+//			}
 
 
 //			User user2 = SorentoLib.Services.Datastore.Get<SorentoLib.User> ("test", "test");

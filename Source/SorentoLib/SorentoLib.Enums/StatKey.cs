@@ -30,6 +30,8 @@ namespace SorentoLib.Enums
 {
 	public enum StatKey
 	{
+		sorentolib_user_totalusers,
+		sorentolib_usergroup_totalusergroups,
 		sorentolib_session_activesessions,
 		sorentolib_session_usersessions,
 		sorentolib_session_guestsessions
