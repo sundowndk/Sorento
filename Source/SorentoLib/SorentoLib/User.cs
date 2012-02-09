@@ -280,6 +280,8 @@ namespace SorentoLib
 		{
 			try
 			{
+				this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
+
 				Hashtable item = new Hashtable ();
 
 				item.Add ("id", this._id);
@@ -307,6 +309,45 @@ namespace SorentoLib
 				// EXCEPTION: Exception.UserSave
 				throw new Exception (string.Format (Strings.Exception.UserSave, this._id));
 			}
+		}
+
+		public bool Authenticate (Usergroup usergroup)
+		{
+			return Authenticate (usergroup.Id);
+		}
+
+		public bool Authenticate (Guid usergroupid)
+		{
+			bool result = false;
+
+			if (this._usergroups.Find (delegate (Usergroup u) { return u.Id == usergroupid;}) != null)
+			{
+				result = true;
+			}
+
+			return result;
+		}
+
+		public bool Authenticate (string Password)
+		{
+			bool result = false;
+
+			if (this._status != Enums.UserStatus.Disabled)
+			{
+				if (this._password == Password)
+				{
+					result = true;
+				}
+				else
+				{
+					if (this._password == SNDK.Crypto.SHAHash (SHAHashAlgorithm.SHA1, Password + Password))
+					{
+						result = true;
+					}
+				}
+			}
+
+			return result;
 		}
 
 		public XmlDocument ToXmlDocument ()
@@ -341,7 +382,7 @@ namespace SorentoLib
 				}
 				else
 				{
-					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username))));
+					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username)).SelectSingleNode ("(//sorentolib.user)[1]")));
 				}
 
 				result._id = new Guid ((string)item["id"]);
@@ -419,7 +460,7 @@ namespace SorentoLib
 					Services.Datastore.Delete (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username));
 				}
 
-				UpdateStats ();
+				ServiceStatsUpdate ();
 			}
 			catch (Exception exception)
 			{
@@ -509,9 +550,17 @@ namespace SorentoLib
 
 		public static User FromXmlDocument (XmlDocument xmlDocument)
 		{
-			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.user)[1]")));
-
+			Hashtable item;
 			User result;
+
+			try
+			{
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.user)[1]")));
+			}
+			catch
+			{
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (xmlDocument);
+			}
 
 			if (item.ContainsKey ("id"))
 			{
@@ -593,7 +642,7 @@ namespace SorentoLib
 			}
 		}
 
-		internal static void UpdateStats ()
+		internal static void ServiceStatsUpdate ()
 		{
 			Services.Stats.Set (Enums.StatKey.sorentolib_user_totalusers, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
 
@@ -636,39 +685,7 @@ namespace SorentoLib
 			return result;
 		}
 
-		public bool Authenticate (Usergroup usergroup)
-		{
-			bool result = false;
 
-			if (this._usergroups.Find (delegate (Usergroup u) { return u.Id == usergroup.Id;}) != null)
-			{
-				result = true;
-			}
-
-			return result;
-		}
-
-		public bool Authenticate (string Password)
-		{
-			bool result = false;
-
-			if (this._status != Enums.UserStatus.Disabled)
-			{
-				if (this._password == Password)
-				{
-					result = true;
-				}
-				else
-				{
-					if (this._password == SNDK.Crypto.SHAHash (SHAHashAlgorithm.SHA1, Password + Password))
-					{
-						result = true;
-					}
-				}
-			}
-
-			return result;
-		}
 
 
 //		private string __usergroups_as_string

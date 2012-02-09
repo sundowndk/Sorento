@@ -54,6 +54,9 @@ namespace Sorento.Startup
 			// Initialize crypto.
 			SorentoLib.Services.Crypto.Initalize ();
 
+			// Initialize datastore
+			SorentoLib.Services.Datastore.Initalize ();
+
 			// Initialize Stats
 			SorentoLib.Services.Stats.Initialize ();
 

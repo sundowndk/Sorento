@@ -252,7 +252,7 @@ namespace Core.Addin
 
 						case "logout":
 						{
-							result.Add (Session.Logout ());
+							result.Add (Session.SignOut ());
 							break;
 						}
 					}

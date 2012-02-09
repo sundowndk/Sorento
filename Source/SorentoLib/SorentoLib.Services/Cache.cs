@@ -104,8 +104,8 @@ namespace SorentoLib.Services
 
 				SorentoLib.Services.Cache.Enabled = true;
 
-				// Done
-				SorentoLib.Services.Logging.LogInfo("Service enabled: Cache");
+				// LOG: LogInfo.RuntimeServiceInitialized
+				Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Cache"));
 			}
 			else
 			{

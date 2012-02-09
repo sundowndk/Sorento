@@ -120,6 +120,12 @@ namespace SorentoLib.Services
 		#endregion
 
 		#region Private Static Methods
+		public static void Initalize ()
+		{
+			// LOG: LogInfo.
+			SorentoLib.Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Datastore"));
+		}
+
 		private static Datastore Load (string Aisle, string Shelf)
 		{
 			return Load (Guid.Empty, Aisle, Shelf, new Hashtable ());
@@ -373,9 +379,8 @@ namespace SorentoLib.Services
 //						return (T)System.Convert.ChangeType (Get (Aisle, Shelf), typeof(T));
 				}
 			}
-			catch (Exception e)
+			catch (Exception exception)
 			{
-				Console.WriteLine (e);
 				throw new Exception (string.Format (Strings.Exception.ServicesDatastoreLocationNotValidType, Aisle +"."+ Shelf, typeof (T).Name));
 			}
 		}

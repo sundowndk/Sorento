@@ -83,7 +83,8 @@ namespace SorentoLib.Services
 
 			SorentoLib.Services.Crypto.Parameters = SorentoLib.Services.Crypto.ServiceProvider.ExportParameters (false);
 
-			SorentoLib.Services.Logging.LogInfo("Service enabled: Crypto");
+			// LOG: LogInfo.RuntimeServiceInitialized
+			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Crypto"));
 
 //			SorentoLib.Services.Logging.LogInfo ("Successfully initalized RSA service provider.");
 		}

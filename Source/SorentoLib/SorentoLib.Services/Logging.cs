@@ -78,7 +78,8 @@ namespace SorentoLib.Services
 				logger.Initialize ();
 			}
 
-			SorentoLib.Services.Logging.LogInfo("Service enabled: Logging");
+			// LOG: LogInfo.RuntimeServiceInitialized
+			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Logging"));
 		}
 
 		public static void LogFatalError (string Message)

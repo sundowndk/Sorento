@@ -69,7 +69,8 @@ namespace SorentoLib.FastCgi
 				Shutdown ();
 			}
 							
-			Services.Logging.LogInfo (Strings.LogInfo.FastCGIServerStarted);
+			// LOG: LogInfo.RuntimeServiceInitialized
+			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "FastCGI"));
 		}					
 				
 		public static void Shutdown ()

@@ -45,8 +45,8 @@ namespace SorentoLib.Services
 			timer.Interval = 2000;
 			timer.Start ();
 
-			// All done.
-			SorentoLib.Services.Logging.LogInfo (Strings.LogInfo.ServicesStatsInitialized);
+			// LOG: LogInfo.RuntimeServiceInitialized
+			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Stats"));
 		}
 
 		public static T Get<T> (object Key)

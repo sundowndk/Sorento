@@ -55,14 +55,19 @@ namespace SorentoLib.Services
 				                                                                      true);
 				SorentoLib.Services.Database.Connection.Connect();
 			}
-			catch  (Exception e)
+			catch  (Exception exception)
 			{
-				//SorentoLib.Services.Logging.LogWarning(e.ToString().Replace("\n", ""));
-				SorentoLib.Services.Logging.LogFatalError("Faild to establish connetion to database server.");
-				SorentoLib.Runtime.Shutdown();				
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SERVICES.DATABASE", exception.Message));
+
+				// LOG: LogFatalError.ServicesDatabaseConnectionFailed
+				SorentoLib.Services.Logging.LogFatalError (Strings.LogErrorFatal.ServicesDatabaseConnectionFailed);
+
+				SorentoLib.Runtime.Shutdown ();
 			}		
-										
-			SorentoLib.Services.Logging.LogInfo("Service enabled: Database");
+
+			// LOG: LogInfo.
+			SorentoLib.Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Database"));
 		}
 		#endregion
 

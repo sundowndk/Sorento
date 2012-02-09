@@ -34,7 +34,8 @@ namespace SorentoLib.Strings
 
 		#region SESSION
 		public static string SessionLoadUser = "[SORENTOLIB.SESSION]: Cannot load user with id: {0}, session will continue without user attached.";
-		public static string SessionLoginUser = "[SORENTOLIB.SESSION]: Cannot load user with username: {0}, login failed";
+		public static string SessionSignIn = "[SORENTOLIB.SESSION]: Failed to singin user '{0}'";
+		public static string SessionSignOut = "[SORENTOLIB.SESSION]: Failed to signout user '{0}'";
 		#endregion
 
 		#region USER

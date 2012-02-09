@@ -49,6 +49,7 @@ namespace SorentoLib.Strings
 		public static string SessionLoad = "Session with id: {0} was not found.";
 		public static string SessionSave = "Could not save session with id: {0}";
 		public static string SessionDelete = "Could not delete session with id: {0}";
+		public static string SessionExpired = "Session '{0}' has expired.";
 		#endregion
 
 

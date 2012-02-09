@@ -133,6 +133,8 @@ namespace SorentoLib
 		{
 			try
 			{
+				this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
+				
 				Hashtable item = new Hashtable ();
 
 				item.Add ("id", this._id);
@@ -146,6 +148,7 @@ namespace SorentoLib
 			}
 			catch (Exception exception)
 			{
+				Console.WriteLine (exception);
 				// LOG: LogDebug.ExceptionUnknown
 				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USERGROUP", exception.Message));
 
@@ -217,7 +220,7 @@ namespace SorentoLib
 			{
 				Services.Datastore.Delete (DatastoreAisle, id.ToString ());
 
-				UpdateStats ();
+				ServiceStatsUpdate ();
 			}
 			catch (Exception exception)
 			{
@@ -232,6 +235,8 @@ namespace SorentoLib
 		public static List<Usergroup> List ()
 		{
 			List<Usergroup> result = new List<Usergroup> ();
+
+			result.AddRange (BuiltInUsergroups);
 
 			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
 			{
@@ -254,9 +259,17 @@ namespace SorentoLib
 
 		public static Usergroup FromXmlDocument (XmlDocument xmlDocument)
 		{
-			Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.usergroup)[1]")));
-
+			Hashtable item;
 			Usergroup result;
+
+			try
+			{
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.usergroup)[1]")));
+			}
+			catch
+			{
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (xmlDocument);
+			}
 
 			if (item.ContainsKey ("id"))
 			{
@@ -304,7 +317,7 @@ namespace SorentoLib
 			}
 		}
 
-		internal static void UpdateStats ()
+		internal static void ServiceStatsUpdate ()
 		{
 			Services.Stats.Set (Enums.StatKey.sorentolib_usergroup_totalusergroups, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
 

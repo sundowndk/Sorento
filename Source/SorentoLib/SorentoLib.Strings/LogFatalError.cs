@@ -32,6 +32,12 @@ namespace SorentoLib.Strings
 		public static string FastCGIFailedToStartServer = "[SORENTOLIB.FASTCGI]: Failed to starte server";
 		#endregion
 
+
+
+		#region SERVICES.DATABASE
+		public static string ServicesDatabaseConnectionFailed = "[SORENTOLIB.SERVICES.DATABASE]: Faild to establish connetion to database server.";
+		#endregion
+
 		#region SERVICES.CONFIG
 		public static string ServicesConfigLoad = "[SORENOTLIB.SERVICES.CONFIG]: Failed to read configuration file:";
 		public static string ServicesConfigLoadException = "[SORENOTLIB.SERVICES.CONFIG]: {0}";

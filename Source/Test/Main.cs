@@ -61,6 +61,20 @@ namespace Test
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
+
+
+
+//			Session session1 = Session.Load (new Guid ("b9651565-d43e-4aec-aaa0-b2081c696714"));
+//			Console.WriteLine (session1.RemoteAdress);
+
+
+//			foreach (Session session in Session.List ())
+//			{
+//				Console.WriteLine (session.RemoteAdress);
+//			}
+
+//			Session session1 = new Session ()
+
 //			Usergroup usergroup1 = new Usergroup ();
 //			usergroup1.Name = "Usergroup #1";
 //			usergroup1.Status = SorentoLib.Enums.UsergroupStatus.Enabled;
@@ -71,10 +85,13 @@ namespace Test
 //				Console.WriteLine (usergroup.Name);
 //			}
 
+			User user1 = User.Load ("rvp");
+			Console.WriteLine (user1.Username);
 
 //			User user1 = new User ("Test", "test@test.dk");
-//			user1.Password = "TestTest";
+//			user1.Username = "rvp";
 //			user1.Realname = "Rasmus Pedersen";
+//			user1.Password = "111";
 //			user1.Save ();
 
 //			Console.WriteLine (User.IsUsernameInUse ("Test", user1.Id));

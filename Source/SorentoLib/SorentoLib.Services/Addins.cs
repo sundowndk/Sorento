@@ -67,6 +67,7 @@ namespace SorentoLib.Services
 			applicationwatcher2.EnableRaisingEvents = true;
 			applicationwatcher2.Filter = "*.dll";
 
+			// LOG: LogInfo.RuntimeServiceInitialized
 			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Addins"));
 		}
 

@@ -80,7 +80,7 @@ namespace Core.Addin
 							return ((SorentoLib.Session)Variable).Request.QueryJar;
 
 						case "remoteaddress":
-							return ((SorentoLib.Session)Variable).RemoteAdress;
+							return ((SorentoLib.Session)Variable).RemoteAddress;
 
 //						case "accesslevel":
 //							return ((SorentoLib.Session)Variable).AccessLevel;
@@ -91,8 +91,18 @@ namespace Core.Addin
 //						case "authenticatebyaccesslevel":
 //							return ((SorentoLib.Session)Variable).AuthenticateByAccesslevel (SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel>(Parameters.Get<string>(0)));
 
-						case "authenticatebyusergroup":
-							return ((SorentoLib.Session)Variable).AuthenticateByUsergroup (Parameters.Get<Guid>(0));
+						case "authenticate":
+							switch (Parameters.Type (0).Name.ToLower())
+							{
+								case "guid":
+									return ((SorentoLib.Session)Variable).Authenticate (Parameters.Get<Guid>(0));
+
+								case "string":
+									return ((SorentoLib.Session)Variable).Authenticate (Parameters.Get<string>(0));
+
+								default:
+									return null;
+							}
 
 						case "current":
 							return Session;

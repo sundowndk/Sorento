@@ -29,13 +29,15 @@ namespace SorentoLib.Strings
 	public class LogDebug
 	{
 		#region EXCEPTIONS
-		public static string ExceptionUnknown = "[{0}] Exception:\n{1}";
+		public static string ExceptionUnknown = "[{0}] Exception: {1}";
 		#endregion
 
 		#region SESSION
 		public static string SessionStats = "[SORENTOLIB.SESSION]: Stats collected for sessions.";
 		public static string SessionGarbageCollector = "[SORENTOLIB.SESSION]: Garbage collected for sessions.";
 		public static string SessionTimeout = "[SORENTOLIB.SESSION]: Session with id: {0}, has expired.";
+		public static string SessionUserSignIn = "[SORENTOLIB.SESSION]: User '{0}' has sucessfully signed in.";
+		public static string SessionUserSignOut = "[SORENTOLIB.SESSION]: User '{0}' has succesfully singed out.";
 		#endregion
 
 		#region USER

@@ -38,7 +38,7 @@ namespace SorentoLib
 	public class Session
 	{
 		#region Public Static Fields
-		public static string DatabaseTableName = Services.Database.Prefix + "sessions";
+		public static string DatastoreAisle = "sessions";
 		#endregion
 
 		#region Private Fields
@@ -153,7 +153,7 @@ namespace SorentoLib
 			}
 		}
 
-		public String RemoteAdress
+		public String RemoteAddress
 		{
 			get
 			{
@@ -182,21 +182,6 @@ namespace SorentoLib
 			}
 		}
 
-//		public Enums.Accesslevel AccessLevel
-//		{
-//			get
-//			{
-//				if (this._user != null)
-//				{
-//					return this._user.Accesslevel;
-//				}
-//				else
-//				{
-//					return Enums.Accesslevel.Guest;
-//				}
-//			}
-//		}
-
 		public bool LoggedIn
 		{
 			get
@@ -211,16 +196,10 @@ namespace SorentoLib
 		}
 		#endregion
 
-		#region Private Constructor
-		private Session ()
-		{
-		}
-		#endregion
-
 		#region Public Constructor
 		public Session (IDictionary<string, string> parameters, byte[] postData)
 		{
-			bool expired = false;
+
 
 			this._request = new FastCgi.Request (parameters, postData);
 
@@ -235,6 +214,8 @@ namespace SorentoLib
 			}
 			else
 			{
+				bool expired = false;
+
 				try
 				{
 					Session session = Session.Load (new Guid (this._request.CookieJar.Get ("sorentosessionid").Value));
@@ -248,34 +229,33 @@ namespace SorentoLib
 						expired = true;
 					}
 				}
-				catch
+				catch (Exception exception)
 				{
+					// LOG: LogDebug.ExceptionUnknown
+					Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
+
 					expired = true;
 				}
-			}
 
-			if (expired)
-			{
-				Console.WriteLine ("SESSION EXPIRED");
-				Services.Logging.LogDebug (string.Format (Strings.LogDebug.SessionTimeout, this._request.CookieJar.Get ("sorentosessionid").Value));
-
-				this._id = Guid.NewGuid ();
-				this._createtimestamp = Date.CurrentDateTimeToTimestamp ();
-				this._user = null;
-				this._request.CookieJar.Get ("sorentosessionid").Value = this._id.ToString ();
-			}
-			else
-			{
-				if (this._user != null)
+				if (expired)
 				{
-					if (this._user.Status == Enums.UserStatus.Disabled)
-					{
-						this._user = null;
-					}
+					Services.Logging.LogDebug (string.Format (Strings.LogDebug.SessionTimeout, this._request.CookieJar.Get ("sorentosessionid").Value));
+
+					this._id = Guid.NewGuid ();
+					this._createtimestamp = Date.CurrentDateTimeToTimestamp ();
+					this._user = null;
+					this._request.CookieJar.Get ("sorentosessionid").Value = this._id.ToString ();
 				}
 			}
 
-			this._updatetimestamp = SNDK.Date.CurrentDateTimeToTimestamp ();
+			if (this._user != null)
+			{
+				if (this._user.Status == Enums.UserStatus.Disabled)
+				{
+					this._user = null;
+				}
+			}
+
 			this._remoteaddress = this._request.Environment.RemoteAddress;
 
 			// Fill accepted languages.
@@ -291,58 +271,40 @@ namespace SorentoLib
 
 			this.Save ();
 		}
+
+		private Session ()
+		{
+		}
 		#endregion
 
 		#region Public Methods
 		public void Save ()
 		{
-			bool success = false;
-			this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
-
-			QueryBuilder qb = null;
-			if (!SNDK.DBI.Helpers.GuidExists (Services.Database.Connection, DatabaseTableName, this._id))
+			try
 			{
-				qb = new QueryBuilder (QueryBuilderType.Insert);
+				this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
+
+				Hashtable item = new Hashtable ();
+
+				item.Add ("id", this._id);
+				item.Add ("createtimestamp", this._createtimestamp);
+				item.Add ("updatetimestamp", this._updatetimestamp);
+				item.Add ("userid", this._userasstring);
+				item.Add ("remoteaddress", this._remoteaddress);
+
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()));
 			}
-			else
+			catch (Exception exception)
 			{
-				qb = new QueryBuilder (QueryBuilderType.Update);
-				qb.AddWhere ("id", "=", this._id);
-			}
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
 
-			qb.Table (DatabaseTableName);
-			qb.Columns ("id",
-			            "createtimestamp",
-			            "updatetimestamp",
-			            "userid",
-			            "remoteaddress");
-
-			qb.Values (this._id,
-			           this._createtimestamp,
-			           this._updatetimestamp,
-			           this._userasstring,
-			           this._remoteaddress);
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-
-//			Console.WriteLine (query.AffectedRows);
-			if (query.AffectedRows > 0)
-			{
-				success = true;
-			}
-			
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
-			{
-//				Console.WriteLine ("BLA");
+				// EXCEPTION: Exception.SessionSave
 				throw new Exception (string.Format (Strings.Exception.SessionSave, this._id));
 			}
 		}
 
-		public bool Login (string Username, string Password)
+		public bool SignIn (string Username, string Password)
 		{
 			bool result = false;
 
@@ -381,90 +343,65 @@ namespace SorentoLib
 					SorentoLib.Services.Events.Invoke.SessionLoginFailed (this);
 				}
 			}
-			catch (Exception E)
+			catch (Exception exception)
 			{
-				Console.WriteLine (E.ToString ());
-				Services.Logging.LogError (string.Format (Strings.LogError.SessionLoginUser, Username));
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
+
+				// LOG: LogError.SessionSignIn
+				Services.Logging.LogError (string.Format (Strings.LogError.SessionSignIn, Username));
 			}
 
 			return result;
 		}
 
-		public bool Logout ()
+		public bool SignOut ()
 		{
-			bool result = false;
-
 			if (this._user != null)
 			{
-				this._user = null;
-				this.Save ();
-				result = true;
-				ServiceStatsUpdate ();
-				Services.Events.Invoke.SessionLogout (this);
-			}
+				string username = this._user.Username;
 
-			return result;
-		}
-
-//		public bool AuthenticateByAccesslevel (Enums.Accesslevel Accesslevel)
-//		{
-//			bool result = false;
-//
-//			if (this._user != null)
-//			{
-//				if (this._user.Accesslevel >= Accesslevel)
-//				{
-//					result = true;
-//				}
-//			}
-//			else
-//			{
-//				if (Enums.Accesslevel.Guest >= Accesslevel)
-//				{
-//					result = true;
-//				}
-//			}
-//
-//			return result;
-//		}
-
-		public bool AuthenticateByUsergroup (Guid Id)
-		{
-			bool result = false;
-
-			if (this._user != null)
-			{
-				foreach (Usergroup usergroup in this._user.Usergroups)
+				try
 				{
-					if (usergroup.Id == Id)
-					{
-						result = true;
-					}
+					this._user = null;
+					this.Save ();
+					ServiceStatsUpdate ();
+					Services.Events.Invoke.SessionLogout (this);
+
+					// LOG: LogDebug.SessionUserSignOut
+					Services.Logging.LogError (string.Format (Strings.LogDebug.SessionUserSignOut, username));
+				}
+				catch (Exception exception)
+				{
+					// LOG: LogDebug.ExceptionUnknown
+					Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
+
+					// LOG: LogError.SessionSignOut
+					Services.Logging.LogError (string.Format (Strings.LogError.SessionSignOut, username));
 				}
 			}
 
-			return result;
+			return true;
 		}
 
-		public Hashtable ToItem ()
+		public bool Authenticate (string password)
 		{
-
-			Hashtable result = new Hashtable ();
-			result.Add ("id", this._id);
-			result.Add ("createtimestamp", this._createtimestamp);
-			result.Add ("updatetimstamp", this._updatetimestamp);
-
-			if (this.LoggedIn != null)
+			if (this._user != null)
 			{
-				result.Add ("userid", this._user.Id);
+				return this._user.Authenticate (password);
 			}
 
-			result.Add ("loggedin", this.LoggedIn);
-//			result.Add ("accesslevel", this.AccessLevel);
+			return false;
+		}
 
-			result.Add ("remoteaddress", this._remoteaddress);
+		public bool Authenticate (Guid usergroupid)
+		{
+			if (this._user != null)
+			{
+				return this._user.Authenticate (usergroupid);
+			}
 
-			return result;
+			return false;
 		}
 
 		public XmlDocument ToXmlDocument ()
@@ -481,150 +418,123 @@ namespace SorentoLib
 		#endregion
 
 		#region Public Static Methods
-		public static Session Load (Guid Id)
+		public static Session Load (Guid id)
 		{
-			bool success = false;
 			Session result = new Session ();
 
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table (DatabaseTableName);
-			qb.Columns ("id",
-			            "createtimestamp",
-			            "updatetimestamp",
-			            "userid",
-			            "remoteaddress");
-
-			qb.AddWhere ("id", "=", Id);
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-
-			if (query.Success)
+			try
 			{
-				if (query.NextRow ())
+				Hashtable item;
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()).SelectSingleNode ("(//sorentolib.session)[1]")));
+
+
+				result._id = new Guid ((string)item["id"]);
+
+				if (item.ContainsKey ("createtimestamp"))
 				{
-					result._id = query.GetGuid (qb.ColumnPos ("id"));
-					result._createtimestamp = query.GetInt (qb.ColumnPos ("createtimestamp"));
-					result._updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
-					result._remoteaddress = query.GetString (qb.ColumnPos ("remoteaddress"));
-					result._userasstring = query.GetString (qb.ColumnPos ("userid"));
-					success = true;
+					result._createtimestamp = int.Parse ((string)item["createtimestamp"]);
+				}
+
+				if (item.ContainsKey ("updatetimestamp"))
+				{
+					result._updatetimestamp = int.Parse ((string)item["updatetimestamp"]);
+				}
+
+				if (item.ContainsKey ("userid"))
+				{
+					result._userasstring = (string)item["userid"];
+				}
+
+				if (item.ContainsKey ("remoteaddress"))
+				{
+					result._remoteaddress = (string)item["remoteaddress"];
 				}
 			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
+			catch (Exception exception)
 			{
-				throw new Exception (string.Format (Strings.Exception.SessionLoad, Id));
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
+
+				// EXCEPTION: Exception.SessionLoad
+				throw new Exception (string.Format (Strings.Exception.SessionLoad, id));
 			}
 
 			return result;
 		}
 
-		public static void Delete (Guid Id)
+		public static void Delete (Guid id)
 		{
-			bool success = false;
-
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-			qb.Table (DatabaseTableName);
-			qb.AddWhere ("id", "=", Id);
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-
-			if (query.AffectedRows > 0)
+			try
 			{
-				success = true;
+				Services.Datastore.Delete (DatastoreAisle, id.ToString ());
+
+				ServiceStatsUpdate ();
+			}
+			catch (Exception exception)
+			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
+
+				// EXCEPTION: Exception.SessionDelete
+				throw new Exception (string.Format (Strings.Exception.SessionDelete, id));
+			}
+		}
+
+		public static List<Session> List ()
+		{
+			List<Session> result = new List<Session> ();
+
+			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
+			{
+				result.Add (Load (new Guid (shelf)));
 			}
 
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
-			{
-				throw new Exception (string.Format (Strings.Exception.SessionDelete, Id));
-			}
+			return result;
 		}
 		#endregion
 
 		#region Internal Static Methods
-		internal static void ServiceConfigChanged ()
-		{
-			DatabaseTableName = SorentoLib.Services.Database.Prefix + "sessions";
-		}
-
 		internal static void ServiceGarbageCollector ()
 		{
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table(DatabaseTableName);
-			qb.Columns("id",
-			           "updatetimestamp");
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
+			foreach (Session session in List ())
 			{
-				while (query.NextRow ())
+				if ((Date.DateTimeToTimestamp (DateTime.Now) - session.UpdateTimestamp) >  Services.Config.Get<int> (Enums.ConfigKey.core_sessiontimeout))
 				{
-					int updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
-
-					if ((Date.DateTimeToTimestamp (DateTime.Now) - updatetimestamp) >  Services.Config.Get<int> (Enums.ConfigKey.core_sessiontimeout))
+					try
 					{
-						try
-						{
-							Session.Delete (query.GetGuid (qb.ColumnPos ("id")));
-						}
-						catch (Exception E)
-						{
-							Services.Logging.LogError (string.Format (Strings.LogError.Exception, "session.delete", E.Message.ToString (), "session.garbagecollector"));
-						}
+						Session.Delete (session.Id);
+					}
+					catch (Exception exception)
+					{
+						// LOG: LogDebug.ExceptionUnknown
+						Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
 					}
 				}
 			}
 
-			query.Dispose ();
-			query = null;
-			qb = null;
-
+			// LOG: LogDebug.SessionGarbageCollector
 			SorentoLib.Services.Logging.LogDebug (Strings.LogDebug.SessionGarbageCollector);
 		}
 
 		internal static void ServiceStatsUpdate ()
 		{
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table(DatabaseTableName);
-			qb.Columns("updatetimestamp",
-			           "userid");
+			int activesessions = 0;
+			int usersessions = 0;
 
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
+			foreach (Session session in List ())
 			{
-				int activesessions = 0;
-				int usersessions = 0;
-
-				while (query.NextRow ())
+				activesessions++;
+				if (session.LoggedIn)
 				{
-					int updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
-					string userid = query.GetString (qb.ColumnPos ("userid"));
-
-					if (userid != string.Empty)
-					{
-						usersessions++;
-					}
-
-					activesessions++;
+					usersessions++;
 				}
-
-				Services.Stats.Set (Enums.StatKey.sorentolib_session_activesessions, activesessions);
-				Services.Stats.Set (Enums.StatKey.sorentolib_session_usersessions, usersessions);
-				Services.Stats.Set (Enums.StatKey.sorentolib_session_guestsessions, activesessions - usersessions);
 			}
 
-			query.Dispose ();
-			query = null;
-			qb = null;
+			Services.Stats.Set (Enums.StatKey.sorentolib_session_activesessions, activesessions);
+			Services.Stats.Set (Enums.StatKey.sorentolib_session_usersessions, usersessions);
+			Services.Stats.Set (Enums.StatKey.sorentolib_session_guestsessions, activesessions - usersessions);
 
+			// LOG: LogDebug.SessionStats
 			Services.Logging.LogDebug (Strings.LogDebug.SessionStats);
 		}
 		#endregion

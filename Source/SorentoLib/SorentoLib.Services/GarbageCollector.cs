@@ -44,8 +44,8 @@ namespace SorentoLib.Services
 			timer.Interval = 2000;
 			timer.Start ();
 
-			// Done
-			SorentoLib.Services.Logging.LogInfo("Service enabled: GarbageCollector");
+			// LOG: LogInfo.RuntimeServiceInitialized
+			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "GarbageCollector"));
 		}
 		#endregion
 

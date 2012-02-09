@@ -76,6 +76,9 @@ namespace SorentoLib.Services
 			_writedelay.Elapsed += EventHandlerDelay;
 			_writedelay.Interval = 10000;
 			_writedelay.AutoReset = false;
+
+			// LOG: LogInfo.RuntimeServiceInitialized
+//			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Config"));
 		}
 
 		private static void SetDefaults ()

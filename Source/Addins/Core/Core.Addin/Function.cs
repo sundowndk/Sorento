@@ -69,13 +69,13 @@ namespace Core.Addin
 						case "login":
 						{
 //							return Session.Login (Session.Request.QueryJar.Get ("username").Value, SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (Session.Request.QueryJar.Get("password").Value))));
-							result = Session.Login (Session.Request.QueryJar.Get ("username").Value, Session.Request.QueryJar.Get("password").Value);
+							result = Session.SignIn (Session.Request.QueryJar.Get ("username").Value, Session.Request.QueryJar.Get("password").Value);
 							break;
 						}
 
 						case "logout":
 						{
-							result = Session.Logout ();
+							result = Session.SignOut ();
 							break;
 						}
 					}
