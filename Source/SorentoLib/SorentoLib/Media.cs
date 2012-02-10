@@ -40,6 +40,7 @@ namespace SorentoLib
 	public class Media
 	{
 		#region Public Static Fields
+		public static string DatabaseTableName = "media";
 		public static string DatastoreAisle = "media";
 		#endregion
 

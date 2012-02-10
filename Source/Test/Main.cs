@@ -61,6 +61,30 @@ namespace Test
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
+			SorentoLib.Services.Config.Initialize ();
+
+			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/rvp/Skrivebord/mediatest/temp/");
+			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/rvp/Skrivebord/mediatest/media/");
+			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_publicmedia, "/home/rvp/Skrivebord/mediatest/public/");
+
+
+			Media2 media1 = new Media2 ("test.data", "http://www.dreamincode.net/forums/uploads/monthly_05_2010/post-380028-12747928967239.jpg.pagespeed.ce.yRppR_j7ae.jpg");
+			media1.Type = SorentoLib.Enums.MediaType.Public;
+			media1.Save ();
+
+			media1.Path = "picture.png";
+			media1.Save ();
+
+//			media1.Type = SorentoLib.Enums.MediaType.Temporary;
+//			media1.Save ();
+
+
+//			media1.Mimetype = "image/jpeg";
+//			Media2 media1 = new Media2 ();
+//			media1.Copyright = "qnax";
+//			media1.Description = "A test file";
+//			media1.Status = SorentoLib.Enums.MediaStatus.Public;
+//			media1.Save ();
 
 
 
@@ -85,8 +109,8 @@ namespace Test
 //				Console.WriteLine (usergroup.Name);
 //			}
 
-			User user1 = User.Load ("rvp");
-			Console.WriteLine (user1.Username);
+//			User user1 = User.Load ("rvp");
+//			Console.WriteLine (user1.Username);
 
 //			User user1 = new User ("Test", "test@test.dk");
 //			user1.Username = "rvp";

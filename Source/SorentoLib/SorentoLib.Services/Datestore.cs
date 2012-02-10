@@ -321,12 +321,21 @@ namespace SorentoLib.Services
 			return result;
 		}
 
+		public static bool ShelfExists (string Aisle, params MetaSearch[] MetaSearch)
+		{
+			if (FindShelf (Aisle, MetaSearch) != string.Empty)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		public static string FindShelf (string Aisle, params MetaSearch[] MetaSearch)
 		{
 			string result = string.Empty;
 
 			List<string> shelfs = ListOfShelfs (Aisle, MetaSearch);
-			string shelf = string.Empty;
 
 			if (shelfs.Count > 0)
 			{
