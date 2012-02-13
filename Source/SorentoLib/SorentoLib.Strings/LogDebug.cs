@@ -47,6 +47,11 @@ namespace SorentoLib.Strings
 		#region USERGROUP
 		public static string UsergroupStats = "[SORENTOLIB.USERGROUP]: Stats collectd for usergroups.";
 		#endregion
+
+		#region MEDIA
+		public static string MediaStats = "[SORENTOLIB.MEDIA]: Stats collected for media.";
+		public static string MediaGarbageCollector =  "[SORENTOLIB.MEDIA]: Garbage collected for media.";
+		#endregion
 	}
 }
 

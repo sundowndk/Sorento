@@ -92,6 +92,8 @@ namespace SorentoLib.Services
 			SetDefault (Enums.ConfigKey.core_loglevel, "info, warning, error, fatalerror, debug");
 			SetDefault (Enums.ConfigKey.core_authenticationtype, "plaintext");
 			SetDefault (Enums.ConfigKey.core_defaultusergroupid, Guid.Empty);
+			SetDefault (Enums.ConfigKey.core_filenameincrementformat, "{0}[{1}]{2}");
+			SetDefault (Enums.ConfigKey.core_mediamaxtempage, 86400);
 			#endregion
 
 			#region DATABASE

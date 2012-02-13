@@ -186,6 +186,16 @@ namespace SorentoLib
 
 					result._id = new Guid ((string)item["id"]);
 
+					if (item.ContainsKey ("createtimestamp"))
+					{
+						result._createtimestamp = int.Parse ((string)item["createtimestamp"]);
+					}
+
+					if (item.ContainsKey ("updatetimestamp"))
+					{
+						result._updatetimestamp = int.Parse ((string)item["updatetimestamp"]);
+					}
+
 					if (item.ContainsKey ("type"))
 					{
 						result._type = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupType> ((string)item["type"]);
@@ -319,7 +329,7 @@ namespace SorentoLib
 
 		internal static void ServiceStatsUpdate ()
 		{
-			Services.Stats.Set (Enums.StatKey.sorentolib_usergroup_totalusergroups, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
+			Services.Stats.Set (Enums.StatKey.sorentolib_usergroup_count, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
 
 			// LOG: LogDebug.UsergroupStats
 			Services.Logging.LogDebug (Strings.LogDebug.UsergroupStats);

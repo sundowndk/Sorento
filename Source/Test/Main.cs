@@ -51,9 +51,10 @@ namespace Test
 
 
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-			                                                            "localhost",
-			                                                            "sorento",
-				//				"sorentotest.sundown.dk",
+//			                                                            "localhost",
+			                                                            "10.0.0.40",
+//			                                                            "sorento",
+								"sorentotest.sundown.dk",
 			                                                            "sorentotest",
 			                                                            "scumbukket",
 			                                                            true);
@@ -63,17 +64,68 @@ namespace Test
 
 			SorentoLib.Services.Config.Initialize ();
 
-			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/rvp/Skrivebord/mediatest/temp/");
-			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/rvp/Skrivebord/mediatest/media/");
-			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_publicmedia, "/home/rvp/Skrivebord/mediatest/public/");
 
 
-			Media2 media1 = new Media2 ("test.data", "http://www.dreamincode.net/forums/uploads/monthly_05_2010/post-380028-12747928967239.jpg.pagespeed.ce.yRppR_j7ae.jpg");
-			media1.Type = SorentoLib.Enums.MediaType.Public;
-			media1.Save ();
 
-			media1.Path = "picture.png";
-			media1.Save ();
+
+//			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/rvp/Skrivebord/mediatest/temp/");
+//			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/rvp/Skrivebord/mediatest/media/");
+//			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_publicmedia, "/home/rvp/Skrivebord/mediatest/public/");
+
+			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/sundown/Skrivebord/mediatest/temp/");
+			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/sundown/Skrivebord/mediatest/media/");
+			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_publicmedia, "/home/sundown/Skrivebord/mediatest/public/");
+
+			User user = new User ("sundown", "rasmus@akvaservice.dk");
+			user.Password = "bukket";
+			user.Status = SorentoLib.Enums.UserStatus.Enabled;
+			user.Save ();
+//
+//
+//			Media2 media1 = new Media2 ("test.jpg", "http://www.dreamincode.net/forums/uploads/monthly_05_2010/post-380028-12747928967239.jpg.pagespeed.ce.yRppR_j7ae.jpg");
+//			media1.Path = "/media/image.jpg";
+//			media1.Type = SorentoLib.Enums.MediaType.Public;
+//			media1.Save ();
+//
+//			Media2.Delete (media1.Id);
+
+
+//			Media2 media2 = Media2.Load (media1.Id);
+//			Console.WriteLine (media2.Path);
+
+//
+//			media1.Type = SorentoLib.Enums.MediaType.Public;
+//			media1.Save ();
+//
+//			media1.Type = SorentoLib.Enums.MediaType.TemporaryPublic;
+//			media1.Save ();
+//
+//			media1.Type = SorentoLib.Enums.MediaType.Restricted;
+//			media1.Save ();
+//
+//			media1.Type = SorentoLib.Enums.MediaType.Temporary;
+//			media1.Save ();
+//
+//			media1.Path = "picture.png";
+//			media1.Type = SorentoLib.Enums.MediaType.Public;
+//			media1.Save ();
+//
+//			media1.Path = "billede.png";
+//			media1.Type = SorentoLib.Enums.MediaType.TemporaryPublic;
+//			media1.Save ();
+//
+//			media1.Path = "image.png";
+//			media1.Type = SorentoLib.Enums.MediaType.Restricted;
+//			media1.Save ();
+//
+//			media1.Path = "bilde.png";
+//			media1.Type = SorentoLib.Enums.MediaType.Temporary;
+//			media1.Save ();
+
+
+
+//			media1.Path = "picture.png";
+//			media1.Save ();
 
 //			media1.Type = SorentoLib.Enums.MediaType.Temporary;
 //			media1.Save ();

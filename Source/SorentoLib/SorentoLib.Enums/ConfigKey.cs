@@ -38,6 +38,8 @@ namespace SorentoLib.Enums
 		core_loglevel,
 		core_authenticationtype,
 		core_defaultusergroupid,
+		core_filenameincrementformat,
+		core_mediamaxtempage,
 
 		path_content,
 		path_html,

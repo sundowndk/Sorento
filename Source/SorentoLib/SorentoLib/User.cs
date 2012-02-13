@@ -644,7 +644,7 @@ namespace SorentoLib
 
 		internal static void ServiceStatsUpdate ()
 		{
-			Services.Stats.Set (Enums.StatKey.sorentolib_user_totalusers, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
+			Services.Stats.Set (Enums.StatKey.sorentolib_user_count, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
 
 			// LOG: LogDebug.UserStats
 			Services.Logging.LogDebug (Strings.LogDebug.UserStats);

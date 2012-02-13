@@ -369,7 +369,7 @@ namespace SorentoLib
 					Services.Events.Invoke.SessionLogout (this);
 
 					// LOG: LogDebug.SessionUserSignOut
-					Services.Logging.LogError (string.Format (Strings.LogDebug.SessionUserSignOut, username));
+					Services.Logging.LogDebug (string.Format (Strings.LogDebug.SessionUserSignOut, username));
 				}
 				catch (Exception exception)
 				{

@@ -51,7 +51,6 @@ namespace SorentoLib.Strings
 		#region MEDIA
 		public static string MediaLoadUsergroup = "[SORENOTLIB.MEDIA]: Cannot load usergroup with id: {0}. Usergroup has been removed from media.";
 		public static string MediaLoadVariant = "[SORENOTLIB.MEDIA]: Cannot load variant with id: {0}. Variant has been removed from media.";		
-		public static string MediaGarbageCollector =  "[SORENTOLIB.MEDIA]: GarbageCollector.";
 		public static string MediaList = "[SORENTOLIB.MEDIA]: Cannot load MEDIA with id: {0}, will be excluded from list.";
 		#endregion
 

@@ -772,7 +772,7 @@ namespace SorentoLib
 
 		internal static void ServiceGarbageCollector ()
 		{
-			SorentoLib.Services.Logging.LogDebug (Strings.LogError.MediaGarbageCollector);
+//			SorentoLib.Services.Logging.LogDebug (Strings.LogError.MediaGarbageCollector);
 
 			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
 			qb.Table(SorentoLib.Media.DatabaseTableName);

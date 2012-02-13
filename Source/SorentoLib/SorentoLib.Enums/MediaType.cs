@@ -31,7 +31,8 @@ namespace SorentoLib.Enums
 	public enum MediaType
 	{
 		Temporary,
+		TemporaryPublic,
 		Public,
-		TemporaryPublic
+		Restricted
 	}
 }
