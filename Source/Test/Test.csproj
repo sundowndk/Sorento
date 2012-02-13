@@ -41,11 +41,11 @@
       <Package>mono-addins</Package>
     </Reference>
     <Reference Include="Mono.CSharp" />
-    <Reference Include="SNDK, Version=1.0.4408.18384, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="System.Xml" />
+    <Reference Include="SNDK, Version=1.0.4416.25851, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />

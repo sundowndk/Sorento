@@ -41,7 +41,7 @@
       <Package>mono-addins</Package>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="SNDK, Version=1.0.4380.18491, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SNDK, Version=1.0.4416.25851, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\SNDK.dll</HintPath>
       <Private>False</Private>
