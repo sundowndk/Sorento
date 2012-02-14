@@ -627,48 +627,69 @@ namespace SorentoLib.Services
 		public class Meta
 		{
 			#region Private Fields
-			private Hashtable _meta;
+//			private Hashtable _meta;
+
+			private List<KeyValuePair<string, object>> _meta;
 			#endregion
 
 			#region Constructor
 			public Meta ()
 			{
-				this._meta = new Hashtable ();
+//				this._meta = new Hashtable ();
+				this._meta = new List<KeyValuePair<string, object>> ();
 			}
 			#endregion
 
 			#region Public Methods
 			public void Remove (string Key)
 			{
-				if (this._meta.ContainsKey (Key))
-				{
-					this._meta.Remove (Key);
-				}
+				this._meta.RemoveAll (delegate (KeyValuePair<string, object> kv) { return kv.Key == Key; });
+
+//				if (this._meta.ContainsKey (Key))
+//				{
+//					this._meta.Remove (Key);
+//				}
 			}
 
 			public void Add (string Key, object Value)
 			{
-				if (this._meta.ContainsKey (Key))
-				{
-					this._meta[Key] = Value.ToString ();
-				}
-				else
-				{
-					this._meta.Add (Key, Value.ToString ());
-				}
+				this._meta.Add (new KeyValuePair<string, object> (Key, Value));
+
+//				this._meta2.Add (Key, Value);
+
+//				if (this._meta.ContainsKey (Key))
+//				{
+//					this._meta[Key] = Value.ToString ();
+//				}
+//				else
+//				{
+//					this._meta.Add (Key, Value.ToString ());
+//				}
 			}
 
 			override public string ToString ()
 			{
 				string result = string.Empty;
 
-				foreach (string key in this._meta.Keys)
+				foreach (KeyValuePair<string, object> kv in this._meta)
 				{
-					result += "|"+ key.ToLower () +":"+ this._meta[key] +"|";
+					result += "|"+ kv.Key.ToLower () +":"+ kv.Value.ToString () +"|";
 				}
 
 				return result;
 			}
+
+//			override public string ToString ()
+//			{
+//				string result = string.Empty;
+//
+//				foreach (string key in this._meta.Keys)
+//				{
+//					result += "|"+ key.ToLower () +":"+ this._meta[key] +"|";
+//				}
+//
+//				return result;
+//			}
 			#endregion
 		}
 		#endregion
