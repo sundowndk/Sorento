@@ -62,7 +62,7 @@ namespace SorentoLib.Services
 			SetDefaults ();
 
 			// Parse conf
-//			SorentoLib.Services.Config.Read ();
+			SorentoLib.Services.Config.Read ();
 			
 			// Monitor configuration file for changes.
 			_watcher = new FileSystemWatcher ();
