@@ -47,21 +47,21 @@ namespace SorentoLib.Services
 		public static void Initialize ()
 		{
 			// Initialize addin engine.
-			AddinManager.Initialize ("data/");
+			AddinManager.Initialize ("data/", SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_addins));
 			AddinManager.AddinLoaded += SorentoLib.Services.Addins.OnLoad;
 			AddinManager.AddinLoadError += SorentoLib.Services.Addins.OnLoadError;
 			AddinManager.Registry.Update (null);
 
 			// Monitor addin folder for changes.
 			FileSystemWatcher applicationwatcher1 = new FileSystemWatcher ();
-			applicationwatcher1.Path = "../Addins/";
+			applicationwatcher1.Path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_addins);
 			applicationwatcher1.IncludeSubdirectories = true;
 			applicationwatcher1.Created += new FileSystemEventHandler (SorentoLib.Services.Addins.OnCreated);
 			applicationwatcher1.EnableRaisingEvents = true;
 			applicationwatcher1.Filter = "*.dll";
 			
 			FileSystemWatcher applicationwatcher2 = new FileSystemWatcher ();
-			applicationwatcher2.Path = "../Addins/";
+			applicationwatcher2.Path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_addins);
 			applicationwatcher2.IncludeSubdirectories = true;
 			applicationwatcher2.Deleted += new FileSystemEventHandler (SorentoLib.Services.Addins.OnDeleted);
 			applicationwatcher2.EnableRaisingEvents = true;

@@ -48,6 +48,7 @@ namespace SorentoLib.Enums
 		path_snapshot,
 		path_script,
 		path_temp,
+		path_addins,
 
 		database_driver,
 		database_hostname,
