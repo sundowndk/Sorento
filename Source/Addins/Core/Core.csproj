@@ -10,11 +10,9 @@
     <RootNamespace>Core</RootNamespace>
     <AssemblyName>Core</AssemblyName>
     <ReleaseVersion>1.0</ReleaseVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\cgi-bin\Addins\Core</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
@@ -41,8 +39,7 @@
       <Package>mono-addins</Package>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="SNDK, Version=1.0.4416.25851, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SNDK">
       <HintPath>..\..\Lib\SNDK.dll</HintPath>
       <Private>False</Private>
     </Reference>

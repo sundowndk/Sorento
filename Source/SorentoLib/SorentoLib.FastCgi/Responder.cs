@@ -182,6 +182,8 @@ namespace SorentoLib.FastCgi
 					#region Page
 					case "page":
 					{
+						Console.WriteLine (session.Request.QueryJar.Get ("cmd.page").Value.ToLower ());
+
 						foreach (SorentoLib.Addins.IPageResponder pageresponder in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IPageResponder)))
 						{
 							if (pageresponder.Process (session))
