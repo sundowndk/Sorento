@@ -10,7 +10,6 @@
     <AssemblyName>SorentoLib</AssemblyName>
     <ReleaseVersion>1.0</ReleaseVersion>
     <RootNamespace>SorentoLib</RootNamespace>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -47,20 +46,18 @@
       <Package>mono-addins</Package>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="Mono.FastCgi, Version=1.0.4295.19585, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Mono.FastCgi.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.CSharp" />
-    <Reference Include="MySql.Data, Version=6.4.3.0, Culture=neutral, PublicKeyToken=20449f9ba87f7ae2">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Addins.Setup, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins-setup</Package>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4416.25851, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Mono.FastCgi">
+      <HintPath>..\Lib\Mono.FastCgi.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\Lib\MySql.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SNDK">
       <HintPath>..\Lib\SNDK.dll</HintPath>
     </Reference>
   </ItemGroup>

@@ -50,7 +50,7 @@ namespace Sorento.Startup
 
 			// Initialize database.
 			SorentoLib.Services.Database.Initalize ();
-
+			
 			// Initialize crypto.
 			SorentoLib.Services.Crypto.Initalize ();
 
