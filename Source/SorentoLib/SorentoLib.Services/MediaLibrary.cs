@@ -66,10 +66,10 @@ namespace SorentoLib.Services
 //			return media;
 //		}
 
-		public static void ChangeStatus (SorentoLib.Media Media, SorentoLib.Enums.MediaStatus Status)
-		{
-			
-		}
+//		public static void ChangeStatus (SorentoLib.Media Media, SorentoLib.Enums.MediaStatus Status)
+//		{
+//
+//		}
 
 		public static void AddFromFile (string Filename)
 		{

@@ -337,10 +337,10 @@ namespace Core.Addin
 							return ((SorentoLib.Media)Variable).Path;
 
 						case "filename":
-							return ((SorentoLib.Media)Variable).FileName;
+//							return ((SorentoLib.Media)Variable).FileName;
 
 						case "directoryname":
-							return ((SorentoLib.Media)Variable).DirectoryName;
+//							return ((SorentoLib.Media)Variable).DirectoryName;
 
 						case "mimetype":
 							return ((SorentoLib.Media)Variable).Mimetype;
@@ -349,13 +349,13 @@ namespace Core.Addin
 							return ((SorentoLib.Media)Variable).Size;
 
 						case "status":
-							return ((SorentoLib.Media)Variable).Status;
+//							return ((SorentoLib.Media)Variable).Status;
 
 						case "accesslevel":
-							return ((SorentoLib.Media)Variable).Accesslevel;
+//							return ((SorentoLib.Media)Variable).Accesslevel;
 
 						case "usergroups":
-							return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.Usergroup> (((SorentoLib.Media)Variable).Usergroups);
+//							return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.Usergroup> (((SorentoLib.Media)Variable).Usergroups);
 
 						case "load":
 							return SorentoLib.Media.Load (Parameters.Get<Guid>(0));

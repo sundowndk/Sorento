@@ -125,7 +125,6 @@
     <Compile Include="SorentoLib.Enums\UserListFilter.cs" />
     <Compile Include="SorentoLib.Addins\IRender.cs" />
     <Compile Include="SorentoLib.Enums\UsergroupType.cs" />
-    <Compile Include="SorentoLib\MediaTransformation.cs" />
     <Compile Include="SorentoLib.Enums\MediaTransformationType.cs" />
     <Compile Include="SorentoLib.Enums\ConfigKey.cs" />
     <Compile Include="SorentoLib.Strings\Exception.cs" />
@@ -147,9 +146,8 @@
     <Compile Include="SorentoLib.Exceptions\RenderExceptionTypeNotFound.cs" />
     <Compile Include="SorentoLib.Enums\StatKey.cs" />
     <Compile Include="SorentoLib.Enums\DatastoreMetaSearchCondition.cs" />
-    <Compile Include="SorentoLib\Media.cs" />
-    <Compile Include="SorentoLib\Media2.cs" />
     <Compile Include="SorentoLib.Enums\MediaType.cs" />
+    <Compile Include="SorentoLib\Media_1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SorentoLib.Render\" />
@@ -168,6 +166,8 @@
     <None Include="Tools.cs" />
     <None Include="SorentoLib.Tools\Install.cs" />
     <None Include="Scraps.txt" />
+    <None Include="SorentoLib\Media.cs" />
+    <None Include="SorentoLib\MediaTransformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SorentoLib.addin.xml" />

@@ -103,34 +103,34 @@ namespace Core.Addin
 			}
 			#endregion
 
-			#region MEDIA
-			{
-				try
-				{
-					string root = SnapshotRoot + "sorentolib.media/";
-					Directory.CreateDirectory (root);
-
-					foreach (Media media in Media.List ())
-					{
-						if (media.Status != SorentoLib.Enums.MediaStatus.Temporary || media.Status != SorentoLib.Enums.MediaStatus.PublicTemporary)
-						{
-							try
-							{
-								SorentoLib.Tools.Helpers.ItemToFile (media.ToAjaxItem (), root + media.Id.ToString () +".xml");
-							}
-							catch (Exception exception)
-							{
-								errors.Add ("sorentolib.media : " + exception.Message);
-							}
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add ("sorentolib.media : " + exception.Message);
-				}
-			}
-			#endregion
+//			#region MEDIA
+//			{
+//				try
+//				{
+//					string root = SnapshotRoot + "sorentolib.media/";
+//					Directory.CreateDirectory (root);
+//
+//					foreach (Media media in Media.List ())
+//					{
+//						if (media.Status != SorentoLib.Enums.MediaStatus.Temporary || media.Status != SorentoLib.Enums.MediaStatus.PublicTemporary)
+//						{
+//							try
+//							{
+//								SorentoLib.Tools.Helpers.ItemToFile (media.ToAjaxItem (), root + media.Id.ToString () +".xml");
+//							}
+//							catch (Exception exception)
+//							{
+//								errors.Add ("sorentolib.media : " + exception.Message);
+//							}
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add ("sorentolib.media : " + exception.Message);
+//				}
+//			}
+//			#endregion
 
 			#region MEDIADATA
 			{
@@ -161,30 +161,30 @@ namespace Core.Addin
 			}
 			#endregion
 
-			#region MEDIATRANSFORMATIONS
-			{
-				try
-				{
-					string root = SnapshotRoot + "sorentolib.mediatransformation/";
-					Directory.CreateDirectory (root);
-					foreach (MediaTransformation mediatransformation in MediaTransformation.List ())
-					{
-						try
-						{
-							SorentoLib.Tools.Helpers.ItemToFile (mediatransformation.ToAjaxItem (), root + mediatransformation.Id.ToString () +".xml");
-						}
-						catch (Exception exception)
-						{
-							errors.Add (exception.Message);
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add (exception.Message);
-				}
-			}
-			#endregion
+//			#region MEDIATRANSFORMATIONS
+//			{
+//				try
+//				{
+//					string root = SnapshotRoot + "sorentolib.mediatransformation/";
+//					Directory.CreateDirectory (root);
+//					foreach (MediaTransformation mediatransformation in MediaTransformation.List ())
+//					{
+//						try
+//						{
+//							SorentoLib.Tools.Helpers.ItemToFile (mediatransformation.ToAjaxItem (), root + mediatransformation.Id.ToString () +".xml");
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add (exception.Message);
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add (exception.Message);
+//				}
+//			}
+//			#endregion
 
 			#region DATA
 			#endregion
@@ -403,43 +403,43 @@ namespace Core.Addin
 			}
 			#endregion
 
-			#region MEDIATRANSFORMATION
-			{
-				try
-				{
-					string root = SnapshotRoot + "sorentolib.mediatransformation/";
-
-					foreach (MediaTransformation mediatransformation in MediaTransformation.List ())
-					{
-						try
-						{
-							SorentoLib.Services.Datastore.Delete (MediaTransformation.DatastoreAisle, mediatransformation.Id.ToString ());
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.mediatransformation: "+ exception.Message);
-						}
-					}
-
-					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
-					{
-						try
-						{
-							MediaTransformation mediatransformation = SorentoLib.MediaTransformation.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
-							mediatransformation.Save ();
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.mediatransformation: "+ exception.Message);
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add ("sorentolib.mediatransformation: "+ exception.Message);
-				}
-			}
-			#endregion
+//			#region MEDIATRANSFORMATION
+//			{
+//				try
+//				{
+//					string root = SnapshotRoot + "sorentolib.mediatransformation/";
+//
+//					foreach (MediaTransformation mediatransformation in MediaTransformation.List ())
+//					{
+//						try
+//						{
+//							SorentoLib.Services.Datastore.Delete (MediaTransformation.DatastoreAisle, mediatransformation.Id.ToString ());
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.mediatransformation: "+ exception.Message);
+//						}
+//					}
+//
+//					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
+//					{
+//						try
+//						{
+//							MediaTransformation mediatransformation = SorentoLib.MediaTransformation.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
+//							mediatransformation.Save ();
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.mediatransformation: "+ exception.Message);
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add ("sorentolib.mediatransformation: "+ exception.Message);
+//				}
+//			}
+//			#endregion
 
 			#region MEDIA.DATA
 			{
@@ -481,50 +481,50 @@ namespace Core.Addin
 			}
 			#endregion
 
-			#region MEDIA
-			{
-				string root = SnapshotRoot + "sorentolib.media/";
-
-				try
-				{
-					foreach (Media media in Media.List ())
-					{
-						try
-						{
-							QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-							qb.Table (Media.DatabaseTableName);
-							qb.AddWhere ("id", "=", media.Id);
-
-							Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-							query.Dispose ();
-							query = null;
-							qb = null;
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.media: "+ exception.Message);
-						}
-					}
-
-					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
-					{
-						try
-						{
-							Media media = SorentoLib.Media.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
-							media.Save ();
-						}
-						catch (Exception exception)
-						{
-							errors.Add ("sorentolib.media: "+ exception.Message);
-						}
-					}
-				}
-				catch (Exception exception)
-				{
-					errors.Add ("sorentolib.media: "+ exception.Message);
-				}
-			}
-			#endregion
+//			#region MEDIA
+//			{
+//				string root = SnapshotRoot + "sorentolib.media/";
+//
+//				try
+//				{
+//					foreach (Media media in Media.List ())
+//					{
+//						try
+//						{
+//							QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
+//							qb.Table (Media.DatabaseTableName);
+//							qb.AddWhere ("id", "=", media.Id);
+//
+//							Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
+//							query.Dispose ();
+//							query = null;
+//							qb = null;
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.media: "+ exception.Message);
+//						}
+//					}
+//
+//					foreach (string filepath in SNDK.IO.GetFilesRecursive (root))
+//					{
+//						try
+//						{
+//							Media media = SorentoLib.Media.FromAjaxItem (SorentoLib.Tools.Helpers.FileToItem (filepath));
+//							media.Save ();
+//						}
+//						catch (Exception exception)
+//						{
+//							errors.Add ("sorentolib.media: "+ exception.Message);
+//						}
+//					}
+//				}
+//				catch (Exception exception)
+//				{
+//					errors.Add ("sorentolib.media: "+ exception.Message);
+//				}
+//			}
+//			#endregion
 
 			return errors;
 		}
