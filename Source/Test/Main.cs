@@ -51,35 +51,56 @@ namespace Test
 
 
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-//			                                                            "localhost",
-			                                                            "10.0.0.40",
+			                                                          "localhost",
+//			                                                            "10.0.0.40",
 //			                                                            "sorento",
-								"sorentotest.sundown.dk",
-			                                                            "sorentotest",
-			                                                            "scumbukket",
-			                                                            true);
+			                                                          "sorentotest.sundown.dk",
+			                                                          "sorentotest",
+			                                                          "qwerty",
+			                                                          true);
 
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
-			SorentoLib.Services.Config.Initialize ();
+//			SorentoLib.Services.Config.Initialize ();
 
 
 
+			MediaTransformation mt1 = new MediaTransformation ();
+			mt1.Title = "Test";
+			mt1.Mimetypes.Add ("image/jpeg");
+			mt1.Mimetypes.Add ("image/png");
+			mt1.Mimetypes.Add ("image/gif");
+			mt1.Script = "Bla bla bla bla";
+			mt1.Save ();
 
+			MediaTransformation mt2 = MediaTransformation.Load (mt1.Id);
+			Console.WriteLine (mt2.Title);
+			Console.WriteLine (mt2.Script);
+
+			foreach (string mimetype in mt2.Mimetypes)
+			{
+				Console.WriteLine (mimetype);
+			}
+
+			foreach (MediaTransformation mt in MediaTransformation.List ())
+			{
+				Console.WriteLine (mt.Title);
+				MediaTransformation.Delete (mt);
+			}
 
 //			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/rvp/Skrivebord/mediatest/temp/");
 //			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/rvp/Skrivebord/mediatest/media/");
 //			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_publicmedia, "/home/rvp/Skrivebord/mediatest/public/");
 
-			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/sundown/Skrivebord/mediatest/temp/");
-			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/sundown/Skrivebord/mediatest/media/");
-			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_publicmedia, "/home/sundown/Skrivebord/mediatest/public/");
+//			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/sundown/Skrivebord/mediatest/temp/");
+//			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/sundown/Skrivebord/mediatest/media/");
+//			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_publicmedia, "/home/sundown/Skrivebord/mediatest/public/");
 
-			User user = new User ("sundown", "rasmus@akvaservice.dk");
-			user.Password = "bukket";
-			user.Status = SorentoLib.Enums.UserStatus.Enabled;
-			user.Save ();
+//			User user = new User ("sundown", "rasmus@akvaservice.dk");
+//			user.Password = "qwerty";
+//			user.Status = SorentoLib.Enums.UserStatus.Enabled;
+//			user.Save ();
 //
 //
 //			Media2 media1 = new Media2 ("test.jpg", "http://www.dreamincode.net/forums/uploads/monthly_05_2010/post-380028-12747928967239.jpg.pagespeed.ce.yRppR_j7ae.jpg");

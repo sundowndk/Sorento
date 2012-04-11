@@ -57,6 +57,8 @@
     <Compile Include="Core.Addin\MediaResponder.cs" />
     <Compile Include="Core.Addin\PageResponder.cs" />
     <Compile Include="Core.Addin\Snapshot.cs" />
+    <Compile Include="Core.Strings\Exception.cs" />
+    <Compile Include="Core.Strings\LogError.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

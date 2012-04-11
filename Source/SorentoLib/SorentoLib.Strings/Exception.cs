@@ -108,6 +108,13 @@ namespace SorentoLib.Strings
 		public static string MediaDelete = "Could not delete media with id: {0}";
 		#endregion
 
+		#region MEDIATRANSFORMATION
+		public static string MediaTransformationLoad = "Could not load mediatransformation with id: {0}";
+		public static string MediaTransformationSave = "Could not save mediatransformation with id: {0}";
+		public static string MediaTransformationDelete = "Could not delete mediatransformation with id: {0}";
+		public static string MediaTransformationFromXMLDocument = "Failed to create MEDIATRANSFORMATION from XMLDocument.";
+		#endregion
+
 		#region RENDER.TEMPLATE
 		public static string RenderTemplateLoad = "Could not load template with filenname: {0}";
 		#endregion

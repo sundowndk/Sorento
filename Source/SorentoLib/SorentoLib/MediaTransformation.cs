@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Xml;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -113,40 +114,80 @@ namespace SorentoLib
 
 		public void Save ()
 		{
-			SorentoLib.Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Serializer.SerializeObjectToString (this));
+			try
+			{
+				Hashtable item = new Hashtable ();
+
+				item.Add ("id", this._id);
+				item.Add ("mimetypes", this._mimetypes);
+				item.Add ("title", this._title);
+				item.Add ("script", this._script);
+
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()));
+			}
+			catch (Exception exception)
+			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.MEDIATRANSFORMATION", exception.Message));
+
+				// EXCEPTION: Exception.MediaTransformationSave
+				throw new Exception (string.Format (Strings.Exception.MediaTransformationSave, this._id));
+			}
 		}
 
-		public void ToAjaxRespons (SorentoLib.Ajax.Respons Respons)
-		{
-//			Respons.Data = this.ToAjaxItem ();
-		}
-
-		public Hashtable ToAjaxItem ()
+		public XmlDocument ToXmlDocument ()
 		{
 			Hashtable result = new Hashtable ();
 
 			result.Add ("id", this._id);
+			result.Add ("mimetypes", this._mimetypes);
 			result.Add ("title", this._title);
 			result.Add ("script", this._script);
 
-			List<Hashtable> mimetypes = new List<Hashtable> ();
-			foreach (string mimetype in this._mimetypes)
-			{
-				Hashtable item = new Hashtable ();
-				item.Add ("mimetype", mimetype);
-				mimetypes.Add (item);
-			}
-
-			result.Add ("mimetypes", mimetypes);
-
-			return result;
+			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
 		}
 		#endregion
 
 		#region Public Static Methods
 		public static MediaTransformation Load (Guid Id)
 		{
-			return SNDK.Serializer.DeSerializeObjectFromString<MediaTransformation> (SorentoLib.Services.Datastore.Get<string> (DatastoreAisle, Id.ToString ()));
+			MediaTransformation result;
+
+			try
+			{
+				Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, Id.ToString ()).SelectSingleNode ("(//sorentolib.mediatransformation)[1]")));
+				result = new MediaTransformation ();
+
+				result._id = new Guid ((string)item["id"]);
+
+				if (item.ContainsKey ("title"))
+				{
+					result._title = (string)item["title"];
+				}
+
+				if (item.ContainsKey ("mimetypes"))
+				{
+					foreach (XmlDocument mimetype in (List<XmlDocument>)item["mimetypes"])
+					{
+						result._mimetypes.Add ((string)((Hashtable)SNDK.Convert.FromXmlDocument (mimetype))["value"]);
+					}
+				}
+
+				if (item.ContainsKey ("script"))
+				{
+					result._script = (string)item["script"];
+				}
+			}
+			catch (Exception exception)
+			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.MEDIATRANSFORMATION", exception.Message));
+
+				// EXCEPTION: Excpetion.MediaTransformationLoad
+				throw new Exception (string.Format (Strings.Exception.MediaTransformationLoad, Id));
+			}
+
+			return result;
 		}
 
 		public static void Delete (MediaTransformation MediaTransformation)
@@ -156,73 +197,27 @@ namespace SorentoLib
 
 		public static void Delete (Guid Id)
 		{
-			SorentoLib.Services.Datastore.Delete (DatastoreAisle, Id.ToString ());
+			try
+			{
+				Services.Datastore.Delete (DatastoreAisle, Id.ToString ());
+			}
+			catch (Exception exception)
+			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.MEDIATRANSFORMATION", exception.Message));
+
+				// EXCEPTION: Exception.MediaTransformationDelete
+				throw new Exception (string.Format (Strings.Exception.MediaTransformationDelete, Id));
+			}
 		}
 
 		public static List<MediaTransformation> List ()
 		{
 			List<MediaTransformation> result = new List<MediaTransformation> ();
 
-			foreach (string id in SorentoLib.Services.Datastore.ListOfShelfs (DatastoreAisle))
+			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
 			{
-				result.Add (MediaTransformation.Load (new Guid (id)));
-			}
-
-			return result;
-		}
-
-		public static MediaTransformation FromAjaxRequest (SorentoLib.Ajax.Request Request)
-		{
-			return FromAjaxItem (Request.Data);
-		}
-
-		public static MediaTransformation FromAjaxItem (Hashtable Item)
-		{
-
-			MediaTransformation result = null;
-
-			Guid id = Guid.Empty;
-
-			try
-			{
-				id = new Guid ((string)Item["id"]);
-			}
-			catch {}
-
-			if (id != Guid.Empty)
-			{
-				try
-				{
-					result = MediaTransformation.Load (id);
-				}
-				catch
-				{
-					result = new MediaTransformation ();
-					result._id = id;
-				}
-			}
-			else
-			{
-				result = new MediaTransformation ();
-			}
-
-			if (Item.ContainsKey ("title"))
-			{
-				result._title = (string)Item["title"];
-			}
-
-			if (Item.ContainsKey ("script"))
-			{
-				result._script = (string)Item["script"];
-			}
-
-			if (Item.ContainsKey ("mimetypes"))
-			{
-				result._mimetypes.Clear ();
-				foreach (Hashtable item in (List<Hashtable>)Item["mimetypes"])
-				{
-					result._mimetypes.Add ((string)item["mimetype"]);
-				}
+				result.Add (Load (new Guid (shelf)));
 			}
 
 			return result;
@@ -250,6 +245,59 @@ namespace SorentoLib
 			}
 
 			SorentoLib.Services.Scripting.Parse (xml, Path, Path);
+		}
+
+		public static MediaTransformation FromXmlDocument (XmlDocument xmlDocument)
+		{
+			Hashtable item;
+			MediaTransformation result;
+
+			try
+			{
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.mediatransformation)[1]")));
+			}
+			catch
+			{
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (xmlDocument);
+			}
+
+			if (item.ContainsKey ("id"))
+			{
+				try
+				{
+					result = Load (new Guid ((string)item["id"]));
+				}
+				catch
+				{
+					result = new MediaTransformation ();
+					result._id = new Guid ((string)item["id"]);
+				}
+			}
+			else
+			{
+				throw new Exception (Strings.Exception.MediaTransformationFromXMLDocument);
+			}
+
+			if (item.ContainsKey ("title"))
+			{
+				result._title = (string)item["title"];
+			}
+
+			if (item.ContainsKey ("mimetypes"))
+			{
+				result._mimetypes.Clear ();
+				foreach (XmlDocument mimetype in (List<XmlDocument>)item["mimetypes"])
+				{
+					result._mimetypes.Add ((string)((Hashtable)SNDK.Convert.FromXmlDocument (mimetype))["value"]);
+				}
+			}
+
+			if (item.ContainsKey ("script"))
+			{
+				result._script = (string)item["script"];
+			}
+
+			return result;
 		}
 		#endregion
 

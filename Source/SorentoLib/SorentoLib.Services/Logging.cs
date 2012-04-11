@@ -92,17 +92,17 @@ namespace SorentoLib.Services
 
 		public static void LogError (string Message)
 		{
-			if ((Level & Enums.LogLevel.Warning) == Enums.LogLevel.Warning)
+			if ((Level & Enums.LogLevel.Error) == Enums.LogLevel.Error)
 			{
-				Write (Enums.LogLevel.Warning, Message);
+				Write (Enums.LogLevel.Error, Message);
 			}
 		}
 
 		public static void LogWarning (string Message)
 		{
-			if ((Level & Enums.LogLevel.Error) == Enums.LogLevel.Error)
+			if ((Level & Enums.LogLevel.Warning) == Enums.LogLevel.Warning)
 			{
-				Write (Enums.LogLevel.Error, Message);
+				Write (Enums.LogLevel.Warning, Message);
 			}
 		}
 

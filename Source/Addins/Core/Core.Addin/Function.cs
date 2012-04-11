@@ -90,31 +90,28 @@ namespace Core.Addin
 					{
 						case "upload":
 						{
+							try
+							{
+								string filename = System.IO.Path.GetFileNameWithoutExtension (Session.Request.QueryJar.Get ("mediaupload").Value).Replace ("%", "_");
+								string extension = System.IO.Path.GetExtension (Session.Request.QueryJar.Get ("mediaupload").Value).ToLower ();
 
-							string filename = System.IO.Path.GetFileNameWithoutExtension (Session.Request.QueryJar.Get ("mediaupload").Value).Replace ("%", "_");
-							string extension = System.IO.Path.GetExtension (Session.Request.QueryJar.Get ("mediaupload").Value).ToLower ();
-
-
-
-							string path = Session.Request.QueryJar.Get ("path").Value;
-							path = path.Replace ("%%GUID%%", Guid.NewGuid ().ToString ()).Replace ("%%FILENAME%%", filename).Replace ("%%EXTENSION%%", extension);
-
+								string path = Session.Request.QueryJar.Get ("path").Value;
+								path = path.Replace ("%%GUID%%", Guid.NewGuid ().ToString ()).Replace ("%%FILENAME%%", filename).Replace ("%%EXTENSION%%", extension);
 
 
-							SorentoLib.Enums.MediaType type = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> (Session.Request.QueryJar.Get ("mediatype").Value);
-							string mimetypes = Session.Request.QueryJar.Get ("mimetypes").Value;
-//							string mediatransformations = Session.Request.QueryJar.Get ("mediatransformations").Value;
+
+								SorentoLib.Enums.MediaType type = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> (Session.Request.QueryJar.Get ("mediatype").Value);
+								string mimetypes = Session.Request.QueryJar.Get ("mimetypes").Value;
+
+							//							string mediatransformations = Session.Request.QueryJar.Get ("mediatransformations").Value;
 //							string postuploadscript = Session.Request.QueryJar.Get ("postuploadscript").Value;
 
+								if (mimetypes.Contains (Session.Request.QueryJar.Get ("mediaupload").BinaryContentType))
+								{
+									SorentoLib.Media media = new SorentoLib.Media (path, Session.Request.QueryJar.Get ("mediaupload").BinaryData);
+									media.Type = type;
+									media.Save ();
 
-							if (mimetypes.Contains (Session.Request.QueryJar.Get ("mediaupload").BinaryContentType))
-							{
-
-								SorentoLib.Media media = new SorentoLib.Media (path, Session.Request.QueryJar.Get ("mediaupload").BinaryData);
-								media.Type = type;
-								media.Save ();
-
-							Console.WriteLine ("Test");
 //									if (postuploadscript != string.Empty)
 //									{
 //										SorentoLib.MediaTransformation.Transform (media.DataPath, SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_script) + postuploadscript);
@@ -130,26 +127,26 @@ namespace Core.Addin
 //									}
 //
 									Session.Page.Variables.Add ("mediaid", media.Id);
-									Session.Page.Variables.Add ("mediasoftpath", media.Path);
-//
-									Console.WriteLine (media.Path);
-									Session.Page.Variables.Add ("uploadsuccess", "true");
+									Session.Page.Variables.Add ("mediapath", media.Path);
+									Session.Page.Variables.Add ("cmdsuccess", true);
+									Session.Page.Variables.Add ("cmderrormessage", string.Empty);
+								}
+								else
+								{
+									SorentoLib.Services.Logging.LogError (string.Format (Strings.LogError.MediaUploadMimeType, Session.Request.QueryJar.Get ("mediaupload").BinaryContentType));
+
+									throw new Exception (string.Format (Strings.LogError.MediaUploadMimeType, Session.Request.QueryJar.Get ("mediaupload").BinaryContentType));
+								}
+
+								result = true;
 							}
-							else
+							catch (Exception exception)
 							{
-								Session.Page.Variables.Add ("uploadsuccess", "false");
-								Session.Page.Variables.Add ("cmderrormessage", Strings.ErrorMessage.MediaUploadMimeType);
+								Session.Page.Variables.Add ("cmdsuccess", false);
+								Session.Page.Variables.Add ("cmderrormessage", exception.Message);
+
+								SorentoLib.Services.Logging.LogDebug (string.Format (Strings.LogDebug.MediaUploadException, exception.ToString ()));
 							}
-//
-//								result = true;
-//							}
-//							catch (Exception exception)
-//							{
-//
-//								Session.Page.Variables.Add ("uploadsuccess", "false");
-//								Session.Page.Variables.Add ("cmderrormessage", Strings.ErrorMessage.MediaUploadUnknown);
-//								SorentoLib.Services.Logging.LogDebug (string.Format (Strings.LogDebug.MediaUploadException, exception.ToString ()));
-//							}
 						}
 						break;
 					}

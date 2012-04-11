@@ -392,7 +392,16 @@ namespace SorentoLib.Render
 							{
 								SorentoLib.Render.Resolver resolver = new SorentoLib.Render.Resolver (this._session);
 								resolver.Parse (statement.Groups["body"].Value);
+
+							if (resolver.Result.GetType () == typeof (bool))
+							{
+								result = resolver.Result.ToString ().ToLower ();
+							}
+							else
+							{
 								result = resolver.Result.ToString ();
+							}
+
 							}
 //						}
 //						catch
