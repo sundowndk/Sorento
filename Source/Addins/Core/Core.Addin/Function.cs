@@ -98,13 +98,8 @@ namespace Core.Addin
 								string path = Session.Request.QueryJar.Get ("path").Value;
 								path = path.Replace ("%%GUID%%", Guid.NewGuid ().ToString ()).Replace ("%%FILENAME%%", filename).Replace ("%%EXTENSION%%", extension);
 
-
-
 								SorentoLib.Enums.MediaType type = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> (Session.Request.QueryJar.Get ("mediatype").Value);
 								string mimetypes = Session.Request.QueryJar.Get ("mimetypes").Value;
-
-							//							string mediatransformations = Session.Request.QueryJar.Get ("mediatransformations").Value;
-//							string postuploadscript = Session.Request.QueryJar.Get ("postuploadscript").Value;
 
 								if (mimetypes.Contains (Session.Request.QueryJar.Get ("mediaupload").BinaryContentType))
 								{
@@ -112,20 +107,17 @@ namespace Core.Addin
 									media.Type = type;
 									media.Save ();
 
-//									if (postuploadscript != string.Empty)
-//									{
-//										SorentoLib.MediaTransformation.Transform (media.DataPath, SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_script) + postuploadscript);
-//									}
-//
-//									if (mediatransformations != string.Empty)
-//									{
-//										foreach (string mediatransformationid in mediatransformations.Split (";".ToCharArray (), StringSplitOptions.RemoveEmptyEntries))
-//										{
-//											MediaTransformation mediatransformation = MediaTransformation.Load (new Guid (mediatransformationid));
-//											mediatransformation.Transform (media);
-//										}
-//									}
-//
+									foreach (string script in Session.Request.QueryJar.Get ("postuploadscripts").Value.Split (";".ToCharArray (), StringSplitOptions.RemoveEmptyEntries))
+									{
+										SorentoLib.MediaTransformation.Transform (media, SorentoLib.Services.Config.Get<string> (SorentoLib.Enums.ConfigKey.path_script) + script);
+									}
+
+									foreach (string mediatransformationid in Session.Request.QueryJar.Get ("mediatransformations").Value.Split (";".ToCharArray (), StringSplitOptions.RemoveEmptyEntries))
+									{
+										MediaTransformation mediatransformation = MediaTransformation.Load (new Guid (mediatransformationid));
+										mediatransformation.Transform (media);
+									}
+
 									Session.Page.Variables.Add ("mediaid", media.Id);
 									Session.Page.Variables.Add ("mediapath", media.Path);
 									Session.Page.Variables.Add ("cmdsuccess", true);
