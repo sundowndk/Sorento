@@ -118,6 +118,7 @@ namespace Core.Addin
 										mediatransformation.Transform (media);
 									}
 
+									Session.Page.Variables.Add ("media", media);
 									Session.Page.Variables.Add ("mediaid", media.Id);
 									Session.Page.Variables.Add ("mediapath", media.Path);
 									Session.Page.Variables.Add ("cmdsuccess", true);
