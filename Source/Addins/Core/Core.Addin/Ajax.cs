@@ -267,19 +267,13 @@ namespace Core.Addin
 					{
 						case "load":
 						{
-							SorentoLib.Media media = SorentoLib.Media.Load (new Guid (request.Key<string> ("id")));
+							result.Add (SorentoLib.Media.Load (request.getValue<Guid> ("id")));
+							break;
+						}
 
-//							result.Data.Add ("id", media.Id);
-//							result.Data.Add ("createtimestamp", media.CreateTimestamp);
-//							result.Data.Add ("updatetimestamp", media.UpdateTimestamp);
-//							result.Data.Add ("path", media.Path);
-//							result.Data.Add ("directoryname", media.DirectoryName);
-//							result.Data.Add ("filename", media.FileName);
-//							result.Data.Add ("mimetype", media.Mimetype);
-//							result.Data.Add ("size", media.Size);
-//							result.Data.Add ("accesslevel", media.Accesslevel);
-//							result.Data.Add ("status", media.Status);
-
+						case "save":
+						{
+							request.getValue<SorentoLib.Media> ("sorentolib.media").Save ();
 							break;
 						}
 					}
@@ -290,55 +284,38 @@ namespace Core.Addin
 				#region SorentoLib.Transformation
 				case "sorentolib.mediatransformation":
 				{
-//					switch (Method.ToLower ())
-//					{
-//						case "new":
-//						{
-//							MediaTransformation mediatransformation = MediaTransformation.FromAjaxRequest (request);
-//							mediatransformation.Save ();
-//							mediatransformation.ToAjaxRespons (result);
-//
-//							break;
-//						}
-//
-//						case "load":
-//						{
-//							MediaTransformation mediatransformation = MediaTransformation.Load (new Guid (request.Key<string> ("id")));
-//							mediatransformation.ToAjaxRespons (result);
-//
-//							break;
-//						}
-//
-//						case "save":
-//						{
-//							MediaTransformation mediatransformation = MediaTransformation.FromAjaxRequest (request);
-//							mediatransformation.Save ();
-//
-//							break;
-//						}
-//
-//						case "delete":
-//						{
-//							MediaTransformation.Delete (new Guid (request.Key<string> ("id")));
-//
-//							break;
-//						}
-//
-//						case "list":
-//						{
-//							List<Hashtable> mediatransformations = new List<Hashtable> ();
-//							foreach (SorentoLib.MediaTransformation mediatransformation in SorentoLib.MediaTransformation.List ())
-//							{
-//								mediatransformations.Add (mediatransformation.ToAjaxItem ());
-//							}
-////							result.Data.Add ("mediatransformations", mediatransformations);
-//
-//							break;
-//						}
-//
-//						default:
-//							break;
-//					}
+					switch (Method.ToLower ())
+					{
+						case "new":
+						{
+							result.Add (new SorentoLib.MediaTransformation ());
+							break;
+						}
+
+						case "load":
+						{
+							result.Add (SorentoLib.MediaTransformation.Load (request.getValue<Guid> ("id")));
+							break;
+						}
+
+						case "save":
+						{
+							request.getValue<SorentoLib.MediaTransformation> ("sorentolib.mediatransformation").Save ();
+							break;
+						}
+
+						case "delete":
+						{
+							SorentoLib.MediaTransformation.Delete (request.getValue<Guid> ("id"));
+							break;
+						}
+
+						case "list":
+						{
+							result.Add (SorentoLib.MediaTransformation.List ());
+							break;
+						}
+					}
 					break;
 				}
 				#endregion

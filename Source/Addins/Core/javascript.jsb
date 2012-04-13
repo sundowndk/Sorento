@@ -13,7 +13,7 @@
 			<class name="media">
 				<js file="javascript/media.js" />
 			</class>				
-			<class name="mediatransformation">
+			<class name="mediaTransformation">
 				<js file="javascript/mediatransformation.js" />
 			</class>				
 			<class name="services">

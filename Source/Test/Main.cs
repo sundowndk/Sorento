@@ -85,6 +85,8 @@ namespace Test
 
 			foreach (MediaTransformation mt in MediaTransformation.List ())
 			{
+				Console.WriteLine (mt.ToXmlDocument ());
+
 				Console.WriteLine (mt.Title);
 				MediaTransformation.Delete (mt);
 			}

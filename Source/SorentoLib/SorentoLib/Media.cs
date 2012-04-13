@@ -1,10 +1,10 @@
-//
-// Media.cs
+// 
+// Media2.cs
 //  
 // Author:
-//       Rasmus Pedersen <rasmus@akvaservice.dk>
+//       rvp <${AuthorEmail}>
 // 
-// Copyright (c) 2009 Rasmus Pedersen
+// Copyright (c) 2012 rvp
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,60 +26,49 @@
 
 using System;
 using System.IO;
+using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 
 using Mono.Unix;
 
 using SNDK;
-using SNDK.DBI;
-using SNDK.Enums;
 
 namespace SorentoLib
-{	
+{
 	public class Media
 	{
 		#region Public Static Fields
-		public static string DatabaseTableName = "media";
 		public static string DatastoreAisle = "media";
 		#endregion
 
-		#region Private Fields		
+		#region Private Fields
 		private Guid _id;
 		private int _createtimestamp;
 		private int _updatetimestamp;
-
+		private List<Usergroup> _usergroups;
+		private Enums.MediaType _type;
 		private string _path;
-		private string _currentpath;
 		private string _mimetype;
 		private long _size;
-
-		private Enums.MediaStatus _status;
-		private Enums.MediaStatus _currentstatus;
-
-		private Enums.Accesslevel _accesslevel;
-		private string _usergroupids;
-
-		private List<Usergroup> _usergroups;
-
 		private string _description;
 		private string _copyright;
-
-		private string _variantids;
-
-		private List<Usergroup> _tempusergroups;
-		private List<Media> _tempvariants;
 		#endregion
 
-		#region Public Fields		
+		#region Temp Fields
+		private string _temppath;
+		private Enums.MediaType _temptype;
+		#endregion
+
+		#region Public Fields
 		public Guid Id
 		{
 			get
 			{
 				return this._id;
 			}
-		}	
-		
+		}
+
 		public int CreateTimestamp
 		{
 			get
@@ -96,21 +85,16 @@ namespace SorentoLib
 			}
 		}
 
-		public string DataPath
+		public Enums.MediaType Type
 		{
 			get
 			{
-				switch (this._currentstatus)
-				{
-					case SorentoLib.Enums.MediaStatus.Temporary:
-						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
+				return this._type;
+			}
 
-					case SorentoLib.Enums.MediaStatus.PublicTemporary:
-						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
-
-					default:
-						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
-				}
+			set
+			{
+				this._temptype = value;
 			}
 		}
 
@@ -118,30 +102,63 @@ namespace SorentoLib
 		{
 			get
 			{
-				return this._currentpath;
+				return this._path;
 			}
 
 			set
 			{
-				this._path = Media.FixPath (value);
+				this._temppath = FixPath (value);
 			}
 		}
 
-		public string FileName
+		public string Directory
 		{
 			get
 			{
-				return System.IO.Path.GetFileName (this._currentpath);
+				return System.IO.Path.GetDirectoryName (this._path);
 			}
 		}
 
-		public string DirectoryName
+		public string Filename
 		{
 			get
 			{
-				return System.IO.Path.GetDirectoryName (this._currentpath);
+				return System.IO.Path.GetFileName (this._path);
 			}
 		}
+
+
+		public string DataPath
+		{
+			get
+			{
+				switch (this._type)
+				{
+					case Enums.MediaType.Temporary:
+					{
+						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
+					}
+
+					case Enums.MediaType.TemporaryPublic:
+					{
+						return Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id;
+					}
+
+					case Enums.MediaType.Public:
+					{
+						return Services.Config.Get<string> (Enums.ConfigKey.path_media) + this._id;
+					}
+
+					case Enums.MediaType.Restricted:
+					{
+						return Services.Config.Get<string> (Enums.ConfigKey.path_media) + this._id;
+					}
+				}
+
+				return string.Empty;
+			}
+		}
+
 
 		public string Mimetype
 		{
@@ -161,80 +178,6 @@ namespace SorentoLib
 			get
 			{
 				return this._size;
-			}
-		}
-
-		public Enums.MediaStatus Status
-		{
-			get
-			{
-				return this._currentstatus;
-			}
-
-			set
-			{
-				this._status = value;
-			}
-		}
-
-		public Enums.Accesslevel Accesslevel
-		{
-			get
-			{
-				return this._accesslevel;
-			}
-
-			set
-			{
-				this._accesslevel = value;
-			}
-		}
-
-		public List<Usergroup> Usergroups
-		{
-			get
-			{
-				if (this._tempusergroups == null)
-				{
-					this._tempusergroups = new List<Usergroup> ();
-					foreach (string usergroupid in this._usergroupids.Split (";".ToCharArray ()))
-					{
-						try
-						{
-							this._usergroups.Add (Usergroup.Load (new Guid (usergroupid)));
-						}
-						catch
-						{
-							Services.Logging.LogError (string.Format (Strings.LogError.MediaLoadUsergroup, usergroupid));
-						}
-					}
-				}
-
-				return this._tempusergroups;
-			}
-		}
-
-		public List<Media> Variants
-		{
-			get
-			{
-				if (this._tempvariants == null)
-				{
-					this._tempvariants = new List<Media> ();
-					foreach (string variantid in this._variantids.Split (";".ToCharArray ()))
-					{
-						try
-						{
-							this._tempvariants.Add (Media.Load (new Guid (variantid)));
-						}
-						catch
-						{
-							Services.Logging.LogError (string.Format (Strings.LogError.MediaLoadVariant, variantid));
-						}
-					}
-				}
-
-				return this._tempvariants;
 			}
 		}
 
@@ -265,32 +208,23 @@ namespace SorentoLib
 		}
 		#endregion
 
-		#region Private Constructor
-		private Media ()
-		{
-			this._usergroups = new List<Usergroup> ();
-		}
-		#endregion
-
-		#region Public Constructor
+		#region Constructor
 		public Media (string Path, byte [] Data)
 		{
-			this.Initalize ();
+			Initialize (Path);
 
 			FileStream filestream = File.Create (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
-			BinaryWriter binarywriter = new BinaryWriter(filestream);
-			binarywriter.Write(Data);
-			binarywriter.Close();
-			filestream.Close();
+			BinaryWriter binarywriter = new BinaryWriter (filestream);
+			binarywriter.Write (Data);
+			binarywriter.Close ();
+			filestream.Close ();
 
-			this._path = Media.FixPath (Path);
-			this._size = Data.LongLength;
-			this._mimetype = IO.GetMimeType (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
+			Update ();
 		}
 
 		public Media (string Path, string SourcePath, bool MoveFile)
 		{
-			this.Initalize ();
+			Initialize (Path);
 
 			FileInfo fileinfo = new FileInfo (SourcePath);
 			if (MoveFile)
@@ -302,447 +236,461 @@ namespace SorentoLib
 				fileinfo.CopyTo (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 			}
 
-			this._path = Media.FixPath (Path);
-			this._size = fileinfo.Length;
-			this._mimetype = IO.GetMimeType (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
+			Update ();
 		}
 
 		public Media (string Path, string Url)
 		{
-			this.Initalize ();
+			Initialize (Path);
 
-			IO.DownloadToFile (Url, Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
+			SNDK.IO.DownloadToFile (Url, Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
 
-			FileInfo fileinfo = new FileInfo (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
+			Update ();
+		}
 
-			this._path = Media.FixPath (Path);
-			this._size = fileinfo.Length;
-			this._mimetype = IO.GetMimeType (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + this._id);
+		private Media ()
+		{
+			this._createtimestamp = 0;
+			this._updatetimestamp = 0;
+			this._path = string.Empty;
+			this._mimetype = string.Empty;
+			this._size = 0;
+			this._description = string.Empty;
+			this._copyright = string.Empty;
+			this._type = SorentoLib.Enums.MediaType.Temporary;
+
+			this._temppath = string.Empty;
+			this._temptype = SorentoLib.Enums.MediaType.Temporary;
+		}
+
+		private void Initialize (string Path)
+		{
+			this._id = Guid.NewGuid ();
+			this._createtimestamp = SNDK.Date.CurrentDateTimeToTimestamp ();
+			this._updatetimestamp = SNDK.Date.CurrentDateTimeToTimestamp ();
+			this._usergroups = new List<Usergroup> ();
+			this._path = FixPath (Path);
+			this._mimetype = string.Empty;
+			this._size = 0;
+			this._description = string.Empty;
+			this._copyright = string.Empty;
+			this._type = SorentoLib.Enums.MediaType.Temporary;
+
+			this._temppath = FixPath (Path);
+			this._temptype = SorentoLib.Enums.MediaType.Temporary;
 		}
 		#endregion
 
 		#region Private Methods
-		private void Initalize ()
-		{
-			this._id = Guid.NewGuid();
-			this._createtimestamp = Date.CurrentDateTimeToTimestamp();
-			this._updatetimestamp = Date.CurrentDateTimeToTimestamp();
-
-			this._accesslevel = Enums.Accesslevel.Guest;
-			this._usergroupids = string.Empty;
-
-			this._status = Enums.MediaStatus.Temporary;
-			this._currentstatus = Enums.MediaStatus.Temporary;
-
-			this._path = string.Empty;
-			this._currentpath = string.Empty;
-
-			this._description = string.Empty;
-			this._copyright = string.Empty;
-
-			this._variantids = string.Empty;
-		}
-
-		private void UpdateData ()
+		public void Update ()
 		{
 			// Check if data still exists.
 			if (!File.Exists (this.DataPath))
 			{
+				// EXCEPTION: Exception.MediaSaveData
 				throw new Exception (string.Format (Strings.Exception.MediaSaveData, this._id));
 			}
 
-			// Make sure data is in the right place.
-			string currentdatapath = this.DataPath;
-			this._currentstatus = this._status;
-
-			if (currentdatapath != this.DataPath)
+			if (this._type != this._temptype)
 			{
-				FileInfo file = new FileInfo (currentdatapath);
-				file.MoveTo (this.DataPath);
-			}
+				string source = string.Empty;
+				string destination = string.Empty;
 
-			// Remove old symlink if needed.
-			if (this._currentstatus == SorentoLib.Enums.MediaStatus.Public || this._currentstatus == SorentoLib.Enums.MediaStatus.PublicTemporary)
-			{
-				if (this._currentpath != string.Empty)
+				switch (this._type)
 				{
-					File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + this._currentpath);
+					case Enums.MediaType.Temporary:
+					{
+						source = Services.Config.Get<string> (Enums.ConfigKey.path_temp);
+						break;
+					}
+
+					case Enums.MediaType.TemporaryPublic:
+					{
+						source = Services.Config.Get<string> (Enums.ConfigKey.path_temp);
+						break;
+					}
+
+					case Enums.MediaType.Public:
+					{
+						source = Services.Config.Get<string> (Enums.ConfigKey.path_media);
+						break;
+					}
+
+					case Enums.MediaType.Restricted:
+					{
+						source = Services.Config.Get<string> (Enums.ConfigKey.path_media);
+						break;
+					}
+				}
+
+				switch (this._temptype)
+				{
+					case Enums.MediaType.Temporary:
+					{
+						destination = Services.Config.Get<string> (Enums.ConfigKey.path_temp);
+						break;
+					}
+
+					case Enums.MediaType.TemporaryPublic:
+					{
+						destination = Services.Config.Get<string> (Enums.ConfigKey.path_temp);
+						break;
+					}
+
+					case Enums.MediaType.Public:
+					{
+						destination = Services.Config.Get<string> (Enums.ConfigKey.path_media);
+						break;
+					}
+
+					case Enums.MediaType.Restricted:
+					{
+						destination = Services.Config.Get<string> (Enums.ConfigKey.path_media);
+						break;
+					}
+				}
+
+				if ((this._path != this._temppath) || (this._type != this._temptype))
+				{
+					// Remove old symlink if needed.
+					if ((this._type == Enums.MediaType.Public) || (this._type == Enums.MediaType.TemporaryPublic))
+					{
+						File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + this._path);
+					}
+				}
+
+				if (source != destination)
+				{
+					FileInfo file = new FileInfo (source + this._id);
+					file.MoveTo (destination + this._id);
 				}
 			}
 
+			this._path = this._temppath;
+			this._type = this._temptype;
+
 			// Create new symlink if needed.
-			if (this._status == SorentoLib.Enums.MediaStatus.Public || this._status == SorentoLib.Enums.MediaStatus.PublicTemporary)
+			if ((this._temptype == Enums.MediaType.Public) || (this._temptype == Enums.MediaType.TemporaryPublic))
 			{
 				// Check if path exists, if not create it.
-				if (!Directory.Exists (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + System.IO.Path.GetDirectoryName (this._path)))
+				if (!System.IO.Directory.Exists (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + System.IO.Path.GetDirectoryName (this._temppath)))
 				{
-					Directory.CreateDirectory (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + System.IO.Path.GetDirectoryName (this._path));
+					System.IO.Directory.CreateDirectory (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + System.IO.Path.GetDirectoryName (this._temppath));
 				}
 
 				// Create a new symlink.
 				UnixFileInfo unixfileinfo = new UnixFileInfo (this.DataPath);
-				unixfileinfo.CreateSymbolicLink (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + this._path);
+				unixfileinfo.CreateSymbolicLink (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + this._temppath);
 			}
 
-			// Check if size changed.
-			FileInfo fileinfo = new FileInfo (this.DataPath);
+			string path = string.Empty;
+
+			switch (this._type)
+			{
+				case Enums.MediaType.Temporary:
+				{
+					path = Services.Config.Get<string> (Enums.ConfigKey.path_temp);
+					break;
+				}
+
+				case Enums.MediaType.TemporaryPublic:
+				{
+					path = Services.Config.Get<string> (Enums.ConfigKey.path_temp);
+					break;
+				}
+
+				case Enums.MediaType.Public:
+				{
+					path = Services.Config.Get<string> (Enums.ConfigKey.path_media);
+					break;
+				}
+
+				case Enums.MediaType.Restricted:
+				{
+					path = Services.Config.Get<string> (Enums.ConfigKey.path_media);
+					break;
+				}
+			}
+
+			// Get filesize
+			FileInfo fileinfo = new FileInfo (path + this._id);
 			this._size = fileinfo.Length;
 
-			this._currentpath = this._path;
-			this._currentstatus = this._status;
+			// Get mimetype
+			this._mimetype = SNDK.IO.GetMimeType (path + this._id);
+		}
+
+		private static string FixPath (string Path)
+		{
+			string result = Path;
+
+			string path = System.IO.Path.GetDirectoryName (Path) +"/";
+			string filename = System.IO.Path.GetFileNameWithoutExtension (Path);
+			string extension = System.IO.Path.GetExtension (Path);
+
+			int increment = 1;
+			while (Services.Datastore.ShelfExists (DatastoreAisle, new Services.Datastore.MetaSearch ("path", Enums.DatastoreMetaSearchCondition.Equal, result)))
+			{
+				result = path + string.Format (Services.Config.Get<string> (Enums.ConfigKey.core_filenameincrementformat), filename, increment, extension);
+				increment++;
+			}
+
+			return result;
 		}
 		#endregion
 
 		#region Public Methods
 		public void Save ()
 		{
-			bool success = false;
-			this.UpdateData ();
-			this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
-
-			if (this._tempusergroups != null)
+			try
 			{
-				this._usergroupids = string.Empty;
-				foreach (Usergroup usergroup in this._tempusergroups)
-				{
-					this._usergroupids += usergroup.Id.ToString () +";";
-				}
-				this._usergroupids = this._usergroupids.TrimEnd (";".ToCharArray ());
+				Update ();
+
+				this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
+
+				Hashtable item = new Hashtable ();
+
+				item.Add ("id", this._id);
+				item.Add ("createtimestamp", this._createtimestamp);
+				item.Add ("updatetimestamp", this._updatetimestamp);
+				item.Add ("type", this._type);
+				item.Add ("path", this._path);
+				item.Add ("mimetype", this._mimetype);
+				item.Add ("size", this._size);
+				item.Add ("description", this._description);
+				item.Add ("copyright", this._copyright);
+
+				Services.Datastore.Meta meta = new Services.Datastore.Meta ();
+				meta.Add ("path", this._path);
+
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()), meta);
 			}
-
-			QueryBuilder qb;
-			if (!SNDK.DBI.Helpers.GuidExists (Services.Database.Connection, DatabaseTableName, this._id))
+			catch (Exception exception)
 			{
-				qb = new QueryBuilder (QueryBuilderType.Insert);
-			}
-			else
-			{
-				qb = new  QueryBuilder (QueryBuilderType.Update);
-				qb.AddWhere("id", "=", this._id);
-			}
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.MEDIA", exception.Message));
 
-			qb.Table (DatabaseTableName);
-			qb.Columns ("id",
-			            "createtimestamp",
-			            "updatetimestamp",
-			            "path",
-			            "mimetype",
-			            "size",
-			            "status",
-			            "accesslevel",
-			            "usergroupids",
-			            "description",
-			            "copyright",
-			            "variantids");
-
-			qb.Values (this._id,
-			           this._createtimestamp,
-			           this._updatetimestamp,
-			           this._path,
-			           this._mimetype,
-			           this._size,
-			           this._status,
-			           this._accesslevel,
-			           this._usergroupids,
-			           this._description,
-			           this._copyright,
-			           this._variantids);
-
-			Query query = Services.Database.Connection.Query (qb.QueryString);
-
-			if (query.AffectedRows > 0)
-			{
-				success = true;
-			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
-			{
+				// EXCEPTION: Exception.MediaSave
 				throw new Exception (string.Format (Strings.Exception.MediaSave, this._id));
 			}
 		}
 
-		public void ToAjaxRespons (SorentoLib.Ajax.Respons Respons)
-		{
-//			Respons.Data = this.ToAjaxItem ();
-		}
-
-		public Hashtable ToAjaxItem ()
+		public XmlDocument ToXmlDocument ()
 		{
 			Hashtable result = new Hashtable ();
+
 			result.Add ("id", this._id);
 			result.Add ("createtimestamp", this._createtimestamp);
-			result.Add ("updatetimstamp", this._updatetimestamp);
-			result.Add ("path", this._currentpath);
-			result.Add ("filename", this.FileName);
-			result.Add ("directoryname", this.DirectoryName);
+			result.Add ("updatetimestamp", this._updatetimestamp);
+			result.Add ("type", this._type);
+			result.Add ("path", this._path);
 			result.Add ("mimetype", this._mimetype);
 			result.Add ("size", this._size);
-			result.Add ("accesslevel", this._accesslevel);
-			result.Add ("status", this._status);
 			result.Add ("description", this._description);
 			result.Add ("copyright", this._copyright);
+			result.Add ("filename", this.Filename);
+			result.Add ("directory", this.Directory);
 
-			return result;
+			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
 		}
-
-		public Media Clone (string Path)
-		{
-			Media result = new Media (Path, this.DataPath, false);
-			result.Status = this._currentstatus;
-			result.Save ();
-
-			return result;
-		}
-
-//		public Media AddVariant (string Name)
-//		{
-//			Media result = new Media (this.Path +"_"+ Name, this.DataPath, false);
-//
-//			if (this._tempvariants == null)
-//			{
-//				this._tempvariants = new List<Media> ();
-//				this._tempvariants.Add (result);
-//			}
-//
-//			return result;
-//		}
 		#endregion
 
 		#region Public Static Methods
-		public static SorentoLib.Media Load (Guid Id)
+		public static Media Load (Guid id)
 		{
-			bool success = false;
-			SorentoLib.Media result = new SorentoLib.Media ();
+			Media result;
 
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table (DatabaseTableName);
-			qb.Columns ("id",
-			            "createtimestamp",
-			            "updatetimestamp",
-			            "path",
-			            "mimetype",
-			            "size",
-			            "status",
-			            "accesslevel",
-			            "usergroupids",
-			            "description",
-			            "copyright",
-			            "variantids");
-
-			qb.AddWhere ("id", "=", Id);
-
-			Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
+			try
 			{
-				if (query.NextRow ())
+				Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, id.ToString ()).SelectSingleNode ("(//sorentolib.media)[1]")));
+				result = new Media ();
+
+				result._id = new Guid ((string)item["id"]);
+
+				if (item.ContainsKey ("createtimestamp"))
 				{
-					result._id = query.GetGuid (qb.ColumnPos ("id"));
-					result._createtimestamp = query.GetInt (qb.ColumnPos ("createtimestamp"));
-					result._updatetimestamp = query.GetInt (qb.ColumnPos ("updatetimestamp"));
-					result._currentpath = query.GetString (qb.ColumnPos ("path"));
-					result._mimetype = query.GetString (qb.ColumnPos ("mimetype"));
-					result._size = query.GetLong (qb.ColumnPos ("size"));
-					result._currentstatus = query.GetEnum<SorentoLib.Enums.MediaStatus> (qb.ColumnPos ("status"));
-					result._accesslevel = query.GetEnum<SorentoLib.Enums.Accesslevel> (qb.ColumnPos ("accesslevel"));
-					result._usergroupids = query.GetString (qb.ColumnPos ("usergroupids"));
-					result._description = query.GetString (qb.ColumnPos ("description"));
-					result._copyright = query.GetString (qb.ColumnPos ("copyright"));
-					result._variantids = query.GetString (qb.ColumnPos ("variantids"));
-					success = true;
+					result._createtimestamp = int.Parse ((string)item["createtimestamp"]);
+				}
+
+				if (item.ContainsKey ("updatetimestamp"))
+				{
+					result._updatetimestamp = int.Parse ((string)item["updatetimestamp"]);
+				}
+
+				if (item.ContainsKey ("type"))
+				{
+					result._type = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> ((string)item["type"]);
+					result._temptype = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> ((string)item["type"]);
+				}
+
+				if (item.ContainsKey ("path"))
+				{
+					result._path = (string)item["path"];
+					result._temppath = (string)item["path"];
+				}
+
+				if (item.ContainsKey ("mimetype"))
+				{
+					result._mimetype = (string)item["mimetype"];
+				}
+
+				if (item.ContainsKey ("size"))
+				{
+					result._size = long.Parse ((string)item["size"]);
+				}
+
+				if (item.ContainsKey ("description"))
+				{
+					result._description = (string)item["description"];
+				}
+
+				if (item.ContainsKey ("copyright"))
+				{
+					result._copyright = (string)item["copyright"];
 				}
 			}
-
-			query.Dispose ();
-			query = null;
-			qb = null;
-
-			if (!success)
+			catch (Exception exception)
 			{
-				throw new Exception (string.Format (Strings.Exception.MediaLoad, Id));
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.MEDIA", exception.Message));
+
+				// EXCEPTION: Excpetion.MediaLoad
+				throw new Exception (string.Format (Strings.Exception.MediaLoad, id));
 			}
 
 			return result;
 		}
 
-		public static void Delete (Guid Id)
+		public static List<Media> List ()
+		{
+			List<Media> result = new List<Media> ();
+
+			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
+			{
+				result.Add (Load (new Guid (shelf)));
+			}
+
+			return result;
+		}
+
+		public static void Delete (Guid id)
 		{
 			try
 			{
-				Media media = Media.Load (Id);
+				Media media = Media.Load (id);
 
-				QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-				qb.Table (DatabaseTableName);
-				qb.AddWhere ("id", "=", Id);
-
-				Query query = Services.Database.Connection.Query (qb.QueryString);
-
-				if (query.AffectedRows > 0)
+				switch (media.Type)
 				{
-					File.Delete (media.DataPath);
-					media = null;
+					case Enums.MediaType.Temporary:
+					{
+						File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + media.Id);
+						break;
+					}
+
+					case Enums.MediaType.TemporaryPublic:
+					{
+						File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_temp) + media.Id);
+						File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + media.Path);
+						break;
+					}
+
+					case Enums.MediaType.Public:
+					{
+						File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_media) + media.Id);
+						File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_publicmedia) + media.Path);
+						break;
+					}
+
+
+					case Enums.MediaType.Restricted:
+					{
+						File.Delete (Services.Config.Get<string> (Enums.ConfigKey.path_media) + media.Id);
+						break;
+					}
 				}
 
-				query.Dispose ();
-				query = null;
-				qb = null;
+				Services.Datastore.Delete (DatastoreAisle, id.ToString ());
+			}
+			catch (Exception exception)
+			{
+				// LOG: LogDebug.ExceptionUnknown
+				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.MEDIA", exception.Message));
+
+				// EXCEPTION: Exception.MediaDelete
+				throw new Exception (string.Format (Strings.Exception.MediaDelete, id));
+			}
+		}
+
+		public static Media FromXmlDocument (XmlDocument xmlDocument)
+		{
+			Hashtable item;
+			Media result;
+
+			try
+			{
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (xmlDocument.SelectSingleNode ("(//sorentolib.media)[1]")));
 			}
 			catch
 			{
-				throw new Exception (string.Format (Strings.Exception.MediaDelete, Id));
-			}
-		}
-
-		public static List<Media> List()
-		{
-			List<Media> result = new List<Media>();
-
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table(SorentoLib.Media.DatabaseTableName);
-			qb.Columns("id");
-
-			SNDK.DBI.Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
-			{
-				while (query.NextRow())
-				{
-					try
-					{
-						result.Add(SorentoLib.Media.Load (query.GetGuid (qb.ColumnPos ("id"))));
-					}
-					catch
-					{
-						SorentoLib.Services.Logging.LogDebug (string.Format (SorentoLib.Strings.LogError.MediaList, qb.ColumnPos ("id")));
-					}
-				}
+				item = (Hashtable)SNDK.Convert.FromXmlDocument (xmlDocument);
 			}
 
-			query.Dispose();
-			query = null;
-			qb = null;
-
-			return result;
-		}
-
-		public static Media FromAjaxItem (Hashtable Item)
-		{
-			Media result = null;
-
-			Guid id = Guid.Empty;
-
-			try
-			{
-				id = new Guid ((string)Item["id"]);
-			}
-			catch {}
-
-			if (id != Guid.Empty)
+			if (item.ContainsKey ("id"))
 			{
 				try
 				{
-					result = Media.Load (id);
+					result = Load (new Guid ((string)item["id"]));
 				}
 				catch
 				{
-					result = new Media ();
-					result._id = id;
-
-					if (Item.ContainsKey ("createtimestamp"))
-					{
-						result._createtimestamp = int.Parse ((string)Item["createtimestamp"]);
-					}
-
-					if (Item.ContainsKey ("updatetimestamp"))
-					{
-						result._createtimestamp = int.Parse ((string)Item["updatetimestamp"]);
-					}
+					throw new Exception (Strings.Exception.MediaTransformationFromXMLDocument);
 				}
 			}
 			else
 			{
-				result = new Media ();
+				throw new Exception (Strings.Exception.MediaTransformationFromXMLDocument);
 			}
 
-			if (Item.ContainsKey ("path"))
-			{
-				result._path = (string)Item["path"];
-			}
-
-			if (Item.ContainsKey ("size"))
-			{
-				try
-				{
-					result._size = long.Parse ((string)Item["size"]);
-				}
-				catch {}
-			}
-
-			if (Item.ContainsKey ("mimetype"))
-			{
-				result._mimetype = (string)Item["mimetype"];
-			}
-
-			if (Item.ContainsKey ("accesslevel"))
-			{
-				result._accesslevel = SNDK.Convert.StringToEnum<SorentoLib.Enums.Accesslevel> ((string)Item["accesslevel"]);
-			}
-
-			if (Item.ContainsKey ("status"))
-			{
-				result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaStatus> ((string)Item["status"]);
-			}
-
-			if (Item.ContainsKey ("description"))
-			{
-				result._description = (string)Item["description"];
-			}
-
-			if (Item.ContainsKey ("copyright"))
-			{
-				result._copyright = (string)Item["copyright"];
-			}
-
-
-//			if (Item.ContainsKey ("accesslevel"))
+//			if (item.ContainsKey ("createtimestamp"))
 //			{
-//				}
+//				result._createtimestamp = int.Parse ((string)item["createtimestamp"]);
+//			}
+//
+//			if (item.ContainsKey ("updatetimestamp"))
+//			{
+//				result._updatetimestamp = int.Parse ((string)item["updatetimestamp"]);
 //			}
 
-			return result;
-		}
-		#endregion
+//			if (item.ContainsKey ("type"))
+//			{
+//				result._type = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> ((string)item["type"]);
+//				result._temptype = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> ((string)item["type"]);
+//			}
 
-		#region Private Static Methods
-		private static string FixPath (string Path)
-		{
-			string result = Path;
-			string path = System.IO.Path.GetDirectoryName (Path) +"/";
-			string filename = System.IO.Path.GetFileNameWithoutExtension (Path);
-			string extension = System.IO.Path.GetExtension (Path);
-			List<string> files = new List<string> ();
+//			if (item.ContainsKey ("path"))
+//			{
+//				result._path = (string)item["path"];
+//				result._temppath = (string)item["path"];
+//			}
 
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table (DatabaseTableName);
-			qb.Columns ("path");
-			qb.AddWhere ("path", "like", "%"+ path +"%");
+//			if (item.ContainsKey ("mimetype"))
+//			{
+//				result._mimetype = (string)item["mimetype"];
+//			}
 
-			Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
+//			if (item.ContainsKey ("size"))
+//			{
+//				result._size = long.Parse ((string)item["size"]);
+//			}
+
+			if (item.ContainsKey ("description"))
 			{
-				while (query.NextRow ())
-				{
-					files.Add (query.GetString (qb.ColumnPos ("path")));
-				}
+				result._description = (string)item["description"];
 			}
 
-			int increment = 1;
-			while (files.Contains (result))
+			if (item.ContainsKey ("copyright"))
 			{
-				result = path + filename +"("+ increment +")" + extension;
-				increment++;
+				result._copyright = (string)item["copyright"];
 			}
 
 			return result;
@@ -752,51 +700,55 @@ namespace SorentoLib
 		#region Internal Static Methods
 		internal static void ServicesSnapshotPurge ()
 		{
-			foreach (Media media in Media.List ())
-			{
-				QueryBuilder qb = new QueryBuilder (QueryBuilderType.Delete);
-				qb.Table (DatabaseTableName);
-				qb.AddWhere ("id", "=", media.Id);
-
-				Query query = Services.Database.Connection.Query (qb.QueryString);
-				query.Dispose ();
-				query = null;
-				qb = null;
-			}
-		}
-
-		internal static void ServiceConfigChanged ()
-		{
-			DatabaseTableName = SorentoLib.Services.Database.Prefix + "media";
 		}
 
 		internal static void ServiceGarbageCollector ()
 		{
-//			SorentoLib.Services.Logging.LogDebug (Strings.LogError.MediaGarbageCollector);
-
-			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-			qb.Table(SorentoLib.Media.DatabaseTableName);
-			qb.Columns ("id", "updatetimestamp");
-			qb.AddWhere ("status", "=", (int)SorentoLib.Enums.MediaStatus.Temporary);
-			qb.AddWhereOR ();
-			qb.AddWhere ("status", "=", (int)SorentoLib.Enums.MediaStatus.PublicTemporary);
-
-			Query query = SorentoLib.Services.Database.Connection.Query (qb.QueryString);
-			if (query.Success)
+			foreach (Media media in List ())
 			{
-				while (query.NextRow ())
+				if ((Date.DateTimeToTimestamp (DateTime.Now) - media.UpdateTimestamp) >  Services.Config.Get<int> (Enums.ConfigKey.core_mediamaxtempage))
 				{
-					if ((SNDK.Date.CurrentDateTimeToTimestamp () - query.GetInt (qb.ColumnPos ("updatetimestamp"))) > SorentoLib.Services.Config.Get<int> (Enums.ConfigKey.media_tempmaxage))
+					if ((media.Type == SorentoLib.Enums.MediaType.Temporary) || (media.Type == SorentoLib.Enums.MediaType.TemporaryPublic))
 					{
-						Delete (query.GetGuid (qb.ColumnPos ("id")));
+						try
+						{
+							Media.Delete (media.Id);
+						}
+						catch (Exception exception)
+						{
+							// LOG: LogDebug.ExceptionUnknown
+							Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.MEDIA", exception.Message));
+						}
 					}
 				}
 			}
 
-			query.Dispose ();
-			query = null;
-			qb = null;
+			// LOG: LogDebug.MediaGarbageCollector
+			SorentoLib.Services.Logging.LogDebug (Strings.LogDebug.MediaGarbageCollector);
+		}
+
+		internal static void ServiceConfigChanged ()
+		{
+		}
+
+		internal static void ServiceStatsUpdate ()
+		{
+			int count = 0;
+			long totalsize = 0;
+
+			foreach (Media media in Media.List ())
+			{
+				count++;
+				totalsize += media.Size;
+			}
+
+			Services.Stats.Set (Enums.StatKey.sorentolib_media_count, count);
+			Services.Stats.Set (Enums.StatKey.sorentolib_media_totalsize, totalsize);
+
+			// LOG: LogDebug.MediaStats
+			Services.Logging.LogDebug (Strings.LogDebug.MediaStats);
 		}
 		#endregion
 	}
 }
+

@@ -34,11 +34,10 @@ using SNDK;
 
 namespace SorentoLib
 {
-	[Serializable]
 	public class MediaTransformation
 	{
 		#region Public Static Fields
-		public static string DatastoreAisle = "sorento_transformations";
+		public static string DatastoreAisle = "mediatransformation";
 		#endregion
 
 		#region Private Fields
@@ -96,6 +95,7 @@ namespace SorentoLib
 		public MediaTransformation ()
 		{
 			this._id = Guid.NewGuid ();
+			this._title = string.Empty;
 			this._mimetypes = new List<string> ();
 			this._script = string.Empty;
 		}

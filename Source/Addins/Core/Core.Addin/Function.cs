@@ -101,7 +101,7 @@ namespace Core.Addin
 								SorentoLib.Enums.MediaType type = SNDK.Convert.StringToEnum<SorentoLib.Enums.MediaType> (Session.Request.QueryJar.Get ("mediatype").Value);
 								string mimetypes = Session.Request.QueryJar.Get ("mimetypes").Value;
 
-								if (mimetypes.Contains (Session.Request.QueryJar.Get ("mediaupload").BinaryContentType))
+								if ((mimetypes.Contains (Session.Request.QueryJar.Get ("mediaupload").BinaryContentType)) || (mimetypes == string.Empty))
 								{
 									SorentoLib.Media media = new SorentoLib.Media (path, Session.Request.QueryJar.Get ("mediaupload").BinaryData);
 									media.Type = type;
