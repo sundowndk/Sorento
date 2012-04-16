@@ -390,6 +390,7 @@ namespace SorentoLib.Render
 //						{
 							if ((!this.CurrentBlock.InLoop) && (this.CurrentBlock.Render))
 							{
+
 								SorentoLib.Render.Resolver resolver = new SorentoLib.Render.Resolver (this._session);
 								resolver.Parse (statement.Groups["body"].Value);
 

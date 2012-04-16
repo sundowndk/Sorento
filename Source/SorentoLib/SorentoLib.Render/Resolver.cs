@@ -95,9 +95,9 @@ namespace SorentoLib.Render
 		#endregion
 
 		#region Private Static Fields
-		private static Regex ExpParseString = new Regex (@"(?<method>[A-z0-9\.]+? *?\(.*?\))|(?<variable>\$[A-z0-9\.]*( *\(.*?\))?)|(?<string>\"".*?\"")|(?<native>[A-z]+)|(?<condition>\(.*?\))", RegexOptions.Compiled);
+		private static Regex ExpParseString = new Regex (@"(?<method>[A-z0-9\.]+? *?\(.*?\))|(?<variable>\$[A-z0-9\.\@]*( *\(.*?\))?)|(?<string>\"".*?\"")|(?<native>[A-z]+)|(?<condition>\(.*?\))", RegexOptions.Compiled);
 
-		private static Regex ExpIsVariable = new Regex (@"((^\$[A-z|0-9|.]*)$)");
+		private static Regex ExpIsVariable = new Regex (@"((^\$[A-z|0-9|.|@]*)$)");
 		private static Regex ExpIsMethod = new Regex (@"^([A-z|0-9])+ *(\((.)*\))$|(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$");
 		private static Regex ExpIsField = new Regex (@"^(([A-z|0-9])+\.)+([A-z|0-9])+$");
 
@@ -512,8 +512,10 @@ namespace SorentoLib.Render
 		#region Public Methods
 		public void Parse (string statement)
 		{
+
 			if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
 			{
+				Console.WriteLine ("variable"+ statement);
 				this._result = ParseVariable (statement);
 			}
 			else if (SorentoLib.Render.Resolver.ExpIsMethod.IsMatch (statement))
