@@ -52,7 +52,7 @@ namespace SorentoLib.Render
 		//(10 + 10)
 
 		// ISVARIABLE:
-//		^\$(([A-z|0-9])+\.?)+([A-z|0-9])+ *(\((.)*\))?$
+//		^\$(([A-z|0-9]|\@|\!)+\.?)+([A-z|0-9])+ *(\((.)*\))?$
 
 		// ISMETHOD:
 		// ^(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?
@@ -97,7 +97,7 @@ namespace SorentoLib.Render
 		#region Private Static Fields
 		private static Regex ExpParseString = new Regex (@"(?<method>[A-z0-9\.]+? *?\(.*?\))|(?<variable>\$[A-z0-9\.\@]*( *\(.*?\))?)|(?<string>\"".*?\"")|(?<native>[A-z]+)|(?<condition>\(.*?\))", RegexOptions.Compiled);
 
-		private static Regex ExpIsVariable = new Regex (@"^\$(([A-z|0-9])+\.?)+([A-z|0-9])+ *(\((.)*\))?$");
+		private static Regex ExpIsVariable = new Regex (@"^\$(([A-z|0-9]|\@|\!)+\.?)+([A-z|0-9])+ *(\((.)*\))?$");
 //		private static Regex ExpIsVariable = new Regex (@"((^\$[A-z|0-9|.|@]*)$)");
 		private static Regex ExpIsMethod = new Regex (@"^([A-z|0-9])+ *(\((.)*\))$|(([A-z|0-9])+\.)+([A-z|0-9])+ *(\((.)*\))?$");
 		private static Regex ExpIsField = new Regex (@"^(([A-z|0-9])+\.)+([A-z|0-9])+$");
