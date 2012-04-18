@@ -136,6 +136,27 @@ namespace SorentoLib.Ajax
 			}
 		}
 
+		public bool ContainsXPath (string xPath)
+		{
+			bool result = false;
+
+			XmlDocument search = new XmlDocument ();
+
+			try
+			{
+				// Search for the given xPath.
+				search.AppendChild (search.ImportNode (this._xmldocument.SelectSingleNode ("/ajax/"+ xPath), true));
+				result = true;
+			}
+			catch
+			{
+			}
+
+			search = null;
+
+			return result;
+		}
+
 		public T getValue<T> (string xPath)
 		{
 			T result = default (T);
