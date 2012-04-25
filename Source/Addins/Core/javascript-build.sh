@@ -12,17 +12,18 @@ OUTPUTDIR="$1"
 # CLEAN                                            #
 ####################################################
 echo "Cleaning previous build..."
-rm "$OUTPUTDIR/html/sorentolib/" -r
+rm "$OUTPUTDIR/cgi-bin/Addins/Core/data/" -r
 
 ####################################################
-# SETUP                                            #
+# CGI-BIN                                          #
 ####################################################
-echo "Setting up build structur..."
-mkdir "$OUTPUTDIR/html/sorentolib/"
-mkdir "$OUTPUTDIR/html/sorentolib/js"
+echo "Building 'cgi-bin'..."
+for file in cgi-bin/*; do
+    cp -rv $file "$OUTPUTDIR/cgi-bin/"
+done
 
 ####################################################
-# JS                                               #
+# JAVASCRIPT                                       #
 ####################################################
 echo "Building 'javascript'..."
-jsbuilder javascript.jsb "$OUTPUTDIR/html/sorentolib/js/"
+jsbuilder javascript.jsb "$OUTPUTDIR/cgi-bin/Addins/Core/data/js/"

@@ -73,6 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="javascript\services\" />
+    <Folder Include="cgi-bin\" />
+    <Folder Include="cgi-bin\Addins\" />
+    <Folder Include="cgi-bin\Addins\Core\" />
+    <Folder Include="cgi-bin\Addins\Core\data\" />
+    <Folder Include="cgi-bin\Addins\Core\data\js\" />
+    <Folder Include="cgi-bin\Addins\Core\data\htdocs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="javascript\services\config.js" />
