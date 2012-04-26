@@ -27,6 +27,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 using SorentoLib;
 
@@ -704,6 +705,14 @@ namespace Core.Addin
 					{
 						case "":
 							return (object)Variable;
+
+						case "count":
+							MethodInfo methodInfo = typeof(SorentoLib.Render.Variables).GetMethod("ConvertToListObjectNew", System.Reflection.BindingFlags.Static | BindingFlags.Public);
+						MethodInfo genericMethodInfo = methodInfo.MakeGenericMethod(new Type[] { ((object)Variable).GetType ().GetGenericArguments()[0] });
+						List<object> returnvalue = (List<object>)genericMethodInfo.Invoke(null, new object[] { (object)Variable });
+
+
+							return returnvalue.Count;
 					}
 					break;
 				#endregion

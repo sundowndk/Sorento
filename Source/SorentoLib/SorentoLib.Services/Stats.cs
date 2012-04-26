@@ -43,7 +43,7 @@ namespace SorentoLib.Services
 			Timer timer = new Timer ();
 			timer.Elapsed += new ElapsedEventHandler (EventHandlerUpdate);
 			timer.Interval = 2000;
-			timer.Start ();
+			//timer.Start ();
 
 			// LOG: LogInfo.RuntimeServiceInitialized
 			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Stats"));
