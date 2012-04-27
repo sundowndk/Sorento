@@ -64,32 +64,34 @@ namespace Test
 
 //			SorentoLib.Services.Config.Initialize ();
 
+			Session s1 = Session.Load (new Guid ("0e1adec8-ab4a-4551-8a05-4c21a7c5aae9"));
 
 
-			MediaTransformation mt1 = new MediaTransformation ();
-			mt1.Title = "Test";
-			mt1.Mimetypes.Add ("image/jpeg");
-			mt1.Mimetypes.Add ("image/png");
-			mt1.Mimetypes.Add ("image/gif");
-			mt1.Script = "Bla bla bla bla";
-			mt1.Save ();
 
-			MediaTransformation mt2 = MediaTransformation.Load (mt1.Id);
-			Console.WriteLine (mt2.Title);
-			Console.WriteLine (mt2.Script);
-
-			foreach (string mimetype in mt2.Mimetypes)
-			{
-				Console.WriteLine (mimetype);
-			}
-
-			foreach (MediaTransformation mt in MediaTransformation.List ())
-			{
-				Console.WriteLine (mt.ToXmlDocument ());
-
-				Console.WriteLine (mt.Title);
-				MediaTransformation.Delete (mt);
-			}
+//			MediaTransformation mt1 = new MediaTransformation ();
+//			mt1.Title = "Test";
+//			mt1.Mimetypes.Add ("image/jpeg");
+//			mt1.Mimetypes.Add ("image/png");
+//			mt1.Mimetypes.Add ("image/gif");
+//			mt1.Script = "Bla bla bla bla";
+//			mt1.Save ();
+//
+//			MediaTransformation mt2 = MediaTransformation.Load (mt1.Id);
+//			Console.WriteLine (mt2.Title);
+//			Console.WriteLine (mt2.Script);
+//
+//			foreach (string mimetype in mt2.Mimetypes)
+//			{
+//				Console.WriteLine (mimetype);
+//			}
+//
+//			foreach (MediaTransformation mt in MediaTransformation.List ())
+//			{
+//				Console.WriteLine (mt.ToXmlDocument ());
+//
+//				Console.WriteLine (mt.Title);
+//				MediaTransformation.Delete (mt);
+//			}
 
 //			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_temp, "/home/rvp/Skrivebord/mediatest/temp/");
 //			SorentoLib.Services.Config.Set (SorentoLib.Enums.ConfigKey.path_media, "/home/rvp/Skrivebord/mediatest/media/");

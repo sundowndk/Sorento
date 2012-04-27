@@ -345,7 +345,7 @@ namespace SorentoLib.Render
 							resolver.Parse(((Foreach)this.CurrentBlock.Loop).Source);
 
 //							Console.WriteLine (resolver.Result.GetType ().IsArray);
-							Console.WriteLine (resolver.Result.GetType ().Name);
+//							Console.WriteLine (resolver.Result.GetType ().Name);
 
 							switch (resolver.Result.GetType ().Name.ToLower ())
 							{

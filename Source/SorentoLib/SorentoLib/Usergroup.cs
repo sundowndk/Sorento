@@ -148,7 +148,7 @@ namespace SorentoLib
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine (exception);
+//				Console.WriteLine (exception);
 				// LOG: LogDebug.ExceptionUnknown
 				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USERGROUP", exception.Message));
 

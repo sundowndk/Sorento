@@ -182,7 +182,7 @@ namespace SorentoLib.FastCgi
 					#region Page
 					case "page":
 					{
-						Console.WriteLine (session.Request.QueryJar.Get ("cmd.page").Value.ToLower ());
+//						Console.WriteLine (session.Request.QueryJar.Get ("cmd.page").Value.ToLower ());
 
 						foreach (SorentoLib.Addins.IPageResponder pageresponder in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IPageResponder)))
 						{
@@ -286,7 +286,10 @@ namespace SorentoLib.FastCgi
 			}
 
 			timer.Stop ();
-			SorentoLib.Services.Logging.LogDebug("Request served in: "+ timer.Duration.TotalSeconds +" seconds.");
+
+			FastCgi.Runtime.Test ();
+
+			SorentoLib.Services.Logging.LogDebug("Request #"+ FastCgi.Runtime.requests +" served in: "+ timer.Duration.TotalSeconds +" seconds.");
 			timer = null;
 
 			return 0;

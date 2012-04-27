@@ -317,7 +317,7 @@ namespace SorentoLib
 				{
 					case "rsa":
 					{
-						Console.WriteLine ("RSA DECODE");
+//						Console.WriteLine ("RSA DECODE");
 						password = SorentoLib.Tools.StringHelper.ASCIIBytesToString (SorentoLib.Services.Crypto.Decrypt (SorentoLib.Tools.StringHelper.HexStringToBytes (Password)));
 						break;
 					}
@@ -468,7 +468,7 @@ namespace SorentoLib
 			{
 				Services.Datastore.Delete (DatastoreAisle, id.ToString ());
 
-				ServiceStatsUpdate ();
+//				ServiceStatsUpdate ();
 			}
 			catch (Exception exception)
 			{
@@ -486,7 +486,15 @@ namespace SorentoLib
 
 			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
 			{
-				result.Add (Load (new Guid (shelf)));
+				try
+				{
+					result.Add (Load (new Guid (shelf)));
+				}
+				catch (Exception exception)
+				{
+					// LOG: LogDebug.ExceptionUnknown
+					Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SESSION", exception.Message));
+				}
 			}
 
 			return result;
@@ -511,6 +519,7 @@ namespace SorentoLib
 					}
 				}
 			}
+
 
 			// LOG: LogDebug.SessionGarbageCollector
 			SorentoLib.Services.Logging.LogDebug (Strings.LogDebug.SessionGarbageCollector);

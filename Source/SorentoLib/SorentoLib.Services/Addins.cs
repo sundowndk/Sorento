@@ -53,19 +53,19 @@ namespace SorentoLib.Services
 			AddinManager.Registry.Update (null);
 
 			// Monitor addin folder for changes.
-//			FileSystemWatcher applicationwatcher1 = new FileSystemWatcher ();
-//			applicationwatcher1.Path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_addins);
-//			applicationwatcher1.IncludeSubdirectories = true;
-//			applicationwatcher1.Created += new FileSystemEventHandler (SorentoLib.Services.Addins.OnCreated);
-//			applicationwatcher1.EnableRaisingEvents = true;
-//			applicationwatcher1.Filter = "*.dll";
+			FileSystemWatcher applicationwatcher1 = new FileSystemWatcher ();
+			applicationwatcher1.Path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_addins);
+			applicationwatcher1.IncludeSubdirectories = true;
+			applicationwatcher1.Created += new FileSystemEventHandler (SorentoLib.Services.Addins.OnCreated);
+			applicationwatcher1.EnableRaisingEvents = true;
+			applicationwatcher1.Filter = "*.dll";
 			
-//			FileSystemWatcher applicationwatcher2 = new FileSystemWatcher ();
-//			applicationwatcher2.Path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_addins);
-//			applicationwatcher2.IncludeSubdirectories = true;
-//			applicationwatcher2.Deleted += new FileSystemEventHandler (SorentoLib.Services.Addins.OnDeleted);
-//			applicationwatcher2.EnableRaisingEvents = true;
-//			applicationwatcher2.Filter = "*.dll";
+			FileSystemWatcher applicationwatcher2 = new FileSystemWatcher ();
+			applicationwatcher2.Path = SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.path_addins);
+			applicationwatcher2.IncludeSubdirectories = true;
+			applicationwatcher2.Deleted += new FileSystemEventHandler (SorentoLib.Services.Addins.OnDeleted);
+			applicationwatcher2.EnableRaisingEvents = true;
+			applicationwatcher2.Filter = "*.dll";
 
 			// LOG: LogInfo.RuntimeServiceInitialized
 			Services.Logging.LogInfo (string.Format (Strings.LogInfo.RuntimeServiceInitialized, "Addins"));

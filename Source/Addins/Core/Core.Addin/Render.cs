@@ -719,7 +719,7 @@ namespace Core.Addin
 
 				#region System.Collections.Hashtable
 				case "system.collections.hashtable":
-					Console.WriteLine ("11");
+//					Console.WriteLine ("11");
 					switch (Method)
 					{
 						case "":

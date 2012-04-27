@@ -299,7 +299,7 @@ namespace SorentoLib.Render
 					this._indexer = int.Parse (indexer.Groups["indexer"].Value);
 					string bla = "["+ this._indexer.ToString () +"]";
 					this._variablename = this._variablename.TrimEnd (bla.ToCharArray ());
-					Console.WriteLine ("indexer "+ this._indexer +" "+ this._variablename);
+//					Console.WriteLine ("indexer "+ this._indexer +" "+ this._variablename);
 					this._parameters.Add (this._indexer);
 				}
 
@@ -517,7 +517,7 @@ namespace SorentoLib.Render
 
 			if (SorentoLib.Render.Resolver.ExpIsVariable.IsMatch (statement))
 			{
-				Console.WriteLine ("PARSE: "+ statement);
+//				Console.WriteLine ("PARSE: "+ statement);
 				this._result = ParseVariable (statement);
 			}
 			else if (SorentoLib.Render.Resolver.ExpIsMethod.IsMatch (statement))

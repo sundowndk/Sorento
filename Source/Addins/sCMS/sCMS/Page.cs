@@ -379,7 +379,7 @@ namespace sCMS
 
 					if (page.Aliases.Exists (delegate (string o) {
 						string directoryname = System.IO.Path.GetDirectoryName (page.Path);
-						Console.WriteLine (directoryname);
+//						Console.WriteLine (directoryname);
 						if (directoryname == "/")
 						{return directoryname + o == Name;}
 						else

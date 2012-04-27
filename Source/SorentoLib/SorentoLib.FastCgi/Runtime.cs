@@ -35,11 +35,25 @@ namespace SorentoLib.FastCgi
 {
 	public static class Runtime
 	{
+
+
 		#region Public Static Fields
 		public static Mono.FastCgi.Server Server;
 		public static Socket Socket;
 		#endregion
-		
+		static readonly object _object = new object();
+
+		public static int requests = 0;
+
+
+		public static void Test ()
+		{
+			lock (_object)
+			{
+				requests++;
+			}
+		}
+
 		#region Public Static Methods
 		public static void Initialize ()
 		{
