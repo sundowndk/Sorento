@@ -64,7 +64,12 @@ namespace Test
 
 //			SorentoLib.Services.Config.Initialize ();
 
-			Session s1 = Session.Load (new Guid ("0e1adec8-ab4a-4551-8a05-4c21a7c5aae9"));
+//			Session s1 = Session.Load (new Guid ("0e1adec8-ab4a-4551-8a05-4c21a7c5aae9"));
+
+			Media.FromXmlDocument (Media.Default ().ToXmlDocument ());
+
+//			Media m1 = new Media ("/home/rvp/Skrivebord/process-stop.svg", "/home/rvp/Skrivebord/process-stop.svg", false);
+//			Console.WriteLine (m1.ToXmlDocument ().InnerXml);
 
 
 

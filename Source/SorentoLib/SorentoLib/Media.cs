@@ -115,7 +115,14 @@ namespace SorentoLib
 		{
 			get
 			{
-				return System.IO.Path.GetDirectoryName (this._path);
+				try
+				{
+					return System.IO.Path.GetDirectoryName (this._path);
+				}
+				catch
+				{
+					return string.Empty;
+				}
 			}
 		}
 
@@ -621,6 +628,15 @@ namespace SorentoLib
 			}
 		}
 
+		public static Media Default ()
+		{
+			Media result = new Media ();
+			result._id = Guid.Empty;
+			result._path = "/test";
+			return result;
+		}
+
+
 		public static Media FromXmlDocument (XmlDocument xmlDocument)
 		{
 			Hashtable item;
@@ -639,7 +655,14 @@ namespace SorentoLib
 			{
 				try
 				{
-					result = Load (new Guid ((string)item["id"]));
+					if (new Guid ((string)item["id"]) != Guid.Empty)
+					{
+						result = Load (new Guid ((string)item["id"]));
+					}
+					else
+					{
+						result = Default ();
+					}
 				}
 				catch
 				{
