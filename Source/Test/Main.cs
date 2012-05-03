@@ -66,7 +66,12 @@ namespace Test
 
 //			Session s1 = Session.Load (new Guid ("0e1adec8-ab4a-4551-8a05-4c21a7c5aae9"));
 
-			Media.FromXmlDocument (Media.Default ().ToXmlDocument ());
+//			Media.FromXmlDocument (Media.Default ().ToXmlDocument ());
+
+			foreach (Media m in Media.List ("/media/scms"))
+			{
+				Console.WriteLine (m.Filename);
+			}
 
 //			Media m1 = new Media ("/home/rvp/Skrivebord/process-stop.svg", "/home/rvp/Skrivebord/process-stop.svg", false);
 //			Console.WriteLine (m1.ToXmlDocument ().InnerXml);

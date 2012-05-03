@@ -568,6 +568,21 @@ namespace SorentoLib
 			return result;
 		}
 
+		public static List<Media> List (string Directory)
+		{
+			List<Media> result = new List<Media> ();
+
+			foreach (Media media in List ())
+			{
+				if (media.Directory == Directory)
+				{
+					result.Add (media);
+				}
+			}
+
+			return result;
+		}
+
 		public static List<Media> List ()
 		{
 			List<Media> result = new List<Media> ();
