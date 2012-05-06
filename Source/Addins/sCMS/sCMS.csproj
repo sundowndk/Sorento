@@ -11,7 +11,6 @@
     <ReleaseVersion>1.0</ReleaseVersion>
     <AssemblyName>sCMS</AssemblyName>
     <SynchReleaseVersion>false</SynchReleaseVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,8 +41,7 @@
     <Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins</Package>
     </Reference>
-    <Reference Include="SNDK, Version=1.0.4416.25851, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SNDK">
       <HintPath>..\..\Lib\SNDK.dll</HintPath>
       <Private>False</Private>
     </Reference>
