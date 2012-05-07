@@ -47,6 +47,7 @@ namespace SorentoLib.Enums
 		path_publicmedia,
 		path_snapshot,
 		path_script,
+		path_cache,
 		path_temp,
 		path_addins,
 

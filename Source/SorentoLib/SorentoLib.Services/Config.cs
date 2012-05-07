@@ -123,6 +123,7 @@ namespace SorentoLib.Services
 			SetDefault (Enums.ConfigKey.path_publicmedia, "../../html/");
 			SetDefault (Enums.ConfigKey.path_snapshot, "data/snapshots/");
 			SetDefault (Enums.ConfigKey.path_script, "data/scripts/");
+			SetDefault (Enums.ConfigKey.path_cache, "data/cache/");
 			SetDefault (Enums.ConfigKey.path_temp, "tmp/");
 			SetDefault (Enums.ConfigKey.path_addins, "../Addins/");
 			#endregion

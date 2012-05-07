@@ -23,6 +23,12 @@ for file in resources*; do
 done
 
 ####################################################
+# PERMISSIONS			                           #
+####################################################
+chmod 777 "$OUTPUTDIR/resources/"
+chmod 777 "$OUTPUTDIR/resources/"* -R
+
+####################################################
 # JAVASCRIPT                                       #
 ####################################################
 echo "Building 'javascript'..."
