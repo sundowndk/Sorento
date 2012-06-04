@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Reflection;
 
 using SorentoLib;
 
@@ -34,8 +35,30 @@ namespace Sorento.Startup
 {
 	public class SorentoMain
 	{
+
+
+
 		public static void Main ()
 		{
+//		AppDomain.CurrentDomain.AssemblyResolve += delegate(object sender, ResolveEventArgs e)
+//		{
+//			AssemblyName requestedName = new AssemblyName(e.Name);
+//
+//				Console.WriteLine ("sdfasdfasdf"+ requestedName);
+//
+//			if (requestedName.Name == "Office11Wrapper")
+//			{
+//				// Put code here to load whatever version of the assembly you actually have
+//
+//				return Assembly.LoadFile("Office11Wrapper.DLL");
+//			}
+//			else
+//			{
+//				return null;
+//			}
+//		};
+
+
 			// Set process name.
 			SorentoLib.Runtime.SetProcessName ("Sorento");
 

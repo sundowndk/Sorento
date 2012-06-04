@@ -738,6 +738,36 @@ namespace Core.Addin
 					}
 					break;
 				#endregion
+
+				#region System.Version
+				case "system.version":
+				{
+					switch (Method)
+					{
+						case "":
+							return ((Version)Variable);
+
+						case "major":
+							return ((Version)Variable).Major;
+
+						case "minor":
+							return ((Version)Variable).Minor;
+
+						case "Build":
+							return ((Version)Variable).Build;
+
+						case "Revision":
+							return ((Version)Variable).Revision;
+
+						case "MajorRevision":
+							return ((Version)Variable).MajorRevision;
+
+						case "MinorRevision":
+							return ((Version)Variable).MinorRevision;
+					}
+					break;
+				}
+				#endregion
 			}
 
 			throw new SorentoLib.Exceptions.RenderExceptionMemberNotFound ();
