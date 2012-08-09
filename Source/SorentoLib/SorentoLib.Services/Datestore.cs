@@ -488,26 +488,36 @@ namespace SorentoLib.Services
 
 			if (Search != null)
 			{
-			foreach (MetaSearch search in Search)
-			{
-				qb.AddWhereAND ();
-
-				switch (search.Condition)
+				foreach (MetaSearch search in Search)
 				{
-					case Enums.DatastoreMetaSearchCondition.Equal:
-					{
-						qb.AddWhere ("meta", "like binary", "%|"+ search.Key +":"+ search.Value +"|%");
-						break;
-					}
+					qb.AddWhereAND ();
 
-					case Enums.DatastoreMetaSearchCondition.NotEqual:
+					switch (search.Condition)
 					{
-						qb.AddWhere ("meta", "not like binary", "%|"+ search.Key +":"+ search.Value +"|%");
-						break;
-					}
+						case Enums.DatastoreMetaSearchCondition.Equal:
+						{
+							qb.AddWhere ("meta", "like binary", "%|"+ search.Key +":"+ search.Value +"|%");
+							break;
+						}
 
+						case Enums.DatastoreMetaSearchCondition.NotEqual:
+						{
+							qb.AddWhere ("meta", "not like binary", "%|"+ search.Key +":"+ search.Value +"|%");
+							break;
+						}
+
+						case Enums.DatastoreMetaSearchCondition.Contains:
+						{
+							qb.AddWhere (@"meta REGEXP '\|"+ search.Key +@"\:.*"+ search.Value +@"*?\|'");
+							break;
+						}
+
+						case Enums.DatastoreMetaSearchCondition.NotContains:
+						{
+							break;
+						}
+					}
 				}
-			}
 			}
 
 			Query query = Services.Database.Connection.Query (qb.QueryString);

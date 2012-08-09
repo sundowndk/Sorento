@@ -31,6 +31,8 @@ namespace SorentoLib.Enums
 	public enum DatastoreMetaSearchCondition
 	{
 		Equal,
-		NotEqual
+		NotEqual,
+		Contains,
+		NotContains
 	}
 }
