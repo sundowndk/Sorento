@@ -1,5 +1,5 @@
 //
-// DatastoreMetaSearchCondition.cs
+// DatastoreMetaSearchLogicOperator.cs
 //
 // Author:
 //       Rasmus Pedersen <rasmus@akvaservice.dk>
@@ -28,14 +28,10 @@ using System;
 
 namespace SorentoLib.Enums
 {
-
-//	Comparison
-	public enum DatastoreMetaSearchComparisonOperator
+	public enum DatastoreMetaSearchLogicOperator
 	{
 		None,
-		Equal,
-		NotEqual,
-		Contains,
-		NotContains
+		And,
+		Or
 	}
 }

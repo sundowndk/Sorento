@@ -382,7 +382,7 @@ namespace SorentoLib
 				}
 				else
 				{
-					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username)).SelectSingleNode ("(//sorentolib.user)[1]")));
+					item = (Hashtable)SNDK.Convert.FromXmlDocument (SNDK.Convert.XmlNodeToXmlDocument (Services.Datastore.Get<XmlDocument> (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchComparisonOperator.Equal, username)).SelectSingleNode ("(//sorentolib.user)[1]")));
 				}
 
 				result._id = new Guid ((string)item["id"]);
@@ -457,7 +457,7 @@ namespace SorentoLib
 				}
 				else
 				{
-					Services.Datastore.Delete (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username));
+					Services.Datastore.Delete (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchComparisonOperator.Equal, username));
 				}
 
 				ServiceStatsUpdate ();
@@ -523,7 +523,7 @@ namespace SorentoLib
 		{
 			bool result = false;
 
-			if (Services.Datastore.FindShelf (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchCondition.Equal, username), new Services.Datastore.MetaSearch ("id", Enums.DatastoreMetaSearchCondition.NotEqual, filterOutUserId)) != string.Empty)
+			if (Services.Datastore.FindShelf (DatastoreAisle, new Services.Datastore.MetaSearch ("username", Enums.DatastoreMetaSearchComparisonOperator.Equal, username), new Services.Datastore.MetaSearch (Enums.DatastoreMetaSearchLogicOperator.And), new Services.Datastore.MetaSearch ("id", Enums.DatastoreMetaSearchComparisonOperator.NotEqual, filterOutUserId)) != string.Empty)
 			{
 				result = true;
 			}
@@ -540,7 +540,7 @@ namespace SorentoLib
 		{
 			bool result = false;
 
-			if (Services.Datastore.FindShelf (DatastoreAisle, new Services.Datastore.MetaSearch ("email", Enums.DatastoreMetaSearchCondition.Equal, Email), new Services.Datastore.MetaSearch ("id", Enums.DatastoreMetaSearchCondition.NotEqual, filterOutUserId)) != string.Empty)
+			if (Services.Datastore.FindShelf (DatastoreAisle, new Services.Datastore.MetaSearch ("email", Enums.DatastoreMetaSearchComparisonOperator.Equal, Email), new Services.Datastore.MetaSearch (Enums.DatastoreMetaSearchLogicOperator.And), new Services.Datastore.MetaSearch ("id", Enums.DatastoreMetaSearchComparisonOperator.NotEqual, filterOutUserId)) != string.Empty)
 			{
 				result = true;
 			}

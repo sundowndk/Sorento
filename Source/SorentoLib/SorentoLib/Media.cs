@@ -436,7 +436,7 @@ namespace SorentoLib
 			string extension = System.IO.Path.GetExtension (Path);
 
 			int increment = 1;
-			while (Services.Datastore.ShelfExists (DatastoreAisle, new Services.Datastore.MetaSearch ("path", Enums.DatastoreMetaSearchCondition.Equal, result)))
+			while (Services.Datastore.ShelfExists (DatastoreAisle, new Services.Datastore.MetaSearch ("path", Enums.DatastoreMetaSearchComparisonOperator.Equal, result)))
 			{
 				result = path + string.Format (Services.Config.Get<string> (Enums.ConfigKey.core_filenameincrementformat), filename, increment, extension);
 				increment++;

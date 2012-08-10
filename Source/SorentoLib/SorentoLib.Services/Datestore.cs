@@ -488,33 +488,54 @@ namespace SorentoLib.Services
 
 			if (Search != null)
 			{
+				qb.AddWhereAND ();
+
 				foreach (MetaSearch search in Search)
 				{
-					qb.AddWhereAND ();
-
-					switch (search.Condition)
+					if (search.ComparisonOperator != Enums.DatastoreMetaSearchComparisonOperator.None)
 					{
-						case Enums.DatastoreMetaSearchCondition.Equal:
+						switch (search.ComparisonOperator)
 						{
-							qb.AddWhere ("meta", "like binary", "%|"+ search.Key +":"+ search.Value +"|%");
-							break;
+							case Enums.DatastoreMetaSearchComparisonOperator.Equal:
+							{
+								qb.AddWhere ("meta", "like binary", "%|"+ search.Key +":"+ search.Value +"|%");
+								break;
+							}
+								
+							case Enums.DatastoreMetaSearchComparisonOperator.NotEqual:
+							{
+								qb.AddWhere ("meta", "not like binary", "%|"+ search.Key +":"+ search.Value +"|%");
+								break;
+							}
+								
+							case Enums.DatastoreMetaSearchComparisonOperator.Contains:
+							{
+								qb.AddWhere (@"meta REGEXP '\|"+ search.Key +@"\:.*"+ search.Value +@"*?\|'");
+								break;
+							}
+								
+							case Enums.DatastoreMetaSearchComparisonOperator.NotContains:
+							{
+								break;
+							}
 						}
+					}
 
-						case Enums.DatastoreMetaSearchCondition.NotEqual:
+					if (search.LogicOperator != Enums.DatastoreMetaSearchLogicOperator.None)
+					{
+						switch (search.LogicOperator)
 						{
-							qb.AddWhere ("meta", "not like binary", "%|"+ search.Key +":"+ search.Value +"|%");
-							break;
-						}
+							case Enums.DatastoreMetaSearchLogicOperator.And:
+							{
+								qb.AddWhereAND ();
+								break;
+							}
 
-						case Enums.DatastoreMetaSearchCondition.Contains:
-						{
-							qb.AddWhere (@"meta REGEXP '\|"+ search.Key +@"\:.*"+ search.Value +@"*?\|'");
-							break;
-						}
-
-						case Enums.DatastoreMetaSearchCondition.NotContains:
-						{
-							break;
+							case Enums.DatastoreMetaSearchLogicOperator.Or:
+							{
+								qb.AddWhereOR ();
+								break;
+							}
 						}
 					}
 				}
@@ -594,7 +615,8 @@ namespace SorentoLib.Services
 		{
 			#region Private Fields
 			private string _key;
-			private Enums.DatastoreMetaSearchCondition _condition;
+			private Enums.DatastoreMetaSearchComparisonOperator _comparisonoperator;
+			private Enums.DatastoreMetaSearchLogicOperator _logicoperator;
 			private string _value;
 			#endregion
 
@@ -607,11 +629,19 @@ namespace SorentoLib.Services
 				}
 			}
 
-			public Enums.DatastoreMetaSearchCondition Condition
+			public Enums.DatastoreMetaSearchComparisonOperator ComparisonOperator
 			{
 				get
 				{
-					return this._condition;
+					return this._comparisonoperator;
+				}
+			}
+
+			public Enums.DatastoreMetaSearchLogicOperator LogicOperator
+			{
+				get
+				{
+					return this._logicoperator;
 				}
 			}
 
@@ -625,11 +655,20 @@ namespace SorentoLib.Services
 			#endregion
 
 			#region Constructor
-			public MetaSearch (string Key, Enums.DatastoreMetaSearchCondition Condition, object Value)
+			public MetaSearch (Enums.DatastoreMetaSearchLogicOperator LogicOperator)
+			{
+				this._key = string.Empty;
+				this._value = string.Empty;
+				this._logicoperator = LogicOperator;
+				this._comparisonoperator = Enums.DatastoreMetaSearchComparisonOperator.None;
+			}
+
+			public MetaSearch (string Key, Enums.DatastoreMetaSearchComparisonOperator ComparisonOperator, object Value)
 			{
 				this._key = Key;
-				this._condition = Condition;
 				this._value = Value.ToString ();
+				this._comparisonoperator = ComparisonOperator;
+				this._logicoperator = Enums.DatastoreMetaSearchLogicOperator.None;
 			}
 			#endregion
 		}
