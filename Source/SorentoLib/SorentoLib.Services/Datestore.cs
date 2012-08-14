@@ -541,6 +541,7 @@ namespace SorentoLib.Services
 				}
 			}
 
+//			Console.WriteLine (qb.QueryString);
 			Query query = Services.Database.Connection.Query (qb.QueryString);
 			if (query.Success)
 			{
