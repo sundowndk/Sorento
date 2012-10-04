@@ -49,6 +49,7 @@ namespace SorentoLib
 		private SorentoLib.Enums.UsergroupType _type;
 		private string _name;
 		private Enums.UsergroupStatus _status;
+		private string _scope;
 		#endregion
 
 		#region Public Fields
@@ -114,6 +115,19 @@ namespace SorentoLib
 				this._status = value;
 			}
 		}
+
+		public string Scope
+		{
+			get
+			{
+				return this._scope;
+			}
+
+			set
+			{
+				this._scope = value;
+			}
+		}
 		#endregion
 
 		#region Constructors
@@ -125,6 +139,7 @@ namespace SorentoLib
 			this._type = SorentoLib.Enums.UsergroupType.Custom;
 			this._name = string.Empty;
 			this._status = Enums.UsergroupStatus.Enabled;
+			this._scope = string.Empty;
 		}
 		#endregion
 
@@ -143,8 +158,12 @@ namespace SorentoLib
 				item.Add ("type", this._type);
 				item.Add ("name", this._name);
 				item.Add ("status", this._status);
+				item.Add ("scope", this._scope);
 
-				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()));
+				Services.Datastore.Meta meta = new Services.Datastore.Meta ();
+				meta.Add ("scope", this._scope);
+
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, "sorentolib.usergroup"), meta);
 			}
 			catch (Exception exception)
 			{
@@ -167,8 +186,9 @@ namespace SorentoLib
 			result.Add ("type", this._type);
 			result.Add ("name", this._name);
 			result.Add ("status", this._status);
+			result.Add ("scope", this._scope);
 
-			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
+			return SNDK.Convert.ToXmlDocument (result, "sorentolib.usergroup");
 		}
 		#endregion
 
@@ -210,6 +230,11 @@ namespace SorentoLib
 					{
 						result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupStatus> ((string)item["status"]);
 					}
+
+					if (item.ContainsKey ("scope"))
+					{
+						result._scope = (string)item["scope"];
+					}
 				}
 				catch (Exception exception)
 				{
@@ -241,7 +266,29 @@ namespace SorentoLib
 				throw new Exception (string.Format (Strings.Exception.UsergroupDelete, id));
 			}
 		}
-		
+
+		public static List<Usergroup> List (string Scope)
+		{
+			List<Usergroup> result = new List<Usergroup> ();
+
+			foreach (Usergroup usergroup in BuiltInUsergroups)
+			{
+				if (usergroup._scope == Scope)
+				{
+					result.Add (usergroup);
+				}
+			}
+
+			SorentoLib.Services.Datastore.MetaSearch metasearch = new SorentoLib.Services.Datastore.MetaSearch ("scope", Enums.DatastoreMetaSearchComparisonOperator.Equal, Scope);
+
+			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle, metasearch))
+			{
+				result.Add (Load (new Guid (shelf)));
+			}
+			
+			return result;
+		}
+
 		public static List<Usergroup> List ()
 		{
 			List<Usergroup> result = new List<Usergroup> ();
@@ -258,10 +305,16 @@ namespace SorentoLib
 
 		public static Usergroup AddBuildInUsergroup (Guid id, string name)
 		{
+			return AddBuildInUsergroup (id, name, string.Empty);
+		}
+
+		public static Usergroup AddBuildInUsergroup (Guid id, string name, string scope)
+		{
 			SorentoLib.Usergroup result = new SorentoLib.Usergroup ();
 			result._id = id;
 			result._type = SorentoLib.Enums.UsergroupType.BuildIn;
 			result._name = name;
+			result._scope = scope;
 			BuiltInUsergroups.Add (result);
 
 			return result;
@@ -312,6 +365,11 @@ namespace SorentoLib
 			if (item.ContainsKey ("status"))
 			{
 				result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UsergroupStatus> ((string)item["status"]);
+			}
+
+			if (item.ContainsKey ("scope"))
+			{
+				result._scope = (string)item["scope"];
 			}
 
 			return result;

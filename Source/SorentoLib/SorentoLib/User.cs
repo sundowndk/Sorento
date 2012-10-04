@@ -51,6 +51,7 @@ namespace SorentoLib
 		private string _realname;
 		private string _email;
 		private Enums.UserStatus _status;
+		private string _scope;
 
 		private string _usergroupsasstring
 		{
@@ -219,6 +220,19 @@ namespace SorentoLib
 				Services.Events.Invoke.UserStatusChanged (this, this._status, value);
 			}
 		}
+
+		public string Scope 
+		{
+			get
+			{
+				return this._scope;
+			}
+
+			set
+			{
+				this._scope = value;
+			}
+		}
 		#endregion
 
 		#region Constructor
@@ -233,6 +247,7 @@ namespace SorentoLib
 			this._realname = string.Empty;
 			this._email = email;
 			this._status = Enums.UserStatus.Disabled;
+			this._scope = string.Empty;
 
 			// Check if specified username is available.
 			if (User.IsUsernameInUse (username))
@@ -272,6 +287,7 @@ namespace SorentoLib
 			this._realname = string.Empty;
 			this._email = string.Empty;
 			this._status = Enums.UserStatus.Disabled;
+			this._scope = string.Empty;
 		}
 		#endregion
 
@@ -293,13 +309,17 @@ namespace SorentoLib
 				item.Add ("realname", this._realname);
 				item.Add ("email", this._email);
 				item.Add ("status", this._status);
+				item.Add ("scope", this._scope);
 
 				Services.Datastore.Meta meta = new Services.Datastore.Meta ();
 				meta.Add ("id", this._id);
 				meta.Add ("username", this._username);
 				meta.Add ("email", this._email);
+				meta.Add ("scope", this._scope);
 
-				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()), meta);
+
+				//Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()), meta);
+				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, "sorentolib.user"), meta);
 			}
 			catch (Exception exception)
 			{
@@ -362,8 +382,9 @@ namespace SorentoLib
 			result.Add ("realname", this._realname);
 			result.Add ("email", this._email);
 			result.Add ("status", this._status);
+			result.Add ("scope", this._scope);
 
-			return SNDK.Convert.ToXmlDocument (result, this.GetType ().FullName.ToLower ());
+			return SNDK.Convert.ToXmlDocument (result, "sorentolib.user");
 		}
 		#endregion
 
@@ -426,11 +447,18 @@ namespace SorentoLib
 				{
 					result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UserStatus> ((string)item["status"]);
 				}
+
+				if (item.ContainsKey ("scope"))
+				{
+					result._scope = (string)item["scope"];
+				}
 			}
 			catch (Exception exception)
 			{
 				// LOG: LogDebug.ExceptionUnknown
 				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.USER", exception.Message));
+
+				Console.WriteLine (exception);
 
 				if (id != Guid.Empty)
 				{
@@ -505,8 +533,22 @@ namespace SorentoLib
 		public static List<User> List ()
 		{
 			List<User> result = new List<User> ();
-
+			
 			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle))
+			{
+				result.Add (Load (new Guid (shelf)));
+			}
+			
+			return result;
+		}
+
+		public static List<User> List (string Scope)
+		{
+			List<User> result = new List<User> ();
+
+			Services.Datastore.MetaSearch metasearch = new SorentoLib.Services.Datastore.MetaSearch ("scope", Enums.DatastoreMetaSearchComparisonOperator.Equal, Scope);
+
+			foreach (string shelf in Services.Datastore.ListOfShelfs (DatastoreAisle, metasearch))
 			{
 				result.Add (Load (new Guid (shelf)));
 			}
@@ -627,6 +669,11 @@ namespace SorentoLib
 			if (item.ContainsKey ("status"))
 			{
 				result._status = SNDK.Convert.StringToEnum<SorentoLib.Enums.UserStatus> ((string)item["status"]);
+			}
+
+			if (item.ContainsKey ("scope"))
+			{
+				result._scope = (string)item["scope"];
 			}
 
 			return result;
