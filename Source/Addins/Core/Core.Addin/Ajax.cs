@@ -64,7 +64,7 @@ namespace Core.Addin
 
 						case "new":
 						{
-							result.Add (new SorentoLib.User (request.getValue<string> ("username"), request.getValue<string> ("email")));
+							result.Add (new SorentoLib.User (request.getValue<string> ("username")));
 							break;
 						}
 
@@ -247,6 +247,12 @@ namespace Core.Addin
 						case "getcurrent":
 						{
 							result.Add (Session);
+							break;
+						}
+
+						case "login":
+						{
+							result.Add (Session.SignIn (request.getValue<string> ("username"), request.getValue<string> ("password")));
 							break;
 						}
 

@@ -196,11 +196,11 @@ namespace SorentoLib
 
 			set
 			{
-				if (User.IsEmailInUse (value, this._id))
-				{
-					// EXCEPTION: Exception.UserSetEmail
-					throw new Exception (string.Format (Strings.Exception.UserSetEmail, value));
-				}
+//				if (User.IsEmailInUse (value, this._id))
+//				{
+//					 EXCEPTION: Exception.UserSetEmail
+//					throw new Exception (string.Format (Strings.Exception.UserSetEmail, value));
+//				}
 				this._email = value;
 			}
 		}
@@ -236,6 +236,39 @@ namespace SorentoLib
 		#endregion
 
 		#region Constructor
+		public User (string username)
+		{
+			this._id = Guid.NewGuid ();
+			this._createtimestamp = Date.CurrentDateTimeToTimestamp ();
+			this._updatetimestamp = Date.CurrentDateTimeToTimestamp ();
+			this._usergroups = new List<Usergroup> ();
+			this._username = username;
+			this._password = string.Empty;
+			this._realname = string.Empty;
+			this._email = string.Empty;
+			this._status = Enums.UserStatus.Disabled;
+			this._scope = string.Empty;
+			
+			// Check if specified username is available.
+			if (User.IsUsernameInUse (username))
+			{
+				// EXCEPTION: Exception.UserCreateUsername
+				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateUsername, username));
+			}
+						
+			// Add default usergroup.
+			try
+			{
+				this._usergroups.Add (Usergroup.Load (Services.Config.Get<Guid> (Enums.ConfigKey.core_defaultusergroupid)));
+			}
+			catch
+			{
+				// LOG: LogError.UserCreateDefaultUsergroup
+				//				Services.Logging.LogError (string.Format (Strings.LogError.UserCreateDefaultUsergroup, Services.Config.Get<Guid> (Enums.ConfigKey.core_defaultusergroupid)));
+				Services.Logging.LogError (Strings.LogError.UserCreateDefaultUsergroup);
+			}
+		}
+
 		public User (string username, string email)
 		{
 			this._id = Guid.NewGuid ();
