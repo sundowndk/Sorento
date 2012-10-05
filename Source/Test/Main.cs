@@ -29,8 +29,8 @@ using System.Threading;
 using System.Text;
 using System.Collections.Generic;
 using System.Collections;
-using SNDK.DBI;
 using SNDK.Enums;
+using SNDK.DBI;
 using System.Xml;
 
 using System.Reflection;
@@ -62,16 +62,24 @@ namespace Test
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
+			SorentoLib.User user = SorentoLib.User.Load ("admin");
+			user.Status = SorentoLib.Enums.UserStatus.Enabled;
+			user.Save ();
+
+//			SorentoLib.User user = new User ("admin");
+//			user.Password = "qwerty";
+//			user.Save ();
+
 //			SorentoLib.Services.Config.Initialize ();
 
 //			Session s1 = Session.Load (new Guid ("0e1adec8-ab4a-4551-8a05-4c21a7c5aae9"));
 
 //			Media.FromXmlDocument (Media.Default ().ToXmlDocument ());
 
-			foreach (Media m in Media.List ("/media/scms"))
-			{
-				Console.WriteLine (m.Filename);
-			}
+//			foreach (Media m in Media.List ("/media/scms"))
+//			{
+//				Console.WriteLine (m.Filename);
+//			}
 
 //			Media m1 = new Media ("/home/rvp/Skrivebord/process-stop.svg", "/home/rvp/Skrivebord/process-stop.svg", false);
 //			Console.WriteLine (m1.ToXmlDocument ().InnerXml);
