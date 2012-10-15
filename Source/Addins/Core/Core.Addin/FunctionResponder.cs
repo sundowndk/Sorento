@@ -60,22 +60,12 @@ namespace Core.Addin
 						{
 							resulttemplate = Session.Request.QueryJar.Get ("cmd.onsuccess").Value;
 						}
-						else
-						{
-							resulttemplate = "";
-						}
 					}
 					else
 					{
-
-
 						if (Session.Request.QueryJar.Exist ("cmd.onerror"))
 						{
 							resulttemplate = Session.Request.QueryJar.Get ("cmd.onerror").Value;
-						}
-						else
-						{
-							resulttemplate = "";
 						}
 					}
 					break;
@@ -94,9 +84,12 @@ namespace Core.Addin
 				}
 			}
 
-			SorentoLib.Render.Template template = new SorentoLib.Render.Template (Session, resulttemplate);
-			template.Render ();
-			template = null;
+			if (resulttemplate != string.Empty)
+			{
+				SorentoLib.Render.Template template = new SorentoLib.Render.Template (Session, resulttemplate);
+				template.Render ();
+				template = null;
+			}
 
 			Session.Responder.Request.SendOutputText (Session.Page.Write (Session));
 		}

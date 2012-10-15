@@ -50,7 +50,7 @@ namespace SorentoLib.FastCgi
 		{
 			get
 			{
-				return this._request;
+				return this._request.;
 			}
 		}
 

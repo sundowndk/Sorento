@@ -136,7 +136,7 @@ namespace SorentoLib
 			else
 			{
 				result += session.Request.HttpHeader("UTF-8");
-				result += "\n";
+//				result += "\n";
 
 				// Write every line in Page.
 				foreach (System.String line in this._lines)
