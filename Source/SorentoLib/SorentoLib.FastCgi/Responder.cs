@@ -50,7 +50,7 @@ namespace SorentoLib.FastCgi
 		{
 			get
 			{
-				return this._request.;
+				return this._request;
 			}
 		}
 
@@ -204,11 +204,13 @@ namespace SorentoLib.FastCgi
 
 					#region Media
 					case "media":
+					{
 						foreach (SorentoLib.Addins.IMediaResponder mediaresponder in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IMediaResponder)))
 						{
 							mediaresponder.Process (session);
 						}
 						break;
+					}
 					#endregion
 
 					#region Function

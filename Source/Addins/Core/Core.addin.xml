@@ -38,6 +38,10 @@
 	<Extension path = "/SorentoLib/AjaxResponders">
 		<Type type="Core.Addin.AjaxResponder"/>	
 	</Extension>	
+	
+	<Extension path = "/SorentoLib/MediaResponders">
+		<Type type="Core.Addin.MediaResponder"/>	
+	</Extension>	
 		
 	<Extension path = "/SorentoLib/Services/Snapshots">
 		<Type type="Core.Addin.Snapshot"/>

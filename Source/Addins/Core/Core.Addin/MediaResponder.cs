@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 
 using Mono.Addins;
 
@@ -43,6 +44,83 @@ namespace Core.Addin
 		#region Public Methods
 		public void Process (SorentoLib.Session Session)
 		{
+			try
+			{
+				Media media = Media.Load (new Guid (Session.Request.QueryJar.Get ("cmd.mediaid").Value));
+
+				Session.Responder.Request.SendOutputText ("Content-Type: "+ media.Mimetype +"\n");
+
+				if (Session.Request.CookieJar.Exist ("download"))
+				{
+					if (Session.Request.QueryJar.Get ("download").Value == "1")
+					{
+						Session.Responder.Request.SendOutputText ("Content-Disposition: attachment; filename = "+ media.Filename +"\n");
+					}
+					else
+					{
+						Session.Responder.Request.SendOutputText ("Content-Disposition: filename = "+ media.Filename +"\n");
+					}
+				}
+				else
+				{
+					Session.Responder.Request.SendOutputText ("Content-Disposition: filename = "+ media.Filename +"\n");
+				}
+
+//				if (Session.Request.QueryJar.Get ("download").Value == "1")
+//				{
+//					Session.Responder.Request.SendOutputText ("Content-Disposition: attachment; filename = "+ media.Filename +"\n");
+//				}
+//				else
+//				{
+//					Session.Responder.Request.SendOutputText ("Content-Disposition: filename = "+ media.Filename +"\n");
+//				}
+
+
+
+				// Open file from disk and server it.
+				string filename = media.DataPath;
+
+				FileStream  fs = File.OpenRead (filename);
+
+				System.IO.FileInfo fi = new System.IO.FileInfo (filename);
+				Session.Responder.Request.SendOutputText ("Content-Length: "+ fi.Length.ToString() +"\n\n");
+					
+				int offset=0;
+				int buffersize = 163840;
+				int bufferread = buffersize ;
+				long remaining = fi.Length;
+					
+				while (remaining > 0)
+				{
+					if (remaining < buffersize)
+					{
+						bufferread = (int)remaining;
+					}
+
+					byte[] test = new byte[bufferread];
+					int read = fs.Read(test, 0, bufferread);
+
+					Session.Responder.Request.SendOutput (test);
+					//Thread.Sleep(2);
+					remaining = remaining - (long)read;
+					offset += read;
+				}
+
+				fs.Close();
+			}
+			catch (Exception exception)
+			{
+				Console.WriteLine (exception);
+			}
+
+
+				
+
+//				                                                                       this._request.SendOutputText("Content-Type: "+ media.Mimetype +"\n");
+		}
+
+
+
 //			Media media = new Media();
 			//                                                                              if (media.Load(new Guid(session.Request.QueryJar.Get("mediaid").Value)))
 			//                                                                              {
@@ -92,7 +170,7 @@ namespace Core.Addin
 
 //			Session.Responder.SendOutput (SNDK.IO.FileToByteArray ("/home/rvp/Skrivebord/upload.pdf"), SNDK.IO.FileToByteArray ("/home/rvp/Skrivebord/upload.pdf").Length);
 //			Session.Responder.SendOutput ()
-		}
+//		}
 		#endregion
 	}
 }
