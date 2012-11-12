@@ -246,7 +246,14 @@ namespace Core.Addin
 					{
 						case "getcurrent":
 						{
+
 							result.Add (Session);
+							break;
+						}
+
+						case "loggedin":
+						{
+							result.Add (Session.LoggedIn);
 							break;
 						}
 

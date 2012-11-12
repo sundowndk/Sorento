@@ -1,4 +1,4 @@
-// ---------------------------------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------------------------------
 // PROJECT: sorentolib
 // ---------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------
@@ -195,6 +195,14 @@ var sorentoLib =
 			request.send ();
 		
 			return request.respons ()["sorentolib.session"];
+		},
+		
+		loggedIn : function ()
+		{
+			var request = new SNDK.ajax.request ("/", "cmd=Ajax;cmd.function=SorentoLib.Session.LoggedIn", "data", "POST", false);
+			request.send ();
+		
+			return request.respons ()["value"];
 		},
 		
 		login : function (username, password)
