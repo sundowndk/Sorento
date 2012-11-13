@@ -570,7 +570,13 @@ namespace Core.Addin
 							return ((string)Variable);
 
 						case "length":
-							return ((string)Variable).Length;
+							return ((string)Variable);
+
+						case "padleft":
+							return ((string)Variable).PadLeft (Parameters.Get<int> (0), Parameters.Get<string> (1)[0]);
+
+						case "padright":
+							return ((string)Variable).PadRight (Parameters.Get<int> (0), Parameters.Get<string> (1)[0]);
 
 						case "substring":
 							return ((string)Variable).Substring (Parameters.Get<int> (0), Parameters.Get<int> (1));
@@ -643,11 +649,14 @@ namespace Core.Addin
 					{
 						case "":
 							return ((int)Variable);
+						
+						case "tostring":
+							return ((int)Variable).ToString ();
 					}
 					break;
 				#endregion
 
-				#region System.String
+				#region System.Boolean
 				case "system.boolean":
 					switch (Method)
 					{
