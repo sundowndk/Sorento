@@ -68,7 +68,6 @@ namespace SorentoLib.Tools
 			{
 				message.BodyFormat = System.Web.Mail.MailFormat.Html;
 			}
-
 			else
 			{
 				message.BodyFormat = System.Web.Mail.MailFormat.Text;
