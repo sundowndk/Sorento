@@ -581,8 +581,15 @@ namespace Core.Addin
 						case "substring":
 							return ((string)Variable).Substring (Parameters.Get<int> (0), Parameters.Get<int> (1));
 
+						case "removenewline":
+							return ((string)Variable).Replace (System.Environment.NewLine, string.Empty);
+
 						case "replace":
+							//SorentoLib.Services.Logging.LogDebug ("Char:"+Parameters.Get<string> (0));
 							return ((string)Variable).Replace (Parameters.Get<string> (0), Parameters.Get<string> (1));
+							//string test = "\n";
+							//return ((string)Variable).Replace (test, Parameters.Get<string> (1));
+							//return ((string)Variable).Replace (System.Environment.NewLine, Parameters.Get<string> (1));
 
 						case "split":
 							return ((string)Variable).Split (Parameters.Get<string> (0).ToCharArray (), StringSplitOptions.RemoveEmptyEntries);
