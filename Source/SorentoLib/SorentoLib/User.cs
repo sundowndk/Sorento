@@ -615,6 +615,8 @@ namespace SorentoLib
 		{
 			bool result = false;
 
+			Console.WriteLine (filterOutUserId);
+
 			if (Services.Datastore.FindShelf (DatastoreAisle, new Services.Datastore.MetaSearch ("email", Enums.DatastoreMetaSearchComparisonOperator.Equal, Email), new Services.Datastore.MetaSearch (Enums.DatastoreMetaSearchLogicOperator.And), new Services.Datastore.MetaSearch ("id", Enums.DatastoreMetaSearchComparisonOperator.NotEqual, filterOutUserId)) != string.Empty)
 			{
 				result = true;
