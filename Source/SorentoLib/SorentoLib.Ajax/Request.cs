@@ -169,6 +169,10 @@ namespace SorentoLib.Ajax
 				{
 					result = (T)(object)xml.DocumentElement.InnerText;
 				}
+				else if (typeof (T) == typeof (bool))
+				{
+					result = (T)(object)SNDK.Convert.StringToBool (xml.DocumentElement.InnerText);
+				}
 				else if (typeof (T) == typeof (Guid))
 				{
 					result = (T)(object)new Guid (xml.DocumentElement.InnerText);
