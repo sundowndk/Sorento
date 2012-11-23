@@ -49,6 +49,67 @@ namespace SorentoLib.Tools
 			return result;
 		}
 
+		public class SendMailAttatchment
+		{
+			private Byte[] _data;
+			private string _filename;
+			private string _mimetype;
+
+			public Byte[] Data
+			{
+				get
+				{
+					return this._data;
+				}
+			}
+
+			public string Filename
+			{
+				get
+				{
+					return this._filename;
+				}
+			}
+
+			public string MimeType
+			{
+				get
+				{
+					return this._mimetype;
+				}
+			}
+
+			public SendMailAttatchment (Byte[] Data, string Filename, string MimeType)
+			{
+				this._data = Data;
+				this._filename = Filename;
+				this._mimetype = MimeType;
+			}
+		}
+
+		public static void SendMail (string From, string To, string Subject, string Body, bool IsBodyHTML, List<SendMailAttatchment> Attachments)
+		{
+			System.Net.Mail.MailMessage message = new System.Net.Mail.MailMessage ();
+			message.From = new System.Net.Mail.MailAddress (From);
+			message.To.Add (new System.Net.Mail.MailAddress (To));
+			message.Subject = Subject;
+			message.IsBodyHtml = IsBodyHTML;
+
+			message.BodyEncoding = Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.smtp_encoding));
+			message.Body = Body;
+
+			foreach (SendMailAttatchment attachment in Attachments)
+			{			
+				MemoryStream stream = new MemoryStream (attachment.Data);
+				message.Attachments.Add (new System.Net.Mail.Attachment (stream, attachment.Filename, attachment.MimeType));
+//				stream.Close ();
+			}
+
+			System.Net.Mail.SmtpClient smtpclient = new System.Net.Mail.SmtpClient (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.smtp_server));
+			smtpclient.Send (message);
+
+		}
+
 
 		public static void SendMail (string From, string To, string Subject, string Body)
 		{
@@ -62,6 +123,7 @@ namespace SorentoLib.Tools
 			message.To = To;
 			message.Subject = Subject;
 			message.Body = Body;
+
 			message.BodyEncoding = Encoding.GetEncoding (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.smtp_encoding));
 			
 			if (BodyIsHtml)
