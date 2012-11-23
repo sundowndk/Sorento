@@ -30,6 +30,7 @@ using System.Text;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace SorentoLib.Tools
 {
@@ -107,6 +108,8 @@ namespace SorentoLib.Tools
 
 			System.Net.Mail.SmtpClient smtpclient = new System.Net.Mail.SmtpClient (SorentoLib.Services.Config.Get<string> (Enums.ConfigKey.smtp_server));
 			smtpclient.Send (message);
+
+			Thread.Sleep (4000);
 
 		}
 
