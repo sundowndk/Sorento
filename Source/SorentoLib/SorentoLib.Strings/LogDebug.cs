@@ -52,6 +52,10 @@ namespace SorentoLib.Strings
 		public static string MediaStats = "[SORENTOLIB.MEDIA]: Stats collected for media.";
 		public static string MediaGarbageCollector =  "[SORENTOLIB.MEDIA]: Garbage collected for media.";
 		#endregion
+
+		#region SERVICE.SETTINGS
+		public static string ServiceSettingsDefaultSet = "[SORENTOLIB.SERVICES.SETTINGS]: Default value set for setting: {0}";
+		#endregion
 	}
 }
 

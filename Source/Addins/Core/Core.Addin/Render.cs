@@ -267,11 +267,13 @@ namespace Core.Addin
 							switch (Parameters.Count)
 							{
 								case 1:
-									return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.User> (SorentoLib.User.List(SorentoLib.Enums.UserListFilter.OnlyUsersThatIsMemberOfUsergroupId, Parameters.Get<Guid>(0)));
+//									return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.User> (SorentoLib.User.List(SorentoLib.Enums.UserListFilter.OnlyUsersThatIsMemberOfUsergroupId, Parameters.Get<Guid>(0)));
+									break;
 
 								default:
 									return SorentoLib.Render.Variables.ConvertToListObject<SorentoLib.User> (SorentoLib.User.List());
 							}
+							break;
 				      }
 					break;
 				#endregion
@@ -711,6 +713,9 @@ namespace Core.Addin
 
 						case "now":
 							return DateTime.Now;
+
+						case "fromtimestamp":
+							return SNDK.Date.TimestampToDateTime (Parameters.Get<int> (0));
 					}
 					break;
 				#endregion

@@ -20,6 +20,9 @@
 				<class name="config">
 					<js file="javascript/services/config.js" />
 				</class>
+				<class name="settings">
+					<js file="javascript/services/settings.js" />
+				</class>				
 				<class name="snapshot">
 					<js file="javascript/services/snapshot.js" />
 				</class>

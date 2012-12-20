@@ -51,8 +51,8 @@ namespace Test
 
 
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-			                                                          "localhost",
-//			                                                            "10.0.0.40",
+//			                                                          "localhost",
+			                                                            "10.0.0.40",
 //			                                                            "sorento",
 			                                                          "sorentotest.sundown.dk",
 			                                                          "sorentotest",
@@ -62,9 +62,15 @@ namespace Test
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
-			SorentoLib.User user = SorentoLib.User.Load ("admin");
-			user.Status = SorentoLib.Enums.UserStatus.Enabled;
-			user.Save ();
+//			SorentoLib.Services.Settings.Set ("test.test.test", "test");
+
+//			SorentoLib.Services.Settings.Delete ("test.test.test");
+
+//			Console.WriteLine (SorentoLib.Services.Settings.Get<bool> ("test.test.test"));
+
+//			SorentoLib.User user = SorentoLib.User.Load ("admin");
+//			user.Status = SorentoLib.Enums.UserStatus.Enabled;
+//			user.Save ();
 
 //			SorentoLib.User user = new User ("admin");
 //			user.Password = "qwerty";

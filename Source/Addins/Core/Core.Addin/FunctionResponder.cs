@@ -44,34 +44,42 @@ namespace Core.Addin
 		#region Public Methods
 		public void Process (SorentoLib.Session Session)
 		{
+			// True if function returns successfully.
+			bool success = false;
+
 			// TODO: fix all this.
 			string resulttemplate = string.Empty;
 
-			SorentoLib.Tools.ParseTypeName typename = new SorentoLib.Tools.ParseTypeName (Session.Request.QueryJar.Get ("cmd.function").Value);
 
 			// Find Addin to handle resolve.
+			SorentoLib.Tools.ParseTypeName typename = new SorentoLib.Tools.ParseTypeName (Session.Request.QueryJar.Get ("cmd.function").Value);
 			foreach (SorentoLib.Addins.IFunction function in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IFunction)))
 			{
 				if (function.IsProvided (typename.Namspace))
 				{
-					if (function.Process (Session, typename.Fullname, typename.Method))
-					{
-						if (Session.Request.QueryJar.Exist ("cmd.onsuccess"))
-						{
-							resulttemplate = Session.Request.QueryJar.Get ("cmd.onsuccess").Value;
-						}
-					}
-					else
-					{
-						if (Session.Request.QueryJar.Exist ("cmd.onerror"))
-						{
-							resulttemplate = Session.Request.QueryJar.Get ("cmd.onerror").Value;
-						}
-					}
+					success = function.Process (Session, typename.Fullname, typename.Method);					
 					break;
 				}
 			}
-			
+
+			// If function returned successfully we need to show the success page, if it has been specified.
+			if (success)
+			{
+				if (Session.Request.QueryJar.Exist ("cmd.onsuccess"))
+				{
+					resulttemplate = Session.Request.QueryJar.Get ("cmd.onsuccess").Value;
+				}
+			}
+			// If function returned unsuccessfull we should show the error page, if it has been specified.
+			else
+			{
+				if (Session.Request.QueryJar.Exist ("cmd.onerror"))
+				{
+					resulttemplate = Session.Request.QueryJar.Get ("cmd.onerror").Value;
+				}
+			}
+
+			// If redirect has been specfied lets do that. This is good for hiding POST urls.
 			if (Session.Request.QueryJar.Exist ("cmd.redirect"))
 			{
 				if (Session.Request.QueryJar.Get ("cmd.redirect").Value.ToLower () == "true")

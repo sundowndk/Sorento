@@ -96,5 +96,6 @@
     <None Include="javascript.jsb" />
     <None Include="javascript\services\addins.js" />
     <None Include="build.sh" />
+    <None Include="javascript\services\settings.js" />
   </ItemGroup>
 </Project>

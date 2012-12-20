@@ -59,6 +59,17 @@ namespace SorentoLib.Strings
 		public static string ServicesConfigKeyNotValidType = "Config key: {0} is not of type: {1}";
 		#endregion
 
+		#region SERVICES.SETTINGS
+		public static string ServicesSettingsKeyError = "Settings key: {0} was not found.";
+		public static string ServicesSettingsKeyNotValidType = "Settings key: {0} is not of type: {1}";
+		#endregion
+
+		#region SERVICES.SETTINGS.SETTING
+		public static string ServicesSettingsSettingSave = "Could not save Setting with key: {0}.";
+		public static string ServicesSettingsSettingLoadKey = "Could not load Setting with key: {0}";
+		public static string ServicesSettingsSettingDeleteKey =  "Could not delete Setting with key: {0}";
+		#endregion
+
 		#region SERVICES.STATS
 		public static string ServicesStatsKeyNotFound = "Stats key: {0} was not found.";
 		public static string ServicesStatsKeyNotValidType = "Stats key: {0} is not of type: {1}";
@@ -84,6 +95,7 @@ namespace SorentoLib.Strings
 		public static string UserCreateUsername = "Could not create user. Username '{0}' is allready in use.";
 		public static string UserCreateEmail = "Could not create user. Email '{0}̈́' is allready in use.";
 		public static string UserSetUsername = "Username '{0}' is allready in use.";
+		public static string UserSetUsernameStringEmpty = "Username cannot be empty.";
 		public static string UserSetEmail = "Email '{0}' is allready in use.";
 		public static string UserLoad = "Could not load user. Please make sure you supplied a valid Id or Username.";
 		public static string UserLoadGuid = "Could not load user with id: {0}";

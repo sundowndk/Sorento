@@ -135,13 +135,21 @@ namespace SorentoLib
 
 			set
 			{
-				if (User.IsUsernameInUse (value, this._id))
+				if (value != string.Empty)
 				{
-					// EXCEPTION: Exception.UserSetUsername
-					throw new Exception (string.Format (Strings.Exception.UserSetUsername, value));
-				}
+					if (User.IsUsernameInUse (value, this._id))
+					{
+						// EXCEPTION: Exception.UserSetUsername
+						throw new Exception (string.Format (Strings.Exception.UserSetUsername, value));
+					}
 
-				this._username = value;
+					this._username = value;
+				}
+				else
+				{
+					// EXCEPTION: Exception.UserSetUsernameStringEmpty
+					throw new Exception (string.Format (Strings.Exception.UserSetUsernameStringEmpty));
+				}
 			}
 		}
 
@@ -196,11 +204,14 @@ namespace SorentoLib
 
 			set
 			{
-//				if (User.IsEmailInUse (value, this._id))
-//				{
-//					 EXCEPTION: Exception.UserSetEmail
-//					throw new Exception (string.Format (Strings.Exception.UserSetEmail, value));
-//				}
+				if (value != string.Empty)
+				{
+					if (User.IsEmailInUse (value, this._id))
+					{
+						// EXCEPTION: Exception.UserSetEmail
+						throw new Exception (string.Format (Strings.Exception.UserSetEmail, value));
+					}
+				}
 				this._email = value;
 			}
 		}
@@ -255,7 +266,7 @@ namespace SorentoLib
 				// EXCEPTION: Exception.UserCreateUsername
 				throw new Exception (string.Format (SorentoLib.Strings.Exception.UserCreateUsername, username));
 			}
-						
+								
 			// Add default usergroup.
 			try
 			{
@@ -349,7 +360,6 @@ namespace SorentoLib
 				meta.Add ("username", this._username);
 				meta.Add ("email", this._email);
 				meta.Add ("scope", this._scope);
-
 
 				//Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, this.GetType ().FullName.ToLower ()), meta);
 				Services.Datastore.Set (DatastoreAisle, this._id.ToString (), SNDK.Convert.ToXmlDocument (item, "sorentolib.user"), meta);
@@ -589,12 +599,12 @@ namespace SorentoLib
 			return result;
 		}
 
-		static public bool IsUsernameInUse (string username)
+		public static bool IsUsernameInUse (string username)
 		{
 			return IsUsernameInUse (username, Guid.Empty);
 		}
 
-		static public bool IsUsernameInUse (string username, Guid filterOutUserId)
+		public static bool IsUsernameInUse (string username, Guid filterOutUserId)
 		{
 			bool result = false;
 
@@ -606,12 +616,12 @@ namespace SorentoLib
 			return result;
 		}
 
-		static public bool IsEmailInUse (string Email)
+		public static bool IsEmailInUse (string Email)
 		{
 			return IsEmailInUse(Email, Guid.Empty);
 		}
 
-		static public bool IsEmailInUse (string Email, Guid filterOutUserId)
+		public static bool IsEmailInUse (string Email, Guid filterOutUserId)
 		{
 			bool result = false;
 
@@ -683,14 +693,6 @@ namespace SorentoLib
 				result.Username = (string)item["username"];
 			}
 
-//			if (item.ContainsKey ("password"))
-//			{
-//				if ((string)item["password"] != string.Empty)
-//				{
-//					result._password = (string)item["password"];
-//				}
-//			}
-
 			if (item.ContainsKey ("email"))
 			{
 				result.Email = (string)item["email"];
@@ -716,14 +718,6 @@ namespace SorentoLib
 		#endregion
 
 		#region Internal Static Methods
-		public static void Purge ()
-		{
-			foreach (User user in User.List ())
-			{
-				User.Delete (user.Id);
-			}
-		}
-
 		internal static void ServiceStatsUpdate ()
 		{
 			Services.Stats.Set (Enums.StatKey.sorentolib_user_count, Services.Datastore.NumberOfShelfsInAisle (DatastoreAisle));
@@ -731,83 +725,6 @@ namespace SorentoLib
 			// LOG: LogDebug.UserStats
 			Services.Logging.LogDebug (Strings.LogDebug.UserStats);
 		}
-		#endregion
-
-		#region OLD
-		public static List<User> List (Enums.UserListFilter filter, object filterData)
-		{
-			List<User> result = new List<User>();
-
-//			QueryBuilder qb = new QueryBuilder (QueryBuilderType.Select);
-//			qb.Table (DatabaseTableName);
-//			qb.Columns ("id");
-//
-//			switch (filter) {
-//				case SorentoLib.Enums.UserListFilter.OnlyUsersThatIsMemberOfUsergroupId:
-//				{
-//					qb.AddWhere ("usergroups", "like", "%"+ ((Guid)filterData).ToString () +"%");
-//					break;
-//				}
-//			}
-//
-//			Query query = Services.Database.Connection.Query (qb.QueryString);
-//			if (query.Success)
-//			{
-//				while (query.NextRow ())
-//				{
-//					User user = Load (query.GetGuid (qb.ColumnPos ("id")));
-//					result.Add (user);
-//				}
-//			}
-//
-//			query.Dispose ();
-//			query = null;
-//			qb = null;
-
-			return result;
-		}
-
-
-
-
-//		private string __usergroups_as_string
-//		{
-//			get
-//			{
-//				string result = string.Empty;
-//				foreach (Usergroup usergroup in this._usergroups)
-//				{
-//					// Remove duplicates
-//					if (result.Contains (usergroup.Id.ToString ()))
-//					{
-//						continue;
-//					}
-//
-//					result += usergroup.Id.ToString () + ";";
-//				}
-//
-//				return  result.TrimEnd (";".ToCharArray ());
-//			}
-//
-//			set
-//			{
-//				this._usergroups.Clear ();
-//
-//				foreach (string id in value.Split (";".ToCharArray (), StringSplitOptions.RemoveEmptyEntries))
-//				{
-//					try
-//					{
-//						this._usergroups.Add (Usergroup.Load (new Guid (id)));
-//					}
-//					catch
-//					{
-//						// LOG: LogErrorUserLoadUsergroup
-//						Services.Logging.LogError (string.Format (Strings.LogError.UserLoadUsergroup, id));
-//					}
-//				}
-//			}
-//		}
-
 		#endregion
 	}
 }

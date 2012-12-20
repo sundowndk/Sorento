@@ -42,6 +42,7 @@ namespace Core.Addin
 			base.NameSpaces.Add ("sorentolib");
 			base.NameSpaces.Add ("sorentolib.services");
 			base.NameSpaces.Add ("sorentolib.services.config");
+			base.NameSpaces.Add ("sorentolib.services.settings");
 			base.NameSpaces.Add ("sorentolib.services.snapshot");
 			base.NameSpaces.Add ("sorentolib.services.addins");
 		}
@@ -398,6 +399,78 @@ namespace Core.Addin
 //								SorentoLib.Services.Config.Set (request.Key<string> ("module"), request.Key<string> ("key"), request.Key<string> ("value"));
 //							}
 
+							break;
+						}
+					}
+					break;
+				}
+				#endregion
+
+				#region SorentoLib.Services.Settings
+				case "sorentolib.services.settings":
+				{
+					switch (Method.ToLower ())
+					{
+						case "get":
+						{
+							Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (request.XmlDocument);
+							
+							List<Hashtable> test = new List<Hashtable> ();
+							
+							foreach (XmlDocument key in (List<XmlDocument>)item["config"])
+							{
+								string keyname = (string)((Hashtable)SNDK.Convert.FromXmlDocument (key))["value"];
+								Hashtable val = new Hashtable ();
+								val.Add (keyname, SorentoLib.Services.Settings.Get<string> (keyname));
+								test.Add (val);
+							}
+							
+							result.Add ("settings", test);
+							
+							break;
+						}
+							
+						case "set":
+						{
+							Hashtable item = (Hashtable)SNDK.Convert.FromXmlDocument (request.XmlDocument);
+							
+							foreach (XmlDocument xml in (List<XmlDocument>)item["config"])
+							{
+								Hashtable conf = (Hashtable)SNDK.Convert.FromXmlDocument (xml);
+								//								SorentoLib.Services.Config.Set (conf["module"], conf["key"], (object)conf["value"]);
+								SorentoLib.Services.Settings.Set (conf["key"], conf["value"]);
+								//								Console.WriteLine (conf["module"] +" "+ conf["key"] +" "+ conf["value"]);
+							}
+							
+							//							foreach (string key in item.Keys)
+							//							{
+							//								Console.WriteLine (item[key].GetType ());
+							//							}
+							
+							//Console.WriteLine (request.GetXml ("config").OuterXml);
+							
+							//							foreach (XmlDocument usergroup in (List<XmlDocument>)item["usergroups"])
+							//							{
+							//								result._usergroups.Add (Usergroup.FromXmlDocument (usergroup));
+							//							}
+							
+							//							foreach (XmlDocument config in request.getValue<List<XmlDocument>> ("config"))
+							//							{
+							//								//result._usergroups.Add (Usergroup.FromXmlDocument (usergroup));
+							//							}
+							
+							//							if (request.Data.ContainsKey ("keys"))
+							//							{
+							//								foreach (string key in ((Hashtable)request.Data["keys"]).Keys)
+							//								{
+							//									SorentoLib.Services.Config.Set (key, ((Hashtable)request.Data["keys"])[key]);
+							//								}
+							//							}
+							//							else
+							//							{
+							//								SorentoLib.Services.Config.Set (request.Key<string> ("module"), request.Key<string> ("key"), request.Key<string> ("value"));
+							//							}
+							
 							break;
 						}
 					}
