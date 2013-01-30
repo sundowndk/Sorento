@@ -510,7 +510,7 @@ namespace SorentoLib.Services
 								
 							case Enums.DatastoreMetaSearchComparisonOperator.Contains:
 							{
-								qb.AddWhere (@"meta REGEXP '\|"+ search.Key +@"\:.*"+ search.Value +@"*?\|'");
+								qb.AddWhere (@"meta REGEXP '\\|"+ search.Key +@"\:.*"+ search.Value +@".*\\|'");
 								break;
 							}
 								
