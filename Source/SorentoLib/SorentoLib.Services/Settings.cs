@@ -54,6 +54,9 @@ namespace SorentoLib.Services
 		{
 			Setting setting;
 
+			Console.WriteLine (Key);
+			Console.WriteLine (typeof (T).Name.ToLower ());
+
 			try
 			{
 				setting = Setting.Load (Key);
@@ -74,6 +77,11 @@ namespace SorentoLib.Services
 					case "guid":
 					{
 						return (T)Convert.ChangeType (new Guid (setting.Value), typeof(T));
+					}
+
+					case "int32":
+					{
+						return (T)Convert.ChangeType (int.Parse (setting.Value), typeof(T));
 					}
 
 					default:
