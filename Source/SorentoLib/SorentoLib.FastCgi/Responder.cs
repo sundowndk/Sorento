@@ -289,7 +289,7 @@ namespace SorentoLib.FastCgi
 
 			timer.Stop ();
 
-			FastCgi.Runtime.Test ();
+//			FastCgi.Runtime.Test ();
 
 			SorentoLib.Services.Logging.LogDebug("Request #"+ FastCgi.Runtime.requests +" served in: "+ timer.Duration.TotalSeconds +" seconds.");
 			timer = null;

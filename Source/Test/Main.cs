@@ -62,6 +62,43 @@ namespace Test
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
+
+
+			
+//			double total = 0;
+//
+//				for (int a = 0; a < 6; a++)
+//				{
+//					  SorentoLib.Tools.Timer timer = new SorentoLib.Tools.Timer ();
+//					  timer.Start ();
+//
+//					  List<string> content = SNDK.IO.ReadTextFile ("parsertest3.stpl");
+//
+//					  for (int i = 0; i < 50; i++)
+//					  {
+//
+//						    Parser parser = new Parser (content);	
+//					  }
+//
+//					  timer.Stop ();
+//
+//					  Console.WriteLine (timer.Duration.TotalSeconds + " seconds.");
+//				total += timer.Duration.TotalSeconds;
+//				}
+
+//			Console.WriteLine ("Mean: "+ (total/6));
+
+
+//			foreach (string line in pare)
+//			{
+//				Console.WriteLine (line);
+//			}
+
+
+
+
+
+
 //			SorentoLib.Services.Settings.Set ("test.test.test", "test");
 
 //			SorentoLib.Services.Settings.Delete ("test.test.test");
