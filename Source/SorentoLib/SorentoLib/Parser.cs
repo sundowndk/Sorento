@@ -33,6 +33,7 @@ using System.Reflection;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text;
 
 using SorentoLib;
 
@@ -41,227 +42,188 @@ namespace SorentoLib
 	public class Parser
 	{
 		#region Private Fields
-		private List<string> _input;
-		private List<string> _output;
+		private Template _template;
+		private List<ParserVariable> _variables;
+		private StringBuilder _output;
+		private ParserError _errors;
 		#endregion
 
 		#region Public Fields
-		public List<string> Input
+		public string Output
 		{
 			get
 			{
-				return this._input;
+				return this._output.ToString ();
 			}
 		}
 
-		public List<string> Output
+		public ParserError Errors
 		{
 			get
 			{
-				return this._output;
+				return this._errors;
 			}
 		}
 		#endregion
 
 		#region Constructor
-		public Parser (List<string> Content)
+		public Parser (Template Template)
 		{
-			this._input = new List<string> ();
-			this._output = new List<string> ();
+			this._template = Template;
+			this._variables = new List<ParserVariable> ();
+			this._output = new StringBuilder ();
 
-			#region PARSE CONTENT
-			List<string> blockdepth = new List<string> ();
-			foreach (string line in Content)
-			{
-				if (line.Contains ("#begin:csharp#"))
-				{
-					blockdepth.Add ("csharp");
-					continue;
-				}
+			this.Run ();
+		}
 
-				if (line.Contains ("#end:csharp#"))
-				{
-					if (blockdepth[(blockdepth.Count - 1)] == "csharp")
-					{
-						blockdepth.RemoveAt ((blockdepth.Count - 1));
-					}
-					continue;
-				}
+		public Parser (Template Template, List<ParserVariable> Variables)
+		{
+			this._template = Template;
+			this._variables = Variables;
+			this._output = new StringBuilder ();
 
-				if (line.Contains ("#begin:html#"))
-				{
-					blockdepth.Add ("html");
-					continue;
-				}
-
-				if (line.Contains ("#end:html#"))
-				{
-					if (blockdepth[(blockdepth.Count - 1)] == "html")
-					{
-						blockdepth.RemoveAt ((blockdepth.Count - 1));
-					}
-					continue;
-				}
-
-
-				if (blockdepth.Count > 0)
-				{
-					if (blockdepth[(blockdepth.Count - 1)] == "csharp")
-					{
-						this._input.Add (line);
-					}
-
-					if (blockdepth[(blockdepth.Count - 1)] == "html")
-					{
-						this._input.Add ("Parser.Hooks.Output.Add (\""+ line +"\");");
-					}
-				}
-			}
-			#endregion
-
-			#region RUN CONTENT
-			string input = string.Empty;
-			foreach (string line in this._input)
-			{
-				input += line;
-			}
-
-
-//			BackgroundWorker bw = new BackgroundWorker ();
-
-//			bw.DoWork += BackgroundWorker;
-//			bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-//			bw.RunWorkerAsync (input);
-
-//			bw.CancelAsync ();
-//			while (bw.IsBusy)
-//			{
-//				Console.WriteLine ("Waiting...");
-//				Thread.Sleep (1);
-//			}
-
-
-
-
-			// Has thread pool for a new thread to do the work.
-			Thread thread = null;
-			Task<List<string>> task = Task.Factory.StartNew<List<string>> (() => 
-			{
-				//Capture the thread, so we can abort worker thread if it hangs.
-				thread = Thread.CurrentThread;
-
-				// Setup error reporting.
-				StringWriter reportwriter = new StringWriter ();
-				try
-				{
-					string code = string.Empty;
-					Report report = new Report (new Mono.CSharp.StreamReportPrinter (reportwriter));
-
-					// Create new evaluator instance.
-					var evaluator = new Evaluator (new CompilerSettings (), report); 
-
-					// Reference current assembly.
-					evaluator.ReferenceAssembly (Assembly.GetExecutingAssembly ());
-
-					// Reference SorentoLib.
-					evaluator.ReferenceAssembly (typeof(SorentoLib.Runtime).Assembly);
-
-					evaluator.Run ("using Test;");
-
-					// Using.
-					evaluator.Run ("using System; using SorentoLib;");
-
-					// Initalize Addins who needs it.
-					foreach (SorentoLib.Addins.IRuntime runtime in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IRuntime)))
-					{
-						evaluator.ReferenceAssembly (runtime.Assembly);
-						evaluator.Run ("using "+ runtime.Assembly.GetName ().Name +";");
-					}
-
-					// Anonymous methods.
-					code += "Test.Parser.Hooks.Commands.Print.Delegate Print = delegate (object Value) { Test.Parser.Hooks.Commands.Print.Method (Value);};";
-
-
-					code += (string)input;
-
-					// Output.
-					Parser.Hooks.Output = new List<string> ();
-
-					// Run evaluation.
-					evaluator.Run (code);
-
-
-//					foreach (string line in Parser._threadstaticoutput)
-//					{
-//						Console.WriteLine (line);
-//					}
-
-
-//					string result = reportwriter.ToString();
-//					Console.WriteLine (result);
-					evaluator = null;
-					report = null;
-
-				}
-				catch
-				{
-//					Console.WriteLine ("Error");
-				}
-
-				reportwriter.Close ();
-				reportwriter.Dispose ();
-
-//				Console.WriteLine ("Evaluator done...");
-
-				return Parser.Hooks.Output;
-			});
-
-
-
-//
-//    //This is needed in the example to avoid thread being still NULL
-//    Thread.Sleep(10);
-//
-//    //Cancel the task by aborting the thread
-//    thread.Abort();
-
-
-			if (!task.Wait (25000))
-			{
-				thread.Abort ();
-				Console.WriteLine ("Evaluator took to long.. thread killed...");
-			}
-
-//			foreach (string line in task.Result)
-//			{
-//				Console.WriteLine (line);
-//			}
-
-			task.Dispose ();
-
-//			evaluatorthread.Start ();       
-//			if (!evaluatorthread.Join (10000))
-//			{
-//				evaluatorthread.Abort ();
-//				Console.WriteLine ("Evaluator took to long.. thread killed...");
-//			}
-
-//			System.Threading.Tasks
-
-//			Console.WriteLine ("Done...");
-
-			#endregion
+			this.Run ();
 		}
 		#endregion
+
+		private void Run ()
+		    {
+				string input = this._template.Content;
+
+				// Ask thread pool for a new thread to do the work.
+				Thread thread = null;
+				Task<StringBuilder> task = Task.Factory.StartNew<StringBuilder> (() => 
+				{
+					  //Capture the thread, so we can abort worker thread if it hangs.
+					  thread = Thread.CurrentThread;
+
+					  // Setup error reporting.
+					  using (StringWriter reportwriter = new StringWriter ())
+					  {
+						    try
+						    {
+								string evalcode = string.Empty;
+
+								Report report = new Report (new Mono.CSharp.StreamReportPrinter (reportwriter));
+
+								// Create new evaluator instance.
+								var evaluator = new Evaluator (new CompilerSettings (), report); 
+
+								// Reference current assembly.
+								evaluator.ReferenceAssembly (Assembly.GetExecutingAssembly ());
+
+						evaluator.ReferenceAssembly (typeof (SNDK.Convert).Assembly);
+
+								// Using.
+								evaluator.Run ("using System; using System.Collections.Generic; using SorentoLib; using SNDK");
+
+
+								foreach (SorentoLib.Addins.IRuntime runtime in AddinManager.GetExtensionObjects (typeof(SorentoLib.Addins.IRuntime)))
+								{
+									  evaluator.ReferenceAssembly (runtime.Assembly);
+									  evaluator.Run ("using " + runtime.Assembly.GetName ().Name + ";");
+								}
+
+								// Anonymous methods.
+								evalcode += "SorentoLib.Parser.Hooks.Commands.Print.Delegate Print = delegate (object Value) { SorentoLib.Parser.Hooks.Commands.Print.Method (Value);};\n";
+
+								// Variables
+								int counter = 0;
+								Parser.Hooks.Variables = this._variables;
+
+								foreach (ParserVariable variable in this._variables)
+								{
+									  evalcode += variable.Value.GetType ().FullName + " " + variable.Name + " = (" + variable.Value.GetType ().FullName + ")SorentoLib.Parser.Hooks.Variables[" + counter + "].Value;\n"; 
+									  counter++;
+								}
+
+								evalcode += input;
+
+								// Output.
+								Parser.Hooks.Errors = null;
+								Parser.Hooks.Output = new StringBuilder ();
+
+								// Run evaluation.
+								evaluator.Run (evalcode);
+
+								// Cleanup.
+								evaluator = null;
+								report = null;
+								evalcode = null;
+
+								if (reportwriter.ToString () != string.Empty)
+								{
+									  Console.WriteLine ("!!!!" + reportwriter.ToString ());
+
+									  Parser.Hooks.Errors = new ParserError (reportwriter.ToString ());
+								}
+						    } catch (Exception e)
+						    {
+								Console.WriteLine (e);
+
+								string interactive = string.Empty;
+								interactive += "{interactive}(0,0): error SE0000: " + e.Message;
+								interactive += reportwriter.ToString ();
+
+								Parser.Hooks.Errors = new ParserError (interactive);
+						    }
+
+						    this._errors = Hooks.Errors;
+//					this._output = Parser.Hooks.Output;
+
+						    return Parser.Hooks.Output;
+					  }
+				}
+				);		
+
+			if (!task.IsCompleted)
+			{
+				if (!task.Wait (25000))
+				{
+					thread.Abort ();
+					throw new Exceptions.Parser ("TEMPLATE PARSER TIMEOUT");
+				}
+			}
+
+			if (this._errors != null)
+			{
+				string message = string.Empty;
+
+				bool thr = false;
+				message += "PARSER EXCEPTION:<br>\n";
+				foreach (SorentoLib.ParserError.Error error in this._errors.Errors)
+				{
+					if (error.Type == Enums.ParserErrorType.Error)
+					{
+						thr = true;
+					}
+
+					message += "Line: "+ error.Line + " - "+ error.Code +" - "+ error.Text +"<br>\n";
+				}
+
+				if (thr)
+				{
+					throw new Exceptions.Parser (message);
+				}
+			}
+
+			this._output = task.Result;
+
+
+//			task.Dispose ();		
+		}
 
 		#region Nested classes
 		public static class Hooks
 		{
 			[ThreadStatic]
-			public static List<string> Output;
+			public static StringBuilder Output;
 
 			[ThreadStatic]
-			public static SorentoLib.Session Session;
+			public static List<ParserVariable> Variables;
+
+			[ThreadStatic]
+			public static ParserError Errors;
 
 			public static class Commands
 			{
@@ -271,7 +233,7 @@ namespace SorentoLib
 
 					public static void Method (object Value)
 					{
-						Parser.Hooks.Output.Add (Value.ToString ());
+						Parser.Hooks.Output.AppendLine (Value.ToString ());
 					}
 				}
 			}

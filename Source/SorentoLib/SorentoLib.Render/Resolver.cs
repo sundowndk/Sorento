@@ -28,6 +28,7 @@ using System;
 using Mono.CSharp;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.IO;
 
 using Mono.Addins;
 
@@ -421,7 +422,21 @@ namespace SorentoLib.Render
 
 			try
 			{
-				result = Evaluator.Evaluate (result +";");
+//				using (StringWriter reportwriter = new StringWriter ())
+//				{
+//					Report report = new Report (new Mono.CSharp.StreamReportPrinter (reportwriter));
+
+					// Create new evaluator instance.
+
+
+					Evaluator e = new Evaluator (new CompilerSettings (), null);
+
+
+					result = e.Evaluate (result +";");
+//				}
+
+
+//				result = Evaluator.Evaluate (result +";");
 			}
 			catch
 			{

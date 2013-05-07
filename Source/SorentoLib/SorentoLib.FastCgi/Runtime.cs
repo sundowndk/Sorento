@@ -70,9 +70,12 @@ namespace SorentoLib.FastCgi
 				Server.SetResponder (typeof (SorentoLib.FastCgi.Responder));
 
 				// Configure server
-				Server.MaxConnections = Services.Config.Get<int> (Enums.ConfigKey.fastcgi_maxconnections);
-				Server.MaxRequests = Services.Config.Get<int> (Enums.ConfigKey.fastcgi_maxrequests);
-				Server.MultiplexConnections = Services.Config.Get<bool> (Enums.ConfigKey.fastcgi_multiplexconnections);
+//				Server.MaxConnections = Services.Config.Get<int> (Enums.ConfigKey.fastcgi_maxconnections);
+//				Server.MaxRequests = Services.Config.Get<int> (Enums.ConfigKey.fastcgi_maxrequests);
+				Server.MaxConnections = 50;
+				Server.MaxRequests = 50;
+				Server.MultiplexConnections = false;
+//				Server.MultiplexConnections = Services.Config.Get<bool> (Enums.ConfigKey.fastcgi_multiplexconnections);
 				
 				// Start listing.
 				Server.Start (false);

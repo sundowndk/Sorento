@@ -3,6 +3,10 @@
 		<Import assembly="SorentoLib.dll"/>		
 	</Runtime>
 
+	<ExtensionPoint path = "/SorentoLib/Runtime">
+		<ExtensionNode objectType="SorentoLib.Addins.IRuntime"/>
+	</ExtensionPoint>	
+
 	<ExtensionPoint path = "/SorentoLib/Init">
 		<ExtensionNode objectType="SorentoLib.Addins.IInit"/>
 	</ExtensionPoint>		

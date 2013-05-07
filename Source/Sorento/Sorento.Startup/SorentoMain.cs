@@ -73,6 +73,9 @@ namespace Sorento.Startup
 
 			// Initialize database.
 			SorentoLib.Services.Database.Initalize ();
+
+			// Initialize settings.
+//			SorentoLib.Services.Settings.Initialize ();
 			
 			// Initialize crypto.
 			SorentoLib.Services.Crypto.Initalize ();

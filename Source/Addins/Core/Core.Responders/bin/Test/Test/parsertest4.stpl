@@ -1,0 +1,30 @@
+#begin:html#
+<html>
+	<head meta="lalala">
+	
+		<title>
+		</title>
+	</head>
+	<body>		
+		<table>
+			#begin:csharp#
+			
+			for (int a = 0; a < 1; a++)
+			{				
+				#begin:html#
+				<tr>
+					<td>
+						#begin:csharp#
+						Print (test);
+						#end:csharp#
+					</td>
+					<td>
+					</td>
+				</tr>
+				#end:html#
+			}
+			#end:csharp#
+		</table>
+	</body>
+</html>
+#end:html#

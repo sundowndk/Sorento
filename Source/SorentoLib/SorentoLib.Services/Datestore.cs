@@ -472,6 +472,97 @@ namespace SorentoLib.Services
 			Delete (Id, string.Empty, string.Empty);
 		}
 
+
+
+		public static List<DatastoreItem> ListOfShelfsNew (string Aisle)
+		{
+			return ListOfShelfsNew (Aisle, null);
+		}
+
+		public static List<DatastoreItem> ListOfShelfsNew (string Aisle, params MetaSearch[] Search)
+		{
+			List<DatastoreItem> result = new List<DatastoreItem>();
+
+			string querystring = string.Empty;
+
+			querystring += "SELECT id, createtimestamp, updatetimestamp, aisle, shelf, data, meta FROM "+ DatabaseTableName +" WHERE (aisle = '"+ Aisle +"')";
+
+			if (Search != null)
+			{
+				querystring += " AND ";
+
+				foreach (MetaSearch search in Search)
+				{
+					if (search.ComparisonOperator != Enums.DatastoreMetaSearchComparisonOperator.None)
+					{
+						switch (search.ComparisonOperator)
+						{
+							case Enums.DatastoreMetaSearchComparisonOperator.Equal:
+							{
+								querystring += "(meta like binary '%|"+ search.Key +":"+ search.Value +"|%')";
+								break;
+							}
+								
+							case Enums.DatastoreMetaSearchComparisonOperator.NotEqual:
+							{
+								querystring += "(meta not like binary '%|"+ search.Key +":"+ search.Value +"|%'";
+								break;
+							}
+								
+							case Enums.DatastoreMetaSearchComparisonOperator.Contains:
+							{
+								querystring += @"(meta REGEXP '\\|"+ search.Key +@"\:.*"+ search.Value +@".*\\|')";
+								break;
+							}
+								
+							case Enums.DatastoreMetaSearchComparisonOperator.NotContains:
+							{
+								break;
+							}
+						}
+					}
+
+					if (search.LogicOperator != Enums.DatastoreMetaSearchLogicOperator.None)
+					{
+						switch (search.LogicOperator)
+						{
+							case Enums.DatastoreMetaSearchLogicOperator.And:
+							{
+								querystring += " AND ";
+								break;
+							}
+
+							case Enums.DatastoreMetaSearchLogicOperator.Or:
+							{
+								querystring += " UNION ";
+								querystring += "SELECT id, createtimestamp, updatetimestamp, aisle, shelf, data, meta FROM "+ DatabaseTableName +" WHERE (aisle = '"+ Aisle +"') AND ";
+								break;
+							}
+						}
+					}
+				}
+			}
+
+//			Console.WriteLine (querystring);
+
+			Query query = Services.Database.Connection.Query (querystring);
+			if (query.Success)
+			{
+				while (query.NextRow ())
+				{
+					result.Add (new DatastoreItem (query.GetGuid (0), query.GetInt (1), query.GetInt (2), query.GetString (3), query.GetString (4), query.GetString (5), query.GetString (6)));
+				}
+			}
+
+			query.Dispose ();
+			query = null;
+//			qb = null;
+			querystring = null;
+
+			return result;
+		}
+
+
 		public static List<string> ListOfShelfs (string Aisle)
 		{
 			return ListOfShelfs (Aisle, null);
@@ -511,7 +602,7 @@ namespace SorentoLib.Services
 								
 							case Enums.DatastoreMetaSearchComparisonOperator.NotEqual:
 							{
-								querystring += "(meta not like binary '%|"+ search.Key +":"+ search.Value +"|%'";
+								querystring += "(meta not like binary '%|"+ search.Key +":"+ search.Value +"|%')";
 //								qb.AddWhere ("meta", "not like binary", "%|"+ search.Key +":"+ search.Value +"|%");
 								break;
 							}
@@ -553,7 +644,7 @@ namespace SorentoLib.Services
 				}
 			}
 
-//			Console.WriteLine (qb.QueryString);
+//			Console.WriteLine (querystring);
 //			Query query = Services.Database.Connection.Query (qb.QueryString);
 			Query query = Services.Database.Connection.Query (querystring);
 			if (query.Success)

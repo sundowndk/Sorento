@@ -1,0 +1,23 @@
+<Addin id          = "Example"              
+       author      = "Rasmus Pedersen"
+       copyright   = "MIT X11"
+       url         = "http://www.sundown.dk/"
+       description = "Example addin for the Sorento Engine"	   
+       version     = "1.0"       
+       >
+	<Runtime>
+		<Import assembly="Example.dll"/>
+	</Runtime>
+	
+	<Dependencies>
+		<Addin id="Sorento" version="1.0" />
+	</Dependencies>		
+	
+	<Extension path = "/SorentoLib/Init">
+		<Type type="Example.Addin.Init"/>
+	</Extension>				
+	
+	<Extension path = "/SorentoLib/Runtime">
+		<Type type="Example.Addin.Runtime"/>
+	</Extension>				
+</Addin>

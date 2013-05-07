@@ -36,6 +36,7 @@ using System.Xml;
 using System.Reflection;
 
 using SorentoLib;
+using SNDK;
 //using sCMS;
 //using sBlog;
 //using Akvabase;
@@ -51,42 +52,85 @@ namespace Test
 
 
 			SorentoLib.Services.Database.Connection = new Connection (SNDK.Enums.DatabaseConnector.Mysql,
-//			                                                          "localhost",
-			                                                            "10.0.0.40",
+			                                                          "localhost",
+//			                                                            "10.0.0.40",
 //			                                                            "sorento",
-			                                                          "sorentotest.sundown.dk",
-			                                                          "sorentotest",
+			                                                          "test",
+			                                                          "test",
 			                                                          "qwerty",
 			                                                          true);
 
 			SorentoLib.Services.Database.Prefix = "sorento_";
 			SorentoLib.Services.Database.Connection.Connect ();
 
+			SorentoLib.Services.Config.Initialize ();
+			SorentoLib.Services.Settings.Initialize ();
 
 
+			SorentoLib.Services.Addins.Initialize ();
+			SorentoLib.Runtime.Initalize ();
+
+			SorentoLib.Session ses = new Session ();
+			ses.Request.QueryJar.Get ();
+
+
+
+			string content = string.Empty;
+			foreach (string line in SNDK.IO.ReadTextFile ("parsertest4.stpl"))
+			{
+				content += line +"\n";
+			}
+
+//			Console.WriteLine (content);
+
+			List<SorentoLib.ParserVariable> variables = new List<ParserVariable> ();
+			variables.Add (new ParserVariable ("test", "blabla"));
+
+//			Parser parser1 = new Parser (new Template ("parsertest4.stpl", Encoding.Default), variables);
+
+			try
+			{
+				Parser parser1 = new Parser (new Template (content), variables);
+				Console.WriteLine (parser1.Output);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e.Message);
+			}
+
+
+
+//			Console.WriteLine (parser1.Errors);
+
+
+			Environment.Exit (0);
 			
 //			double total = 0;
+//			int totaly = 0;
+//			int x = 6;
+//			int y = 200;
 //
-//				for (int a = 0; a < 6; a++)
+//			for (int a = 0; a < x; a++)
+//			{
+//				SorentoLib.Tools.Timer timer = new SorentoLib.Tools.Timer ();
+//				timer.Start ();
+//
+//				for (int i = 0; i < y; i++)
 //				{
-//					  SorentoLib.Tools.Timer timer = new SorentoLib.Tools.Timer ();
-//					  timer.Start ();
-//
-//					  List<string> content = SNDK.IO.ReadTextFile ("parsertest3.stpl");
-//
-//					  for (int i = 0; i < 50; i++)
-//					  {
-//
-//						    Parser parser = new Parser (content);	
-//					  }
-//
-//					  timer.Stop ();
-//
-//					  Console.WriteLine (timer.Duration.TotalSeconds + " seconds.");
-//				total += timer.Duration.TotalSeconds;
+////					Parser parser = new Parser (new Template ("parsertest4.stpl", Encoding.Default), variables);
+//					Parser parser = new Parser (new Template (content), variables);
 //				}
-
-//			Console.WriteLine ("Mean: "+ (total/6));
+//
+//
+//				timer.Stop ();
+//
+//				Console.WriteLine (timer.Duration.TotalSeconds);
+//				total += timer.Duration.TotalSeconds;
+//				totaly += y;
+//			}
+//
+//			Console.WriteLine ("Mean: "+ (total/x));
+//			Console.WriteLine ("Eval pr. sec.: "+ (totaly/total) +" ["+ totaly +"]");
 
 
 //			foreach (string line in pare)

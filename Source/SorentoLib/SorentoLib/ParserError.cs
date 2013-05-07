@@ -32,8 +32,9 @@ namespace SorentoLib
 {
 	public class ParserError
 	{
+		//{interactive}(0,0): error CS0000: Blablabla
 		#region Private Fields
-		private static Regex _expinteractiveerror = new Regex (@"^\{interactive\}\((?<line>\d*),(?<character>\d*)\)\: error (?<code>.*)\:.(?<text>.*)", RegexOptions.Compiled|RegexOptions.Multiline);
+		private static Regex _expinteractiveerror = new Regex (@"^\{interactive\}\((?<line>\d*),(?<character>\d*)\)\: (?<type>.*) (?<code>.*)\:.(?<text>.*)", RegexOptions.Compiled|RegexOptions.Multiline);
 		private List<Error> _errors;
 		#endregion
 
@@ -54,7 +55,7 @@ namespace SorentoLib
 
 			foreach (Match match in _expinteractiveerror.Matches (InteractiveError))
 			{
-				this._errors.Add (new Error (int.Parse (match.Groups ["line"].Value), int.Parse (match.Groups ["character"].Value), match.Groups ["code"].Value, match.Groups ["text"].Value));
+				this._errors.Add (new Error (int.Parse (match.Groups ["line"].Value), int.Parse (match.Groups ["character"].Value), SNDK.Convert.StringToEnum<Enums.ParserErrorType> (match.Groups ["type"].Value.ToLower ()), match.Groups ["code"].Value, match.Groups ["text"].Value));
 			}
 		}
 		#endregion
@@ -65,6 +66,7 @@ namespace SorentoLib
 			private int _line;
 			private int _character;
 			private string _code;
+			private Enums.ParserErrorType _type;
 			private string _text;
 			#endregion
 
@@ -82,6 +84,14 @@ namespace SorentoLib
 				get
 				{
 					return this._character;
+				}
+			}
+
+			public Enums.ParserErrorType Type
+			{
+				get
+				{
+					return this._type;
 				}
 			}
 
@@ -103,10 +113,11 @@ namespace SorentoLib
 			#endregion
 
 			#region Constructor
-			internal Error (int Line, int Character, string Code, string Text)
+			internal Error (int Line, int Character, Enums.ParserErrorType Type, string Code, string Text)
 			{
 				this._line = Line;
 				this._character = Character;
+				this._type = Type;
 				this._code = Code;
 				this._text = Text;
 			}

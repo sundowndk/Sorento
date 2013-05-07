@@ -372,7 +372,7 @@ namespace SorentoLib
 				// EXCEPTION: Exception.UserSave
 				throw new Exception (string.Format (Strings.Exception.UserSave, this._id));
 			}
-		}
+	}
 
 		public bool Authenticate (Usergroup usergroup)
 		{
@@ -625,12 +625,13 @@ namespace SorentoLib
 		{
 			bool result = false;
 
-			Console.WriteLine (filterOutUserId);
-
 			if (Services.Datastore.FindShelf (DatastoreAisle, new Services.Datastore.MetaSearch ("email", Enums.DatastoreMetaSearchComparisonOperator.Equal, Email), new Services.Datastore.MetaSearch (Enums.DatastoreMetaSearchLogicOperator.And), new Services.Datastore.MetaSearch ("id", Enums.DatastoreMetaSearchComparisonOperator.NotEqual, filterOutUserId)) != string.Empty)
+//			if (Services.Datastore.FindShelf (DatastoreAisle, new Services.Datastore.MetaSearch ("email", Enums.DatastoreMetaSearchComparisonOperator.Equal, Email), new Services.Datastore.MetaSearch (Enums.DatastoreMetaSearchLogicOperator.And)) != string.Empty)
 			{
+//				Console.WriteLine ("IN USE");
 				result = true;
 			}
+//			Console.WriteLine ("NOT IN USE");
 
 			return result;
 		}

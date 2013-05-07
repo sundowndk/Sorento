@@ -23,51 +23,69 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
 using System;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Settings.
+/// </summary>
 namespace SorentoLib.Services
 {
 	public static class Settings
 	{
-		public static void Set (object Key, object Value)
+
+		public static void Initialize ()
 		{
-			Set (Key.ToString ().ToLower (), Value);
+			// Set default settings.
+			foreach (Enums.SettingsKey key in Enum.GetValues (typeof (Enums.SettingsKey)))
+			{
+				if (!SorentoLib.Services.Settings.Exist (key))
+				{
+					SorentoLib.Services.Settings.Set (key, defaults[key]);
+					
+					// LOG: LogDebug.ExceptionUnknown
+					SorentoLib.Services.Logging.LogDebug (string.Format (SorentoLib.Strings.LogDebug.ServiceSettingsDefaultSet, key.ToString ().ToLower ()));
+				}
+			}
 		}
 
-		private static void Set (string Key, object Value)
+		public static Hashtable defaults = new Hashtable ()
 		{
-			Setting setting = new Setting ();
-			setting.Key = Key;
-			setting.Value = Value.ToString ();
+			{ Enums.SettingsKey.path_addins, "../Addins/" },
+			{ Enums.SettingsKey.parser_timeout, 25 }
+		};
+
+		#region Public Static Methods
+		/// <summary>
+		/// Set the specified Key and Value.
+		/// </summary>
+		public static void Set (object Key, object Value)
+		{
+			Setting setting = new Setting (Key.ToString ().ToLower (), Value.ToString ());
 			setting.Save ();
 		}
 
+		/// <summary>
+		/// Get the specified Key.
+		/// </summary>
 		public static T Get<T> (object Key)
-		{
-			return (T)Get<T> (Key.ToString ().ToLower ());
-		}
-
-		private static T Get<T> (string Key)
 		{
 			Setting setting;
 
-			Console.WriteLine (Key);
-			Console.WriteLine (typeof (T).Name.ToLower ());
-
 			try
 			{
-				setting = Setting.Load (Key);
+				setting = Setting.Load (Key.ToString ().ToLower ());
 			}
 			catch (Exception exception)
 			{
 				// LOG: LogDebug.ExceptionUnknown
 				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SERVICES.SETTINGS", exception.Message));
 				
-				// EXCEPTION: Exception.ServicesSettingsssKeyError
-				throw new Exception (string.Format (Strings.Exception.ServicesSettingsKeyError, Key));
+				// EXCEPTION: Exception.ServicesSettingsKeyError
+				throw new Exception (string.Format (Strings.Exception.ServicesSettingsKeyError, Key.ToString ().ToLower ()));
 			}
 
 			try
@@ -77,11 +95,6 @@ namespace SorentoLib.Services
 					case "guid":
 					{
 						return (T)Convert.ChangeType (new Guid (setting.Value), typeof(T));
-					}
-
-					case "int32":
-					{
-						return (T)Convert.ChangeType (int.Parse (setting.Value), typeof(T));
 					}
 
 					default:
@@ -96,46 +109,44 @@ namespace SorentoLib.Services
 				Services.Logging.LogDebug (string.Format (Strings.LogDebug.ExceptionUnknown, "SORENTOLIB.SERVICES.SETTINGS", exception.Message));
 
 				// EXCEPTION: Exception.ServicesConfigKeyNotValidType
-				throw new Exception (string.Format (Strings.Exception.ServicesConfigKeyNotValidType, Key, typeof (T).Name));
+				throw new Exception (string.Format (Strings.Exception.ServicesConfigKeyNotValidType, Key.ToString ().ToLower (), typeof (T).Name));
 			}
 		}
 
+		/// <summary>
+		/// Delete the specified Key.
+		/// </summary>
 		public static void Delete (object Key)
 		{
-			Delete (Key.ToString ().ToLower ());
+			Setting.Delete (Key.ToString ().ToLower ());
 		}
 
-		private static void Delete (string Key)
-		{
-			Setting.Delete (Key);
-		}
-
+		/// <summary>
+		/// Check if the specifed key sxist.
+		/// </summary>
 		public static bool Exist (object Key)
 		{
-			return Exist (Key.ToString ().ToLower ());
+			return Setting.Exist (Key.ToString ().ToLower ());
 		}
 
-		private static bool Exist (string Key)
-		{
-			try
-			{
-				Setting.Load (Key);
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
-		}
 
-		private class Setting
-		{
-			public static string DatastoreAisle = "sorentolib.services.settings";
+		#endregion
 
+		#region Internal Classes
+		/// <summary>
+		/// Setting.
+		/// </summary>
+		internal class Setting
+		{
+			#region Private Fields
 			private string _ḱey;
 			private string _value;
+			#endregion
 
-			public string Key
+			#region Internal Fields
+			internal static string DatastoreAisle = "sorentolib.services.settings";
+
+			internal string Key
 			{
 				get
 				{
@@ -148,7 +159,7 @@ namespace SorentoLib.Services
 				}
 			}
 
-			public string Value
+			internal string Value
 			{
 				get
 				{
@@ -160,14 +171,30 @@ namespace SorentoLib.Services
 					this._value = value;
 				}
 			}
+			#endregion
 
-			public Setting ()
+			#region Constructor
+			/// <summary>
+			/// Initializes a new instance of the <see cref="SorentoLib.Services.Settings+Setting"/> class.
+			/// </summary>
+			internal Setting (string Key, string Value)
+			{
+				this._ḱey = Key;
+				this._value = Value;
+			}
+
+			internal Setting ()
 			{
 				this._ḱey = string.Empty;
 				this._value = string.Empty;
 			}
+			#endregion
 
-			public void Save ()
+			#region Internal Methods
+			/// <summary>
+			/// Save this instance.
+			/// </summary>
+			internal void Save ()
 			{
 				try
 				{
@@ -186,8 +213,13 @@ namespace SorentoLib.Services
 					throw new Exception (string.Format (Strings.Exception.ServicesSettingsSettingSave, this._ḱey));
 				}
 			}
+			#endregion
 
-			public static Setting Load (string Key)
+			#region Internal Static Methods
+			/// <summary>
+			/// Load the specified Key.
+			/// </summary>
+			internal static Setting Load (string Key)
 			{
 				Setting result = new Setting ();
 				
@@ -214,7 +246,10 @@ namespace SorentoLib.Services
 				return result;
 			}
 
-			public static void Delete (String Key)
+			/// <summary>
+			/// Delete the specified Key.
+			/// </summary>
+			internal static void Delete (String Key)
 			{
 				try
 				{
@@ -229,7 +264,26 @@ namespace SorentoLib.Services
 					throw new Exception (string.Format (Strings.Exception.ServicesSettingsSettingDeleteKey, Key.ToLower ()));
 				}
 			}
+
+			/// <summary>
+			/// See if specified Key exists.
+			/// </summary>
+			internal static bool Exist (string Key)
+			{
+				// TODO: THIS SHOULD BE DONE WITH FINDAISLE.
+				try
+				{
+					Load (Key);
+					return true;
+				}
+				catch 
+				{
+					return false;
+				}
+			}
+			#endregion
 		}
+		#endregion
 	}
 }
 

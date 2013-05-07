@@ -46,7 +46,9 @@
       <Package>mono-addins</Package>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="Mono.CSharp" />
+    <Reference Include="Mono.CSharp">
+      <HintPath>..\Lib\Mono.CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Addins.Setup, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Package>mono-addins-setup</Package>
     </Reference>
@@ -150,9 +152,17 @@
     <Compile Include="SorentoLib\MediaTransformation.cs" />
     <Compile Include="SorentoLib\Media.cs" />
     <Compile Include="SorentoLib.Enums\DatastoreMetaSearchLogicOperator.cs" />
-    <Compile Include="SorentoLib.Services\Settings.cs" />
+    <Compile Include="SorentoLib.Services\DatastoreItem.cs" />
+    <Compile Include="SorentoLib\Template.cs" />
     <Compile Include="SorentoLib\Parser.cs" />
+    <Compile Include="SorentoLib.Addins\IRuntime.cs" />
+    <Compile Include="SorentoLib.Enums\SettingsKey.cs" />
+    <Compile Include="SorentoLib\ParserVariable.cs" />
     <Compile Include="SorentoLib\ParserError.cs" />
+    <Compile Include="SorentoLib.Exceptions\Parser.cs" />
+    <Compile Include="SorentoLib\Page.cs" />
+    <Compile Include="SorentoLib.Enums\ParserErrorType.cs" />
+    <Compile Include="SorentoLib.Services\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SorentoLib.Render\" />
